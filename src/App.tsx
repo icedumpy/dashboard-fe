@@ -1,19 +1,22 @@
-import React from 'react';
-import { AuthProvider, useAuth } from './contexts/AuthContext';
-import { LoginPage } from './components/LoginPage';
-import { OperatorDashboard } from './components/OperatorDashboard';
-import { QCDashboard } from './components/QCDashboard';
-import { ManagerDashboard } from './components/ManagerDashboard';
+import React from "react";
+import { AuthProvider, useAuth } from "./contexts/AuthContext";
+// import { LoginPage } from './components/LoginPage';
+import LoginPage from "./pages/login-page";
+import { OperatorDashboard } from "./components/OperatorDashboard";
+import { QCDashboard } from "./components/QCDashboard";
+import { ManagerDashboard } from "./components/ManagerDashboard";
 
 const AppContent: React.FC = () => {
   const { user, isLoading } = useAuth();
 
+  console.log(window.location.pathname);
+
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
-        <div className="bg-white rounded-lg shadow-md p-8">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="text-gray-600 mt-4 text-center">กำลังโหลด...</p>
+      <div className="flex items-center justify-center min-h-screen bg-gray-100">
+        <div className="p-8 bg-white rounded-lg shadow-md">
+          <div className="w-8 h-8 mx-auto border-b-2 border-blue-600 rounded-full animate-spin"></div>
+          <p className="mt-4 text-center text-gray-600">กำลังโหลด...</p>
         </div>
       </div>
     );
@@ -24,15 +27,15 @@ const AppContent: React.FC = () => {
   }
 
   switch (user.role) {
-    case 'operator':
+    case "operator":
       return <OperatorDashboard />;
-    case 'qc':
+    case "qc":
       return <QCDashboard />;
-    case 'superadmin':
+    case "superadmin":
       // Super admin has access to all views - for now showing manager dashboard
       // TODO: Could implement a view switcher for super admin
       return <ManagerDashboard />;
-    case 'viewer':
+    case "viewer":
       return <OperatorDashboard />; // Viewer sees operator dashboard in read-only mode
     default:
       return <OperatorDashboard />;
