@@ -1,15 +1,14 @@
 import React from "react";
-import { AuthProvider, useAuth } from "./contexts/AuthContext";
+import { AuthProvider } from "./contexts/AuthContext";
 // import { LoginPage } from './components/LoginPage';
 import LoginPage from "./pages/login-page";
 import { OperatorDashboard } from "./components/OperatorDashboard";
 import { QCDashboard } from "./components/QCDashboard";
 import { ManagerDashboard } from "./components/ManagerDashboard";
+import { useAuth } from "@/hooks/auth/use-auth";
 
 const AppContent: React.FC = () => {
   const { user, isLoading } = useAuth();
-
-  console.log(window.location.pathname);
 
   if (isLoading) {
     return (
