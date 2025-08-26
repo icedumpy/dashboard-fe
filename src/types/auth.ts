@@ -1,8 +1,10 @@
+import { ROLES } from "@/contants/auth";
+
 export interface UserType {
   id: number;
   username: string;
   display_name: string;
-  role: string;
+  role: RoleType;
   is_active: boolean;
   line: LineType;
   shift: ShiftType;
@@ -21,3 +23,5 @@ export interface ShiftType {
   start_time: string;
   end_time: string;
 }
+
+export type RoleType = keyof typeof ROLES;
