@@ -1,6 +1,8 @@
+import { useState } from "react";
 import { FilterIcon } from "lucide-react";
 
-import RollTable from "@/components/roll-table/roll-table";
+import Filters from "./components/filters";
+import DataTable from "@/components/data-table";
 import { Layout } from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import {
@@ -14,13 +16,25 @@ import {
 import { PRODUCTION_LINE_OPTIONS } from "@/contants/dashboard";
 import { useAuth } from "@/hooks/auth/use-auth";
 import { STATISTIC_OPTIONS } from "./constants";
+import { useItemAPI } from "@/hooks/item/use-item";
+import { STATION } from "@/contants/station";
+import { COLUMNS } from "./constants/columns";
 import { cn } from "@/lib/utils";
-import Filters from "./components/filters";
-import { useState } from "react";
 
 export default function OperatorPage() {
   const { user } = useAuth();
   const [toggleFilter, setToggleFilter] = useState(false);
+
+  const { data: stationRoll } = useItemAPI({
+    station: STATION.ROLL,
+  });
+
+  const { data: stationBundle } = useItemAPI({
+    station: STATION.BUNDLE,
+  });
+
+  console.log("data roll:", stationRoll);
+  console.log("data BUNDLE:", stationBundle);
   return (
     <Layout title="Operator Dashboard">
       <div className="space-y-4 ">
@@ -81,7 +95,16 @@ export default function OperatorPage() {
                   </div>
                 ))}
               </div>
-              <RollTable />
+              <DataTable
+                data={stationRoll?.data || []}
+                columns={COLUMNS}
+                pagination={{
+                  ...stationBundle?.pagination,
+                  onPageChange(page) {
+                    console.log("page:", page);
+                  },
+                }}
+              />
             </div>
             <div className="space-y-2">
               <h3 className="font-medium text-md">Bundle</h3>
@@ -99,7 +122,16 @@ export default function OperatorPage() {
                   </div>
                 ))}
               </div>
-              <RollTable />
+              <DataTable
+                data={stationBundle?.data || []}
+                columns={COLUMNS}
+                pagination={{
+                  ...stationBundle?.pagination,
+                  onPageChange(page) {
+                    console.log("page:", page);
+                  },
+                }}
+              />
             </div>
           </div>
         </div>
