@@ -1,52 +1,46 @@
 import React from "react";
-import { AuthProvider } from "./contexts/AuthContext";
-// import { LoginPage } from './components/LoginPage';
+
 import LoginPage from "./pages/login-page";
+import LoadingScreen from "./components/loading-screen";
+import OperatorPage from "./pages/operator-page";
 import { OperatorDashboard } from "./components/OperatorDashboard";
 import { QCDashboard } from "./components/QCDashboard";
+import { AuthProvider } from "./contexts/AuthContext";
 import { ManagerDashboard } from "./components/ManagerDashboard";
+
 import { useAuth } from "@/hooks/auth/use-auth";
+import { ROLES } from "./contants/auth";
 
-const AppContent: React.FC = () => {
-  const { user, isLoading } = useAuth();
+import type { RoleType } from "./types/auth";
 
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-100">
-        <div className="p-8 bg-white rounded-lg shadow-md">
-          <div className="w-8 h-8 mx-auto border-b-2 border-blue-600 rounded-full animate-spin"></div>
-          <p className="mt-4 text-center text-gray-600">กำลังโหลด...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (!user) {
-    return <LoginPage />;
-  }
-
-  switch (user.role) {
-    case "operator":
-      return <OperatorDashboard />;
-    case "qc":
+const getDashboard = (role: RoleType) => {
+  switch (role) {
+    case ROLES.OPERATOR:
+    case ROLES.VIEWER:
+      // return <OperatorDashboard />;
+      return <OperatorPage />;
+    case ROLES.QC:
+    case ROLES.INSPECTOR:
       return <QCDashboard />;
-    case "superadmin":
-      // Super admin has access to all views - for now showing manager dashboard
-      // TODO: Could implement a view switcher for super admin
+    case ROLES.SUPERADMIN:
       return <ManagerDashboard />;
-    case "viewer":
-      return <OperatorDashboard />; // Viewer sees operator dashboard in read-only mode
     default:
       return <OperatorDashboard />;
   }
 };
 
-function App() {
-  return (
-    <AuthProvider>
-      <AppContent />
-    </AuthProvider>
-  );
-}
+const AppContent: React.FC = () => {
+  const { user, isLoading } = useAuth();
+
+  if (isLoading) return <LoadingScreen />;
+  if (!user) return <LoginPage />;
+  return getDashboard(user.role);
+};
+
+const App: React.FC = () => (
+  <AuthProvider>
+    <AppContent />
+  </AuthProvider>
+);
 
 export default App;
