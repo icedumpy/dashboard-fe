@@ -11,7 +11,7 @@ export default function StatisticRoll({
     <div className="flex flex-wrap gap-2">
       <div
         className={cn(
-          "p-2 border rounded text-center flex-1 min-w-[120px] bg-gray-50"
+          "min-w-[120px] p-2 border rounded text-center flex-1 bg-gray-50"
         )}
       >
         <p className="text-xl font-bold">{data?.total}</p>
@@ -19,7 +19,7 @@ export default function StatisticRoll({
       </div>
       <div
         className={cn(
-          "p-2 border rounded text-center flex-1 min-w-[120px",
+          "min-w-[120px] p-2 border rounded text-center flex-1 min-w-[120px",
           "bg-orange-50 border-orange-200 text-orange-800"
         )}
       >
@@ -28,7 +28,7 @@ export default function StatisticRoll({
       </div>
       <div
         className={cn(
-          "p-2 border rounded text-center flex-1 min-w-[120px",
+          "min-w-[120px] p-2 border rounded text-center flex-1 min-w-[120px",
           "bg-red-50 border-red-200 text-red-800"
         )}
       >
@@ -37,7 +37,7 @@ export default function StatisticRoll({
       </div>
       <div
         className={cn(
-          "p-2 border rounded text-center flex-1 min-w-[120px",
+          "min-w-[120px] p-2 border rounded text-center flex-1 min-w-[120px",
           "bg-orange-100 border-orange-300 text-orange-700"
         )}
       >
@@ -46,7 +46,7 @@ export default function StatisticRoll({
       </div>
       <div
         className={cn(
-          "p-2 border rounded text-center flex-1 min-w-[120px",
+          "min-w-[120px] p-2 border rounded text-center flex-1 min-w-[120px",
           "bg-red-100 border-red-300 text-red-700"
         )}
       >

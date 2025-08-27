@@ -63,7 +63,7 @@ export default function DataTablePagination(
           ) : (
             <PaginationItem key={num}>
               <Button
-                variant={num === currentPage ? "secondary" : "outline"}
+                variant={"outline"}
                 size="icon"
                 disabled={num === currentPage}
                 onClick={() => pagination.onPageChange?.(num)}
