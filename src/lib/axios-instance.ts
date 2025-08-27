@@ -37,8 +37,9 @@ axiosInstance.interceptors.response.use(
       try {
         const refreshToken = getCookie(REFRESH_TOKEN);
         const res = await axios.post(
-          `${import.meta.env.VITE_API_BASE_URL}/refresh-token`,
-          { refreshToken }
+          `${import.meta.env.VITE_API_URL + API_V1}/auth/refresh-token`,
+          { refresh_Token: refreshToken },
+          { withCredentials: true }
         );
         const newAccessToken = res.data?.data?.accessToken;
         if (newAccessToken) {
@@ -61,8 +62,6 @@ axiosInstance.interceptors.response.use(
       error.response?.data?.message ||
       error.message ||
       "Unexpected error";
-
-    console.log("message", message);
 
     return Promise.reject(new Error(message));
   }

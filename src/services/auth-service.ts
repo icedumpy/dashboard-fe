@@ -1,4 +1,4 @@
-import { LOGIN, PROFILE } from "@/contants/api";
+import { LOGIN_ENDPOINT, PROFILE_ENDPOINT } from "@/contants/api";
 import axiosInstance from "@/lib/axios-instance";
 
 import { LoginFormType } from "@/pages/login-page/types";
@@ -6,11 +6,11 @@ import { LoginFormType } from "@/pages/login-page/types";
 // Example auth service
 export const AuthService = {
   login: async (credentials: LoginFormType) => {
-    const response = await axiosInstance.post(LOGIN, credentials);
+    const response = await axiosInstance.post(LOGIN_ENDPOINT, credentials);
     return response.data;
   },
   getProfile: async () => {
-    const response = await axiosInstance.get(PROFILE);
+    const response = await axiosInstance.get(PROFILE_ENDPOINT);
     return response.data;
   },
   refreshToken: async () => {

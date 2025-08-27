@@ -1,9 +1,13 @@
-import { ITEM } from "@/contants/item";
-import { ItemService } from "@/services/item-service";
 import { useQuery } from "@tanstack/react-query";
 
-export const useItemAPI = (params: unknown) =>
+import { ITEM_ENDPOINT } from "@/contants/api";
+import { ItemService } from "@/services/item-service";
+import { sanitizeQueryParams } from "@/utils/sanitize-query-params";
+
+import type { FilterType } from "@/pages/operator-page/types";
+
+export const useItemAPI = (params: FilterType) =>
   useQuery({
-    queryKey: [ITEM],
-    queryFn: () => ItemService.getItems(params),
+    queryKey: [ITEM_ENDPOINT, sanitizeQueryParams(params)],
+    queryFn: () => ItemService.getItems(sanitizeQueryParams(params)),
   });

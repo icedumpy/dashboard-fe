@@ -1,33 +1,41 @@
+import { RotateCcwIcon } from "lucide-react";
+import { useFormContext } from "react-hook-form";
+import dayjs from "dayjs";
+
 import { Button } from "@/components/ui/button";
 import {
+  Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { RotateCcwIcon } from "lucide-react";
-import { FormProvider, useForm } from "react-hook-form";
+import { MultiSelect } from "@/components/ui/multi-select";
+
+import { useStationStatusOptions } from "@/hooks/option/use-station-status-option";
 
 export default function Filters() {
   const DEFAULT_VALUES = {
-    productCode: "",
-    rollNumber: "",
-    jobOrderNumber: "",
-    rollWidth: "",
-    status: "",
-    timeRange: "",
-    startDate: "",
-    endDate: "",
+    product_code: undefined,
+    roll_number: undefined,
+    job_order_number: undefined,
+    number: undefined,
+    status: [],
+    time_range: undefined,
+    station: undefined,
+    detected_to: dayjs().toISOString(),
+    detected_from: dayjs().toISOString(),
+    line_id: undefined,
   };
 
-  const form = useForm({
-    defaultValues: DEFAULT_VALUES,
-    mode: "onChange",
-  });
+  const form = useFormContext();
 
   const values = form.watch();
   const filledCount = Object.values(values).filter((v) => v && v !== "").length;
+
+  const statusOptions = useStationStatusOptions();
 
   return (
     <div className="p-4 py-6 space-y-3 border rounded">
@@ -46,14 +54,14 @@ export default function Filters() {
           </Button>
         </div>
       </div>
-      <FormProvider {...form}>
+      <Form {...form}>
         <form
-          className="grid grid-cols-1 gap-4 md:grid-cols-4"
+          className="grid items-baseline grid-cols-1 gap-4 md:grid-cols-4"
           onSubmit={form.handleSubmit((data) => console.log(data))}
         >
           <FormField
             control={form.control}
-            name="productCode"
+            name="product_code"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Product Code</FormLabel>
@@ -65,7 +73,7 @@ export default function Filters() {
           />
           <FormField
             control={form.control}
-            name="productCode"
+            name="number"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Roll/Bundle Number</FormLabel>
@@ -77,7 +85,7 @@ export default function Filters() {
           />
           <FormField
             control={form.control}
-            name="productCode"
+            name="job_order_number"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Job Order Number</FormLabel>
@@ -89,11 +97,32 @@ export default function Filters() {
           />
           <FormField
             control={form.control}
-            name="rollWidth"
-            render={({ field }) => (
+            name="roll_width_min"
+            render={() => (
               <FormItem>
                 <FormLabel>Roll Width</FormLabel>
-                <Input {...field} />
+                <Input
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    const [min, max] = value.split("-").map((v) => v.trim());
+
+                    // Simple validation: check if min is a valid number
+                    if (min && isNaN(Number(min))) {
+                      form.setError("roll_width_min", {
+                        type: "manual",
+                        message: "Min width ต้องเป็นตัวเลข",
+                      });
+                    } else {
+                      form.clearErrors("roll_width_min");
+                      form.setValue("roll_width_min", +min);
+                      form.setValue("roll_width_max", +max);
+                      form.trigger("roll_width_min");
+                    }
+                  }}
+                />
+                <FormDescription className="text-xs">
+                  ใส่ค่าเดียว หรือช่วง (100-200)
+                </FormDescription>
               </FormItem>
             )}
           />
@@ -104,14 +133,19 @@ export default function Filters() {
               <FormItem>
                 <FormLabel>Status</FormLabel>
                 <FormControl>
-                  <Input {...field} />
+                  <MultiSelect
+                    placeholder="เลือกสถานะ"
+                    options={statusOptions}
+                    value={field.value as unknown as string[]}
+                    onChange={field.onChange}
+                  />
                 </FormControl>
               </FormItem>
             )}
           />
-          <FormField
+          {/* <FormField
             control={form.control}
-            name="productCode"
+            name="detected_to"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>ช่วงเวลา</FormLabel>
@@ -120,22 +154,22 @@ export default function Filters() {
                 </FormControl>
               </FormItem>
             )}
-          />
+          /> */}
           <FormField
             control={form.control}
-            name="startDate"
+            name="detected_from"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>วันที่เริ่มต้น</FormLabel>
                 <FormControl>
-                  <Input type="date" {...field} />
+                  <Input className="w-full" type="date" {...field} />
                 </FormControl>
               </FormItem>
             )}
           />
           <FormField
             control={form.control}
-            name="endDate"
+            name="detected_to"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>วันที่สิ้นสุด</FormLabel>
@@ -146,7 +180,7 @@ export default function Filters() {
             )}
           />
         </form>
-      </FormProvider>
+      </Form>
     </div>
   );
 }

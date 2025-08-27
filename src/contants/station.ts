@@ -2,3 +2,12 @@ export const STATION = {
   ROLL: "ROLL",
   BUNDLE: "BUNDLE",
 } as const;
+
+export const STATION_STATUS = {
+  REJECTED: "REJECTED",
+  DEFECT: "DEFECT",
+  SCRAP: "SCRAP",
+  RECHECK: "RECHECK",
+  NORMAL: "NORMAL",
+  QC_PASSED: "QC_PASSED",
+};

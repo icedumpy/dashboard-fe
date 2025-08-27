@@ -28,3 +28,21 @@ export interface StationResponse {
   data: StationItemType[];
   pagination: PaginationType;
 }
+
+export interface StationDetailResponse {
+  data: StationItemType;
+  defects?: unknown[];
+  images?: Images;
+  reviews?: unknown[];
+}
+
+export interface Images {
+  DETECTED: ImageType[];
+  FIX: ImageType[];
+  OTHER: ImageType[];
+}
+
+export interface ImageType {
+  id: number;
+  path: string;
+}
