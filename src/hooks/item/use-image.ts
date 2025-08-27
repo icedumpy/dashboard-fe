@@ -1,11 +1,8 @@
-import { useQuery } from "@tanstack/react-query";
-
 import { ITEM } from "@/contants/item";
 import { ItemService } from "@/services/item-service";
+import { useQuery } from "@tanstack/react-query";
 
-import type { FilterType } from "@/pages/operator-page/types";
-
-export const useItemAPI = (params: FilterType) =>
+export const useItemAPI = (params: unknown) =>
   useQuery({
     queryKey: [ITEM],
     queryFn: () => ItemService.getItems(params),

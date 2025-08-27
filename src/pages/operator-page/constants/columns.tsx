@@ -1,6 +1,9 @@
 import dayjs from "dayjs";
 import { ColumnDef } from "@tanstack/react-table";
 
+import CheckButton from "../components/check-button";
+import StatusBadge from "@/components/status-badge";
+
 import { DATE_TIME_FORMAT } from "@/contants/format";
 
 import type { StationItemType } from "@/types/station";
@@ -19,7 +22,7 @@ export const COLUMNS: ColumnDef<StationItemType>[] = [
   {
     accessorKey: "roll_width",
     header: "Roll Width",
-    meta: { className: "text-center" },
+    meta: { className: "text-end" },
   },
   {
     accessorKey: "detected_at",
@@ -30,11 +33,20 @@ export const COLUMNS: ColumnDef<StationItemType>[] = [
   {
     accessorKey: "status_code",
     header: "Status",
-    meta: { className: "text-center" },
+    cell: (info) => (
+      <StatusBadge
+        status={info.getValue<string>()}
+        note={info.row.original.ai_note}
+      />
+    ),
   },
   {
     accessorKey: "action",
     header: "Action",
-    cell: () => "TODO",
+    cell: ({ row }) => (
+      <div>
+        <CheckButton id={row.original.id} />
+      </div>
+    ),
   },
 ];
