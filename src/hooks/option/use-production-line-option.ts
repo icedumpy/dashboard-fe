@@ -1,10 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 
-import { GET_PRODUCTION_LINE_OPTIONS } from "@/contants/line";
+import { PRODUCTION_LINE_ENDPOINT } from "@/contants/api";
 import { OptionService } from "@/services/option-service";
 
 export const useProductionLineOptions = () =>
   useQuery({
-    queryKey: [GET_PRODUCTION_LINE_OPTIONS],
+    queryKey: [PRODUCTION_LINE_ENDPOINT],
     queryFn: () => OptionService.getProductionLine(),
   });

@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 
-import { ITEM } from "@/contants/item";
+import { ITEM_ENDPOINT } from "@/contants/api";
 import { ItemService } from "@/services/item-service";
 
 export const useItemDetailAPI = (
@@ -8,7 +8,7 @@ export const useItemDetailAPI = (
   options?: Record<string, unknown>
 ) =>
   useQuery({
-    queryKey: [ITEM, id],
+    queryKey: [ITEM_ENDPOINT, id],
     queryFn: () => ItemService.getItemDetail(id),
     enabled: !!id,
     ...options,

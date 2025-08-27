@@ -7,7 +7,7 @@ import { ACCESS_TOKEN, REFRESH_TOKEN } from "@/contants/auth";
 import { useLoginAPI } from "@/hooks/auth/use-login";
 import { useProfileAPI } from "@/hooks/auth/use-profile";
 import { AuthContext } from "@/hooks/auth/use-auth";
-import { PROFILE } from "@/contants/api";
+import { PROFILE_ENDPOINT } from "@/contants/api";
 
 import type { LoginFormType } from "@/pages/login-page/types";
 import type { UserType } from "@/types/auth";
@@ -39,7 +39,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
           setCookie(REFRESH_TOKEN, data.refresh_token);
 
           queryClient.invalidateQueries({
-            queryKey: [PROFILE],
+            queryKey: [PROFILE_ENDPOINT],
           });
         }
       } catch (error: unknown) {
@@ -53,7 +53,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const logout = useCallback(() => {
     removeCookie(ACCESS_TOKEN);
     removeCookie(REFRESH_TOKEN);
-    queryClient.setQueryData([PROFILE], null);
+    queryClient.setQueryData([PROFILE_ENDPOINT], null);
   }, [queryClient]);
 
   const value = useMemo<AuthContextType>(

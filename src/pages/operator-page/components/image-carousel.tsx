@@ -11,7 +11,7 @@ import {
 
 import { useQueries } from "@tanstack/react-query";
 import { UploadService } from "@/services/upload-service";
-import { GET_IMAGE } from "@/contants/upload";
+import { IMAGE_PATH_ENDPOINT } from "@/contants/api";
 
 import type { ImageType } from "@/types/station";
 import type { CarouselApi } from "@/components/ui/carousel";
@@ -23,7 +23,7 @@ export default function ImageCarousel({ images }: { images?: ImageType[] }) {
   const imageQueries = useQueries({
     queries:
       images?.map((img) => ({
-        queryKey: [GET_IMAGE, img.path],
+        queryKey: [IMAGE_PATH_ENDPOINT, img.path],
         queryFn: () => UploadService.getImageBold(img.path),
       })) ?? [],
   });

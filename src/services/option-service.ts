@@ -1,12 +1,12 @@
 import axiosInstance from "@/lib/axios-instance";
-import { GET_PRODUCTION_LINE_OPTIONS } from "@/contants/line";
+import { PRODUCTION_LINE_ENDPOINT } from "@/contants/api";
 
 import type { ProductionLineT } from "@/types/line";
 import type { OptionT } from "@/types/option";
 
 export const OptionService = {
   getProductionLine: async () => {
-    const response = await axiosInstance.get(GET_PRODUCTION_LINE_OPTIONS);
+    const response = await axiosInstance.get(PRODUCTION_LINE_ENDPOINT);
 
     const options = (response?.data?.data as ProductionLineT[]).map((item) => ({
       value: item.code,

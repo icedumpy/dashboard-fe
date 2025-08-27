@@ -1,10 +1,10 @@
 import axiosInstance from "@/lib/axios-instance";
-import { GET_IMAGE } from "@/contants/upload";
+import { IMAGE_PATH_ENDPOINT } from "@/contants/api";
 
 export const UploadService = {
   getImageBold: async (image_path?: string) => {
     const response = await axiosInstance.get(
-      GET_IMAGE.replace("{image_path}", image_path || ""),
+      IMAGE_PATH_ENDPOINT.replace("{image_path}", image_path || ""),
       {
         responseType: "blob",
       }
