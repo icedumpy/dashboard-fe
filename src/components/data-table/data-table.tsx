@@ -73,7 +73,11 @@ export function DataTable<T extends object>({
         <TableBody>
           {table.getRowModel().rows.length === 0 ? (
             <tr>
-              <td colSpan={columns.length}>No data</td>
+              <td colSpan={columns.length}>
+                <div className="p-4 text-center text-muted-foreground">
+                  No results.
+                </div>
+              </td>
             </tr>
           ) : (
             table.getRowModel().rows.map((row) => (
