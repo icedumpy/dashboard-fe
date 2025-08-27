@@ -12,12 +12,13 @@ import {
 } from "@/components/ui/form";
 
 import { loginSchema } from "./schema";
-import { useAuth } from "@/hooks/auth/use-auth";
+import { useAuth } from "@/hooks/auth/use-auth-v2";
+import { cn } from "@/lib/utils";
 
 import type { LoginFormType } from "./types";
 
 export default function LoginCard() {
-  const { login, isLoading, error } = useAuth();
+  const { login, isLoginLoading, loginError } = useAuth();
   const form = useForm({
     defaultValues: {
       username: "OPTH03A",
@@ -29,6 +30,8 @@ export default function LoginCard() {
   function onSubmit(values: LoginFormType) {
     login(values);
   }
+
+  console.log("loginError", loginError);
 
   return (
     <FormProvider {...form}>
@@ -59,8 +62,15 @@ export default function LoginCard() {
             </FormItem>
           )}
         />
-        {error && <p className="text-destructive">{error}</p>}
-        <Button type="submit" className="w-full" disabled={isLoading}>
+        <p
+          className={cn(
+            "text-destructive h-0 overflow-hidden",
+            loginError?.message && "h-fit"
+          )}
+        >
+          {loginError?.message}
+        </p>
+        <Button type="submit" className="w-full" disabled={isLoginLoading}>
           Login
         </Button>
       </form>

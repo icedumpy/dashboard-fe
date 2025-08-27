@@ -18,7 +18,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import { useAuth } from "@/hooks/auth/use-auth";
+import { useAuth } from "@/hooks/auth/use-auth-v2";
 import { useItemAPI } from "@/hooks/item/use-item";
 import { STATION } from "@/contants/station";
 import { COLUMNS } from "./constants/columns";

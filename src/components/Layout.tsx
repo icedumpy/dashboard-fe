@@ -1,6 +1,7 @@
 import React from "react";
 import { Factory, LogOut, User, Bell } from "lucide-react";
-import { useAuth } from "@/hooks/auth/use-auth";
+import { useAuth } from "@/hooks/auth/use-auth-v2";
+import { ROLES } from "@/contants/auth";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -12,11 +13,11 @@ export const Layout: React.FC<LayoutProps> = ({ children, title }) => {
 
   const getRoleColor = (role: string) => {
     switch (role) {
-      case "operator":
+      case ROLES.OPERATOR:
         return "bg-green-100 text-green-800";
-      case "qc":
+      case ROLES.QC:
         return "bg-blue-100 text-blue-800";
-      case "superadmin":
+      case ROLES.SUPERADMIN:
         return "bg-purple-100 text-purple-800";
       default:
         return "bg-gray-100 text-gray-800";
@@ -55,7 +56,7 @@ export const Layout: React.FC<LayoutProps> = ({ children, title }) => {
                   <User className="w-4 h-4 text-gray-600" />
                 </div>
                 <button
-                  onClick={logout}
+                  onClick={() => logout()}
                   className="p-2 text-gray-400 transition-colors hover:text-gray-600"
                   title="ออกจากระบบ"
                 >
