@@ -2,6 +2,7 @@ import dayjs from "dayjs";
 import { useState } from "react";
 import { FilterIcon } from "lucide-react";
 import { FormProvider, useForm } from "react-hook-form";
+import { useQueryState } from "nuqs";
 
 import Filters from "./components/filters";
 import DataTable from "@/components/data-table";
@@ -17,7 +18,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import { PRODUCTION_LINE_OPTIONS } from "@/contants/dashboard";
 import { useAuth } from "@/hooks/auth/use-auth";
 import { useItemAPI } from "@/hooks/item/use-item";
 import { STATION } from "@/contants/station";
@@ -26,11 +26,14 @@ import { DATE_TIME_FORMAT } from "@/contants/format";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { filtersSchema } from "./schema";
 import { useItemSummaryAPI } from "@/hooks/item/use-sumary";
+import { ROLES } from "@/contants/auth";
+import { useProductionLineOptions } from "@/hooks/option/use-production-line-option";
 
 export default function OperatorPage() {
   const { user } = useAuth();
   const [toggleFilter, setToggleFilter] = useState(false);
   const [rollPage, setRollPage] = useState(1);
+  const [line, setLine] = useQueryState("line");
 
   const form = useForm({
     resolver: zodResolver(filtersSchema),
@@ -39,6 +42,7 @@ export default function OperatorPage() {
 
   const filterParams = form.watch();
 
+  const { data: productionLineOptions } = useProductionLineOptions();
   const { data: summary } = useItemSummaryAPI();
   const { data: roll } = useItemAPI({
     ...filterParams,
@@ -50,21 +54,24 @@ export default function OperatorPage() {
     station: STATION.BUNDLE,
   });
 
+  const disabledLine = user?.role === ROLES.OPERATOR;
+
   return (
     <FormProvider {...form}>
       <Layout title="Operator Dashboard">
         <div className="space-y-4 ">
           <div className="flex items-center gap-2">
-            <p>
-              Production Line:
-              {user?.line.code}
-            </p>
-            <Select value="3">
+            <p>Production Line:</p>
+            <Select
+              value={String(line || user?.line.code)}
+              onValueChange={setLine}
+              disabled={disabledLine}
+            >
               <SelectTrigger>
                 <SelectValue placeholder="Select a line" />
               </SelectTrigger>
               <SelectContent>
-                {PRODUCTION_LINE_OPTIONS.map((line) => (
+                {productionLineOptions?.map((line) => (
                   <SelectItem key={line.value} value={line.value}>
                     {line.label}
                   </SelectItem>
