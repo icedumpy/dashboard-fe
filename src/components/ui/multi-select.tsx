@@ -1,7 +1,6 @@
 import * as React from "react";
-import { ChevronsUpDown, X } from "lucide-react";
+import { ChevronsUpDown } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -41,7 +40,7 @@ export function MultiSelect({
   placeholder = "Select items...",
   className,
   disabled = false,
-  maxCount = 3,
+  // maxCount = 3,
   showSearch = false,
   //   modalPopover = false,
   //   asChild = false,
@@ -76,72 +75,26 @@ export function MultiSelect({
 
   return (
     <Popover>
-      <PopoverTrigger>
+      <PopoverTrigger className="overflow-hidden">
         <Button
           variant="outline"
           role="combobox"
           aria-expanded={open}
           className={cn(
-            "w-full justify-between text-left font-normal",
+            "w-full min-w-0 justify-between text-left font-normal",
             className
           )}
           onClick={() => setOpen(!open)}
           disabled={disabled}
         >
-          <div className="flex flex-wrap gap-1">
+          <div className="flex items-center w-full min-w-0 gap-1 overflow-hidden flex-nowrap">
             {value?.length === 0 && (
               <span className="text-muted-foreground">{placeholder}</span>
             )}
             {value?.length > 0 && (
-              <>
-                {value?.slice(0, maxCount).map((item) => {
-                  const option = options.find(
-                    (option) => option.value === item
-                  );
-                  const IconComponent = option?.icon;
-                  return (
-                    <Badge
-                      variant="secondary"
-                      key={item}
-                      className="mb-1 mr-1"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        handleUnselect(item);
-                      }}
-                    >
-                      {IconComponent && (
-                        <IconComponent className="w-4 h-4 mr-2" />
-                      )}
-                      {option?.label}
-                      <button
-                        className="ml-1 rounded-full outline-none ring-offset-background focus:ring-2 focus:ring-ring focus:ring-offset-2"
-                        onKeyDown={(e) => {
-                          if (e.key === "Enter") {
-                            handleUnselect(item);
-                          }
-                        }}
-                        onMouseDown={(e) => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                        }}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          handleUnselect(item);
-                        }}
-                      >
-                        <X className="w-3 h-3 text-muted-foreground hover:text-foreground" />
-                      </button>
-                    </Badge>
-                  );
-                })}
-                {value.length > maxCount && (
-                  <Badge variant="secondary" className="mb-1 mr-1">
-                    +{value.length - maxCount} more
-                  </Badge>
-                )}
-              </>
+              <span className="block w-full min-w-0 truncate">
+                {value?.join(", ")}
+              </span>
             )}
           </div>
           <ChevronsUpDown className="w-4 h-4 opacity-50 shrink-0" />

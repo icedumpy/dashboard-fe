@@ -1,12 +1,12 @@
 import { RotateCcwIcon } from "lucide-react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { useFormContext } from "react-hook-form";
 import dayjs from "dayjs";
 
 import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -15,14 +15,13 @@ import { Input } from "@/components/ui/input";
 import { MultiSelect } from "@/components/ui/multi-select";
 
 import { useStationStatusOptions } from "@/hooks/option/use-station-status-option";
-import { filtersSchema } from "../schema";
 
 export default function Filters() {
   const DEFAULT_VALUES = {
     product_code: undefined,
     roll_number: undefined,
     job_order_number: undefined,
-    roll_width: undefined,
+    number: undefined,
     status: [],
     time_range: undefined,
     station: undefined,
@@ -31,10 +30,7 @@ export default function Filters() {
     line_id: undefined,
   };
 
-  const form = useForm({
-    defaultValues: DEFAULT_VALUES,
-    resolver: zodResolver(filtersSchema),
-  });
+  const form = useFormContext();
 
   const values = form.watch();
   const filledCount = Object.values(values).filter((v) => v && v !== "").length;
@@ -60,7 +56,7 @@ export default function Filters() {
       </div>
       <Form {...form}>
         <form
-          className="grid grid-cols-1 gap-4 md:grid-cols-4"
+          className="grid items-baseline grid-cols-1 gap-4 md:grid-cols-4"
           onSubmit={form.handleSubmit((data) => console.log(data))}
         >
           <FormField
@@ -77,7 +73,7 @@ export default function Filters() {
           />
           <FormField
             control={form.control}
-            name="roll_number"
+            name="number"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Roll/Bundle Number</FormLabel>
@@ -101,11 +97,32 @@ export default function Filters() {
           />
           <FormField
             control={form.control}
-            name="roll_width"
-            render={({ field }) => (
+            name="roll_width_min"
+            render={() => (
               <FormItem>
                 <FormLabel>Roll Width</FormLabel>
-                <Input {...field} />
+                <Input
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    const [min, max] = value.split("-").map((v) => v.trim());
+
+                    // Simple validation: check if min is a valid number
+                    if (min && isNaN(Number(min))) {
+                      form.setError("roll_width_min", {
+                        type: "manual",
+                        message: "Min width ต้องเป็นตัวเลข",
+                      });
+                    } else {
+                      form.clearErrors("roll_width_min");
+                      form.setValue("roll_width_min", +min);
+                      form.setValue("roll_width_max", +max);
+                      form.trigger("roll_width_min");
+                    }
+                  }}
+                />
+                <FormDescription className="text-xs">
+                  ใส่ค่าเดียว หรือช่วง (100-200)
+                </FormDescription>
               </FormItem>
             )}
           />
@@ -117,6 +134,7 @@ export default function Filters() {
                 <FormLabel>Status</FormLabel>
                 <FormControl>
                   <MultiSelect
+                    placeholder="เลือกสถานะ"
                     options={statusOptions}
                     value={field.value as unknown as string[]}
                     onChange={field.onChange}
@@ -139,19 +157,19 @@ export default function Filters() {
           /> */}
           <FormField
             control={form.control}
-            name="detected_to"
+            name="detected_from"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>วันที่เริ่มต้น</FormLabel>
                 <FormControl>
-                  <Input type="date" {...field} />
+                  <Input className="w-full" type="date" {...field} />
                 </FormControl>
               </FormItem>
             )}
           />
           <FormField
             control={form.control}
-            name="detected_from"
+            name="detected_to"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>วันที่สิ้นสุด</FormLabel>

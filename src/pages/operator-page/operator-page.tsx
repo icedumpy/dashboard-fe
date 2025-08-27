@@ -30,32 +30,23 @@ import { useItemSummaryAPI } from "@/hooks/item/use-sumary";
 export default function OperatorPage() {
   const { user } = useAuth();
   const [toggleFilter, setToggleFilter] = useState(false);
+  const [rollPage, setRollPage] = useState(1);
 
   const form = useForm({
-    defaultValues: {
-      product_code: "",
-      roll_number: "",
-      job_order_number: "",
-      roll_width: "",
-      status: [],
-      time_range: "",
-      detected_to: "",
-      detected_from: "",
-      station: "",
-    },
     resolver: zodResolver(filtersSchema),
     mode: "onChange",
   });
 
-  const { data: itemSummary } = useItemSummaryAPI();
+  const filterParams = form.watch();
 
-  const { data: stationRoll } = useItemAPI({
-    // ...queryParams,
+  const { data: summary } = useItemSummaryAPI();
+  const { data: roll } = useItemAPI({
+    ...filterParams,
+    page: rollPage,
     station: STATION.ROLL,
   });
-
-  const { data: stationBundle } = useItemAPI({
-    // ...queryParams,
+  const { data: bundle } = useItemAPI({
+    ...filterParams,
     station: STATION.BUNDLE,
   });
 
@@ -106,26 +97,26 @@ export default function OperatorPage() {
             <div className="p-4 space-y-3">
               <div className="space-y-2">
                 <h3 className="font-medium text-md">Roll</h3>
-                <StatisticRoll data={itemSummary?.roll} />
+                <StatisticRoll data={summary?.roll} />
                 <DataTable
-                  data={stationRoll?.data || []}
+                  data={roll?.data || []}
                   columns={COLUMNS}
                   pagination={{
-                    ...stationBundle?.pagination,
+                    ...roll?.pagination,
                     onPageChange(page) {
-                      console.log("page:", page);
+                      setRollPage(page);
                     },
                   }}
                 />
               </div>
               <div className="space-y-2">
                 <h3 className="font-medium text-md">Bundle</h3>
-                <StatisticBundle data={itemSummary?.bundle} />
+                <StatisticBundle data={summary?.bundle} />
                 <DataTable
-                  data={stationBundle?.data || []}
+                  data={bundle?.data || []}
                   columns={COLUMNS}
                   pagination={{
-                    ...stationBundle?.pagination,
+                    ...bundle?.pagination,
                     onPageChange(page) {
                       console.log("page:", page);
                     },
