@@ -4,7 +4,11 @@ import App from "./App.tsx";
 import "./index.css";
 import Providers from "./components/providers.tsx";
 
-createRoot(document.getElementById("root")!).render(
+const rootEl = document.getElementById("root")!;
+const loaderEl = document.getElementById("global-loader");
+if (loaderEl) loaderEl.remove();
+
+createRoot(rootEl).render(
   <StrictMode>
     <Providers>
       <App />

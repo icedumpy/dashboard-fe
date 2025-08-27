@@ -37,7 +37,7 @@ axiosInstance.interceptors.response.use(
       try {
         const refreshToken = getCookie(REFRESH_TOKEN);
         const res = await axios.post(
-          `${import.meta.env.VITE_API_URL + API_V1}/auth/refresh-token`,
+          `${import.meta.env.VITE_API_URL + API_V1}/auth/refresh`,
           { refresh_Token: refreshToken },
           { withCredentials: true }
         );

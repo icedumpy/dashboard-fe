@@ -1,46 +1,49 @@
-import React from "react";
+import { Routes, Route } from "react-router-dom";
 
-import LoginPage from "./pages/login-page";
-import LoadingScreen from "./components/loading-screen";
-import OperatorPage from "./pages/operator-page";
-import { OperatorDashboard } from "./components/OperatorDashboard";
+import LoginPage from "@/pages/login-page";
+import OperatorPage from "@/pages/operator-page";
+import ProtectedRoute from "@/components/protected-route";
+import AuthGuard from "@/components/auth-guard";
 import { QCDashboard } from "./components/QCDashboard";
-import { AuthProvider } from "./contexts/AuthContext";
 import { ManagerDashboard } from "./components/ManagerDashboard";
+import { OperatorDashboard } from "./components/OperatorDashboard";
 
-import { useAuth } from "@/hooks/auth/use-auth";
+import { useAuth } from "./hooks/auth/use-auth-v2";
 import { ROLES } from "./contants/auth";
 
 import type { RoleType } from "./types/auth";
 
-const getDashboard = (role: RoleType) => {
-  switch (role) {
-    case ROLES.OPERATOR:
-    case ROLES.VIEWER:
-      // return <OperatorDashboard />;
-      return <OperatorPage />;
-    case ROLES.QC:
-    case ROLES.INSPECTOR:
-      return <QCDashboard />;
-    case ROLES.SUPERADMIN:
-      return <ManagerDashboard />;
-    default:
-      return <OperatorDashboard />;
-  }
-};
+function App() {
+  const { user } = useAuth();
 
-const AppContent: React.FC = () => {
-  const { user, isLoading } = useAuth();
+  const getDashboard = (role?: RoleType) => {
+    switch (role) {
+      case ROLES.OPERATOR:
+      case ROLES.VIEWER:
+        return <OperatorPage />; //V2
+      case ROLES.QC:
+      case ROLES.INSPECTOR:
+        return <QCDashboard />; // V1
+      case ROLES.SUPERADMIN:
+        return <ManagerDashboard />; // V1
+      default:
+        return <OperatorDashboard />; // V1
+    }
+  };
 
-  if (isLoading) return <LoadingScreen />;
-  if (!user) return <LoginPage />;
-  return getDashboard(user.role);
-};
-
-const App: React.FC = () => (
-  <AuthProvider>
-    <AppContent />
-  </AuthProvider>
-);
+  return (
+    <Routes>
+      <Route
+        index
+        element={
+          <ProtectedRoute>
+            <AuthGuard>{getDashboard(user?.role)}</AuthGuard>
+          </ProtectedRoute>
+        }
+      />
+      <Route path="/login" element={<LoginPage />} />
+    </Routes>
+  );
+}
 
 export default App;

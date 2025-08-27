@@ -7,6 +7,11 @@
     <title>Manufacturing Defect Management System</title>
   </head>
   <body>
+    <div id="global-loader" style="position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:white;z-index:9999;">
+      <div style="width:24px;height:24px;border:3px solid #3b82f6;border-top-color:transparent;border-radius:50%;animation:spin 1s linear infinite;"></div>    </div>
+    <style>
+      @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
