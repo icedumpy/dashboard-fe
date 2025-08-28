@@ -28,7 +28,6 @@ import { DATE_TIME_FORMAT } from "@/contants/format";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { filtersSchema } from "./schema";
 import { useItemSummaryAPI } from "@/hooks/item/use-sumary";
-import { ROLES } from "@/contants/auth";
 import { useProductionLineOptions } from "@/hooks/option/use-production-line-option";
 
 export default function OperatorPage() {
@@ -40,8 +39,9 @@ export default function OperatorPage() {
   const [bundlePage, setBundlePage] = useQueryState("bundlePage", {
     defaultValue: "1",
   });
+  const { data: productionLineOptions } = useProductionLineOptions();
   const [line, setLine] = useQueryState("line", {
-    defaultValue: "3",
+    defaultValue: String(user?.line?.id),
   });
 
   const form = useForm({
@@ -51,20 +51,21 @@ export default function OperatorPage() {
 
   const filterParams = form.watch();
 
-  const { data: productionLineOptions } = useProductionLineOptions();
   const { data: summary } = useItemSummaryAPI();
   const { data: roll } = useItemAPI({
     ...filterParams,
     page: +rollPage,
+    line_id: line,
     station: STATION.ROLL,
   });
   const { data: bundle } = useItemAPI({
     ...filterParams,
     page: +bundlePage,
+    line_id: line,
     station: STATION.BUNDLE,
   });
 
-  const disabledLine = user?.role === ROLES.OPERATOR;
+  const disabledLine = ["3A"].includes(String(user?.line.name));
 
   return (
     <FormProvider {...form}>

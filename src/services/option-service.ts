@@ -9,7 +9,7 @@ export const OptionService = {
     const response = await axiosInstance.get(PRODUCTION_LINE_ENDPOINT);
 
     const options = (response?.data?.data as ProductionLineT[]).map((item) => ({
-      value: item.code,
+      value: String(item.id),
       label: item.name,
     }));
 
