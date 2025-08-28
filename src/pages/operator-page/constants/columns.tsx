@@ -55,7 +55,10 @@ export const COLUMNS: ColumnDef<StationItemType>[] = [
     header: "Action",
     cell: ({ row }) => (
       <div>
-        <CheckButton id={row.original.id} />
+        <CheckButton
+          status={row.original?.status_code as StationItemType["status_code"]}
+          id={row.original.id}
+        />
       </div>
     ),
   },

@@ -16,7 +16,7 @@ import { IMAGE_PATH_ENDPOINT } from "@/contants/api";
 import type { ImageType } from "@/types/station";
 import type { CarouselApi } from "@/components/ui/carousel";
 
-export default function ImageCarousel({ images }: { images?: ImageType[] }) {
+export default function ImageDefect({ images }: { images?: ImageType[] }) {
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
 
@@ -66,45 +66,42 @@ export default function ImageCarousel({ images }: { images?: ImageType[] }) {
     };
   }, [api]);
 
-  if (isEmpty(images)) {
-    return (
-      <div className="grid text-sm place-content-center aspect-video bg-accent text-muted-foreground">
-        ไม่มีรูปภาพ
-      </div>
-    );
-  }
-
   return (
     <div className="space-y-2">
-      <h3>ตรวจสอบ Defect</h3>
-
-      <div>
-        <Carousel className="border rounded" setApi={setApi}>
-          <CarouselContent>
-            {images?.map((image, idx) => (
-              <CarouselItem key={image.id} className="aspect-video">
-                {imageUrls[idx] ? (
-                  <img
-                    src={imageUrls[idx]}
-                    className="object-contain w-auto h-full mx-auto"
-                    id={encodeURIComponent(image.path)}
-                    alt={`Defect image ${image.id}`}
-                  />
-                ) : (
-                  <div className="grid w-full h-full text-sm place-content-center bg-accent text-muted-foreground">
-                    Image Not Found
-                  </div>
-                )}
-              </CarouselItem>
-            ))}
-          </CarouselContent>
-          <CarouselNext className="right-2" />
-          <CarouselPrevious className="left-2" />
-        </Carousel>
-        <div className="py-2 text-sm text-center text-muted-foreground">
-          {current} of {images?.length}
+      <h3 className="font-bold text-orange-600">รูป Defect ที่ระบบตรวจพบ</h3>
+      {isEmpty(images) ? (
+        <div className="grid text-sm border place-content-center aspect-video bg-accent text-muted-foreground">
+          ไม่มีรูปภาพ
         </div>
-      </div>
+      ) : (
+        <div>
+          <Carousel className="border rounded" setApi={setApi}>
+            <CarouselContent>
+              {images?.map((image, idx) => (
+                <CarouselItem key={image.id} className="aspect-video">
+                  {imageUrls[idx] ? (
+                    <img
+                      src={imageUrls[idx]}
+                      className="object-contain w-auto h-full mx-auto"
+                      id={encodeURIComponent(image.path)}
+                      alt={`Defect image ${image.id}`}
+                    />
+                  ) : (
+                    <div className="grid w-full h-full text-sm place-content-center bg-accent text-muted-foreground">
+                      Image Not Found
+                    </div>
+                  )}
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselNext className="right-2" />
+            <CarouselPrevious className="left-2" />
+          </Carousel>
+          <div className="py-2 text-sm text-center text-muted-foreground">
+            {current} of {images?.length}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
