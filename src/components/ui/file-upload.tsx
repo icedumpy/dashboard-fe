@@ -1,6 +1,7 @@
+import { useQuery } from "@tanstack/react-query";
+import { ImageUpIcon } from "lucide-react";
 import { IMAGE_PATH_ENDPOINT } from "@/contants/api";
 import { UploadService } from "@/services/upload-service";
-import { useQuery } from "@tanstack/react-query";
 
 interface FileUploadProps {
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
@@ -16,9 +17,9 @@ export default function FileUpload({ onChange, value }: FileUploadProps) {
   return (
     <label
       htmlFor="file-upload"
-      className="flex items-center justify-center p-4 text-center border-2 border-dashed cursor-pointer border-border rounded-xl bg-accent aspect-video"
+      className="flex items-center justify-center p-4 text-center border border-dashed rounded-md cursor-pointer border-border bg-accent aspect-video"
     >
-      <div className="flex flex-col items-center justify-center gap-2">
+      <div className="flex flex-col items-center justify-center gap-2 text-sm">
         {image ? (
           <img
             src={URL.createObjectURL(image)}
@@ -26,14 +27,15 @@ export default function FileUpload({ onChange, value }: FileUploadProps) {
             className="object-contain mb-2 rounded-lg aspect-video"
           />
         ) : (
-          <>
-            <span className="text-muted-foreground">
-              คลิกเพื่ออัปโหลดรูปหลังการแก้ไข
-            </span>
-            <span className="text-sm text-muted-foreground">
-              PNG, JPG ขนาดไม่เกิน 10MB
-            </span>
-          </>
+          <div className="flex flex-col items-center gap-2 text-muted-foreground">
+            <div className="p-3 bg-white border rounded-full text-muted-foreground">
+              <ImageUpIcon className="size-5" />
+            </div>
+            <div className="flex flex-col">
+              <span>คลิกเพื่ออัปโหลดรูปหลังการแก้ไข</span>
+              <span className="text-xs">PNG, JPG ขนาดไม่เกิน 10MB</span>
+            </div>
+          </div>
         )}
       </div>
       <input
