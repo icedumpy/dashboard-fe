@@ -14,25 +14,37 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
-import { downloadCSV } from "@/utils/download-csv";
+import {
+  DownloadReportParams,
+  useItemReportAPI,
+} from "@/hooks/item/use-item-report";
+import { STATION } from "@/contants/station";
+import { downloadFile } from "@/utils/download-file";
 
-import type { StationItemType } from "@/types/station";
-
-interface ExportRollButtonProps {
-  data: StationItemType[];
-}
-
-export default function ExportRollButton({ data }: ExportRollButtonProps) {
+export default function ExportRollButton({
+  filters,
+}: {
+  filters: DownloadReportParams;
+}) {
   const [line] = useQueryState("line", {
     defaultValue: "3",
   });
 
+  const itemReport = useItemReportAPI();
   const handleExport = useCallback(() => {
     const filename = `roll-station-line-${line}-${dayjs().format(
       "YYYY-MM-DD"
     )}.csv`;
-    downloadCSV<StationItemType>(data, filename);
-  }, [data, line]);
+
+    itemReport.mutate(
+      { ...filters, line_id: line, station: STATION.ROLL },
+      {
+        onSuccess(data) {
+          downloadFile(data, filename);
+        },
+      }
+    );
+  }, [itemReport, line, filters]);
 
   return (
     <Dialog>
@@ -55,7 +67,9 @@ export default function ExportRollButton({ data }: ExportRollButtonProps) {
           <DialogClose asChild>
             <Button variant="outline">ยกเลิก</Button>
           </DialogClose>
-          <Button onClick={handleExport}>ดาวน์โหลด</Button>
+          <Button onClick={handleExport} disabled={itemReport.isPending}>
+            ดาวน์โหลด
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

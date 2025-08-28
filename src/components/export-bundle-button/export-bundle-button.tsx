@@ -4,6 +4,7 @@ import { useCallback } from "react";
 import dayjs from "dayjs";
 
 import { Button } from "@/components/ui/button";
+
 import {
   Dialog,
   DialogClose,
@@ -14,25 +15,37 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
-import { downloadCSV } from "@/utils/download-csv";
+import {
+  DownloadReportParams,
+  useItemReportAPI,
+} from "@/hooks/item/use-item-report";
+import { STATION } from "@/contants/station";
+import { downloadFile } from "@/utils/download-file";
 
-import type { StationItemType } from "@/types/station";
-
-interface ExportBundleButtonProps {
-  data: StationItemType[];
-}
-
-export default function ExportBundleButton({ data }: ExportBundleButtonProps) {
+export default function ExportBundleButton({
+  filters,
+}: {
+  filters: DownloadReportParams;
+}) {
   const [line] = useQueryState("line", {
     defaultValue: "3",
   });
 
+  const itemReport = useItemReportAPI();
   const handleExport = useCallback(() => {
-    const filename = `bindle-station-line-${line}-${dayjs().format(
+    const filename = `bundle-station-line-${line}-${dayjs().format(
       "YYYY-MM-DD"
     )}.csv`;
-    downloadCSV<StationItemType>(data, filename);
-  }, [data, line]);
+
+    itemReport.mutate(
+      { ...filters, line_id: line, station: STATION.BUNDLE },
+      {
+        onSuccess(data) {
+          downloadFile(data, filename);
+        },
+      }
+    );
+  }, [itemReport, line, filters]);
 
   return (
     <Dialog>

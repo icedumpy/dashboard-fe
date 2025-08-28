@@ -96,7 +96,20 @@ export default function OperatorPage() {
             </Button>
           </div>
           {toggleFilter && <Filters />}
-          <ReportSection roll={roll?.data} bundle={bundle?.data} />
+          <ReportSection
+            filters={{
+              detected_from: filterParams.detected_from,
+              detected_to: filterParams.detected_to,
+              job_order_number: filterParams.job_order_number,
+              line_id: line,
+              number: filterParams.number,
+              product_code: filterParams.product_code,
+              roll_width_max: filterParams.roll_width_max,
+              roll_width_min: filterParams.roll_width_min,
+              station: STATION.ROLL,
+              status: filterParams.status,
+            }}
+          />
           <div className="border rounded">
             <div className="flex items-center justify-between p-4 text-white rounded-t bg-gradient-to-r from-primary to-blue-700">
               <div>

@@ -22,6 +22,7 @@ export interface StationItemType {
   images_count: number;
   defects_count: number;
   roll_data: unknown;
+  roll_id?: string;
 }
 
 export interface StationResponse {

@@ -4,17 +4,13 @@ import ExportBundleButton from "../export-bundle-button";
 import { ROLES } from "@/contants/auth";
 import { useAuth } from "@/hooks/auth/use-auth-v2";
 
-import type { StationItemType } from "@/types/station";
-
-interface ReportSectionProps {
-  roll?: StationItemType[];
-  bundle?: StationItemType[];
-}
+import type { DownloadReportParams } from "@/hooks/item/use-item-report";
 
 export default function ReportSection({
-  roll = [],
-  bundle = [],
-}: ReportSectionProps) {
+  filters,
+}: {
+  filters: DownloadReportParams;
+}) {
   const { user } = useAuth();
 
   if (user?.role != ROLES.VIEWER) {
@@ -30,8 +26,8 @@ export default function ReportSection({
         </span>
       </div>
       <div className="flex gap-2">
-        <ExportRollButton data={roll} />
-        <ExportBundleButton data={bundle} />
+        <ExportRollButton filters={filters} />
+        <ExportBundleButton filters={filters} />
       </div>
     </div>
   );

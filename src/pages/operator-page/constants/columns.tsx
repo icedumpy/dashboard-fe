@@ -15,6 +15,11 @@ export const COLUMNS: ColumnDef<StationItemType>[] = [
     meta: { className: "text-center" },
   },
   {
+    accessorKey: "roll_id",
+    header: "Roll ID",
+    meta: { className: "text-center" },
+  },
+  {
     accessorKey: "roll_number",
     header: "Roll Number",
     meta: { className: "text-center" },
