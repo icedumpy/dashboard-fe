@@ -8,6 +8,7 @@ export const REFRESH_TOKEN_ENDPOINT = "/auth/refresh";
 // Item
 export const ITEM_ENDPOINT = "/item";
 export const ITEM_SUMMARY_ENDPOINT = "/item/summary";
+export const ITEM_REPORT_ENDPOINT = "/item/report";
 
 // Production Line
 export const PRODUCTION_LINE_ENDPOINT = "/production_line";

@@ -3,6 +3,7 @@ import { useState } from "react";
 import { FilterIcon } from "lucide-react";
 import { FormProvider, useForm } from "react-hook-form";
 import { useQueryState } from "nuqs";
+import { isEmpty } from "radash";
 
 import Filters from "./components/filters";
 import DataTable from "@/components/data-table";
@@ -10,6 +11,7 @@ import StatisticRoll from "./components/statistic-roll";
 import StatisticBundle from "./components/statistic-bundle";
 import { Layout } from "@/components/Layout";
 import { Button } from "@/components/ui/button";
+import ReportSection from "@/components/report-section";
 import {
   Select,
   SelectContent,
@@ -38,7 +40,9 @@ export default function OperatorPage() {
   const [bundlePage, setBundlePage] = useQueryState("bundlePage", {
     defaultValue: "1",
   });
-  const [line, setLine] = useQueryState("line");
+  const [line, setLine] = useQueryState("line", {
+    defaultValue: "3",
+  });
 
   const form = useForm({
     resolver: zodResolver(filtersSchema),
@@ -69,7 +73,7 @@ export default function OperatorPage() {
           <div className="flex items-center gap-2">
             <p>Production Line:</p>
             <Select
-              value={String(line || user?.line.code)}
+              value={String(line || user?.line?.code)}
               onValueChange={setLine}
               disabled={disabledLine}
             >
@@ -92,15 +96,29 @@ export default function OperatorPage() {
             </Button>
           </div>
           {toggleFilter && <Filters />}
+          <ReportSection
+            filters={{
+              detected_from: filterParams.detected_from,
+              detected_to: filterParams.detected_to,
+              job_order_number: filterParams.job_order_number,
+              line_id: line,
+              number: filterParams.number,
+              product_code: filterParams.product_code,
+              roll_width_max: filterParams.roll_width_max,
+              roll_width_min: filterParams.roll_width_min,
+              station: STATION.ROLL,
+              status: filterParams.status,
+            }}
+          />
           <div className="border rounded">
-            <div className="flex justify-between p-4 text-white rounded-t bg-gradient-to-r from-primary to-blue-700">
+            <div className="flex items-center justify-between p-4 text-white rounded-t bg-gradient-to-r from-primary to-blue-700">
               <div>
-                <h2 className="text-lg font-bold">
-                  Production Line {user?.line?.id}
-                </h2>
-                <p>
-                  กะ: {user?.shift.start_time} - {user?.shift.end_time}
-                </p>
+                <h2 className="text-lg font-bold">Production Line {line}</h2>
+                {!isEmpty(user?.shift) && (
+                  <p>
+                    กะ: {user?.shift?.start_time} - {user?.shift?.end_time}
+                  </p>
+                )}
               </div>
               <div>
                 <p className="text-sm">อัปเดตล่าสุด</p>
