@@ -28,7 +28,7 @@ export default function CheckButton({ id }: CheckButtonProps) {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
+      <DialogTrigger asChild className="overflow-auto">
         <Button
           size="sm"
           className="text-xs rounded h-fit py-0.5"
@@ -37,7 +37,7 @@ export default function CheckButton({ id }: CheckButtonProps) {
           ตรวจสอบ
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-4xl ">
+      <DialogContent className="overflow-auto sm:max-w-4xl">
         <DialogHeader>
           <DialogTitle asChild>
             <div>
@@ -53,11 +53,11 @@ export default function CheckButton({ id }: CheckButtonProps) {
             <blockquote className="font-bold">
               การเปรียบเทียบรูป Defect และรูปหลังการแก้ไข
             </blockquote>
-            <div className="flex gap-2">
-              <div className="w-1/2">
+            <div className="flex flex-col gap-2 md:flex-row">
+              <div className="w-full md:w-1/2">
                 <ImageCarousel images={data?.images?.DETECTED} />
               </div>
-              <div className="w-1/2">
+              <div className="w-full md:w-1/2">
                 <ImageRepair images={data?.images?.FIX} />
               </div>
             </div>

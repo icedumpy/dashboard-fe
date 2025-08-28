@@ -8,7 +8,7 @@ export default function ProductDetail({ data }: { data?: StationItemType }) {
   return (
     <>
       <blockquote className="prose">รายละเอียดการผลิต</blockquote>
-      <div className="grid w-full grid-cols-3 gap-2 p-4 border rounded">
+      <div className="grid w-full grid-cols-1 gap-2 p-4 border rounded md:grid-cols-2 lg:grid-cols-3">
         {[
           {
             label: "Production Line:",
