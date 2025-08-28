@@ -14,7 +14,7 @@ export default function StatisticRoll({
           "min-w-[120px] p-2 border rounded text-center flex-1 bg-gray-50"
         )}
       >
-        <p className="text-xl font-bold">{data?.total}</p>
+        <p className="text-xl font-bold">{data?.total ?? 0}</p>
         <span className="text-xs">จำนวน Roll ทั้งหมดในกะนี้</span>
       </div>
       <div
@@ -23,7 +23,7 @@ export default function StatisticRoll({
           "bg-orange-50 border-orange-200 text-orange-800"
         )}
       >
-        <p className="text-xl font-bold">{data?.defects}</p>
+        <p className="text-xl font-bold">{data?.defects ?? 0}</p>
         <span className="text-xs">จำนวน Defect ทั้งหมดในกะนี้</span>
       </div>
       <div
@@ -32,7 +32,7 @@ export default function StatisticRoll({
           "bg-red-50 border-red-200 text-red-800"
         )}
       >
-        <p className="text-xl font-bold">{data?.scrap}</p>
+        <p className="text-xl font-bold">{data?.scrap ?? 0}</p>
         <span className="text-xs">จำนวน Scrap ทั้งหมดในกะนี้</span>
       </div>
       <div
@@ -41,7 +41,7 @@ export default function StatisticRoll({
           "bg-orange-100 border-orange-300 text-orange-700"
         )}
       >
-        <p className="text-xl font-bold">{data?.pending_defect}</p>
+        <p className="text-xl font-bold">{data?.pending_defect ?? 0}</p>
         <span className="text-xs">จำนวน Defect ที่รอการตรวจสอบ</span>
       </div>
       <div
@@ -50,7 +50,7 @@ export default function StatisticRoll({
           "bg-red-100 border-red-300 text-red-700"
         )}
       >
-        <p className="text-xl font-bold">{data?.pending_scrap}</p>
+        <p className="text-xl font-bold">{data?.pending_scrap ?? 0}</p>
         <span className="text-xs">จำนวน Scrap ที่รอการตรวจสอบ</span>
       </div>
     </div>
