@@ -6,6 +6,10 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import ProductDetail from "./production-details";
 import ImageDefect from "./image-defect";
+import ImageRepair from "./image-repair";
+import FileUpload from "@/components/ui/file-upload";
+import ConfirmDetail from "./confirm-detail";
+import ConfirmEditChecklist from "./confirm-edit-check-list";
 import {
   Dialog,
   DialogClose,
@@ -15,8 +19,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import ImageRepair from "./image-repair";
-import FileUpload from "@/components/ui/file-upload";
 
 import { useItemDetailAPI } from "@/hooks/item/use-item-detail";
 import { STATION_STATUS } from "@/contants/station";
@@ -46,9 +48,12 @@ export default function CheckButton({ id, status }: CheckButtonProps) {
   const imageUpload = useImageUpload();
   const itemFixRequest = useItemFixRequest();
 
-  const isEditable =
-    status === STATION_STATUS.NORMAL || status === STATION_STATUS.QC_PASSED;
+  const isEditable = ![
+    STATION_STATUS.NORMAL,
+    STATION_STATUS.QC_PASSED,
+  ].includes(status);
   const isCrossLine = Number(user?.line.id) !== Number(line);
+  const canEdit = isEditable && !isCrossLine;
 
   const toggleOpen = useCallback(() => {
     setOpen(!open);
@@ -66,22 +71,23 @@ export default function CheckButton({ id, status }: CheckButtonProps) {
       },
       {
         onSuccess() {
-          toast("แก้ไขสำเร็จ");
+          toast.success("แก้ไขสำเร็จ");
           queryClient.invalidateQueries({
             queryKey: [ITEM_ENDPOINT],
             exact: false,
           });
+          imageUpload.reset();
 
           setOpen(false);
         },
         onError(error) {
-          toast("แก้ไขไม่สำเร็จ", {
-            description: error.message,
+          toast.error("แก้ไขไม่สำเร็จ", {
+            description: JSON.stringify(error),
           });
         },
       }
     );
-  }, [id, imageUpload.data?.data, itemFixRequest, queryClient]);
+  }, [id, imageUpload, itemFixRequest, queryClient]);
 
   return (
     <>
@@ -129,9 +135,7 @@ export default function CheckButton({ id, status }: CheckButtonProps) {
             </div>
           </div>
           <DialogFooter>
-            {(isEditable || !isCrossLine) && (
-              <Button onClick={() => setMode("EDIT")}>แก้ไข</Button>
-            )}
+            {canEdit && <Button onClick={() => setMode("EDIT")}>แก้ไข</Button>}
             <DialogClose asChild>
               <Button variant="outline">ปิด</Button>
             </DialogClose>
@@ -146,25 +150,8 @@ export default function CheckButton({ id, status }: CheckButtonProps) {
             <DialogTitle>ยืนยันการแก้ใข</DialogTitle>
           </DialogHeader>
           <div className="space-y-3 text-base">
-            <div className="p-3 space-y-2 border rounded">
-              <p>ยืนยันการแก้ไขสำหรับ</p>
-              <p className="text-sm">
-                Product Code: {data?.data?.product_code}
-              </p>
-              <p>Roll Number: {data?.data?.roll_number}</p>
-              <p>Job Order Number: {data?.data?.job_order_number}</p>
-              <p>Station: {data?.data?.station}</p>
-              <p>
-                สถานะ: {data?.data?.status_code} ({data?.data?.ai_note})
-              </p>
-            </div>
-            <div className="p-3 space-y-2 border rounded">
-              <p>การยืนยันการแก้ไขข้อบกพร่องนี้ คุณยืนยันว่าได้:</p>
-              <ul className="list-disc list-inside">
-                <li>ตรวจสอบรายละเอียด Defect แล้ว</li>
-                <li>ดำเนินการแก้ไขแล้ว</li>
-              </ul>
-            </div>
+            <ConfirmDetail data={data?.data} />
+            <ConfirmEditChecklist />
             <div className="p-3 space-y-2 border rounded">
               <p>อัปโหลดรูปหลังการแก้ไข (จำเป็น) *</p>
               <FileUpload
@@ -178,7 +165,7 @@ export default function CheckButton({ id, status }: CheckButtonProps) {
 
                   imageUpload.mutate(payload, {
                     onError(error) {
-                      toast("อัพโหลดรูปภาพล้มเหลว", {
+                      toast.error("อัพโหลดรูปภาพล้มเหลว", {
                         description: error.message,
                       });
                     },
@@ -191,7 +178,11 @@ export default function CheckButton({ id, status }: CheckButtonProps) {
             <DialogClose>
               <Button variant="outline">ยกเลิก</Button>
             </DialogClose>
-            <Button onClick={onConfirmEdit} disabled={itemFixRequest.isPending}>
+            <Button
+              className="bg-amber-600 hover:bg-amber-600/90"
+              onClick={onConfirmEdit}
+              disabled={itemFixRequest.isPending || imageUpload.isPending}
+            >
               ยืนยันการแก้ไข
             </Button>
           </DialogFooter>

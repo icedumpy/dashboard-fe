@@ -1,8 +1,9 @@
 import dayjs from "dayjs";
 import { ColumnDef } from "@tanstack/react-table";
 
-import CheckButton from "../components/check-button";
 import StatusBadge from "@/components/status-badge";
+import CheckButton from "../components/check-button";
+import ConfirmButton from "../components/confirm-button";
 
 import { DATE_TIME_FORMAT } from "@/contants/format";
 
@@ -53,13 +54,16 @@ export const COLUMNS: ColumnDef<StationItemType>[] = [
   {
     accessorKey: "action",
     header: "Action",
-    cell: ({ row }) => (
-      <div>
-        <CheckButton
-          status={row.original?.status_code as StationItemType["status_code"]}
-          id={row.original.id}
-        />
-      </div>
-    ),
+    cell: ({ row }) => {
+      const id = row.original.id;
+      const status = row.original
+        ?.status_code as StationItemType["status_code"];
+      return (
+        <div className="flex items-center gap-2">
+          <CheckButton status={status} id={id} />
+          <ConfirmButton status={status} id={id} />
+        </div>
+      );
+    },
   },
 ];
