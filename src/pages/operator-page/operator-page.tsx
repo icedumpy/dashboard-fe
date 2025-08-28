@@ -32,7 +32,12 @@ import { useProductionLineOptions } from "@/hooks/option/use-production-line-opt
 export default function OperatorPage() {
   const { user } = useAuth();
   const [toggleFilter, setToggleFilter] = useState(false);
-  const [rollPage, setRollPage] = useState(1);
+  const [rollPage, setRollPage] = useQueryState("rollPage", {
+    defaultValue: "1",
+  });
+  const [bundlePage, setBundlePage] = useQueryState("bundlePage", {
+    defaultValue: "1",
+  });
   const [line, setLine] = useQueryState("line");
 
   const form = useForm({
@@ -46,11 +51,12 @@ export default function OperatorPage() {
   const { data: summary } = useItemSummaryAPI();
   const { data: roll } = useItemAPI({
     ...filterParams,
-    page: rollPage,
+    page: +rollPage,
     station: STATION.ROLL,
   });
   const { data: bundle } = useItemAPI({
     ...filterParams,
+    page: +bundlePage,
     station: STATION.BUNDLE,
   });
 
@@ -111,7 +117,7 @@ export default function OperatorPage() {
                   pagination={{
                     ...roll?.pagination,
                     onPageChange(page) {
-                      setRollPage(page);
+                      setRollPage(String(page));
                     },
                   }}
                 />
@@ -125,7 +131,7 @@ export default function OperatorPage() {
                   pagination={{
                     ...bundle?.pagination,
                     onPageChange(page) {
-                      console.log("page:", page);
+                      setBundlePage(String(page));
                     },
                   }}
                 />
