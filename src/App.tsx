@@ -4,7 +4,7 @@ import LoginPage from "@/pages/login-page";
 import OperatorPage from "@/pages/operator-page";
 import ProtectedRoute from "@/components/protected-route";
 import AuthGuard from "@/components/auth-guard";
-import { QCDashboard } from "./components/QCDashboard";
+import QCPage from "@/pages/qc-page";
 import { ManagerDashboard } from "./components/ManagerDashboard";
 import { OperatorDashboard } from "./components/OperatorDashboard";
 
@@ -23,7 +23,7 @@ function App() {
         return <OperatorPage />; //V2
       case ROLES.QC:
       case ROLES.INSPECTOR:
-        return <QCDashboard />; // V1
+        return <QCPage />; // V2
       case ROLES.SUPERADMIN:
         return <ManagerDashboard />; // V1
       default:

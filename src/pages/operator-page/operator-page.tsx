@@ -29,6 +29,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { filtersSchema } from "./schema";
 import { useItemSummaryAPI } from "@/hooks/item/use-sumary";
 import { useProductionLineOptions } from "@/hooks/option/use-production-line-option";
+import { ROLES } from "@/contants/auth";
 
 export default function OperatorPage() {
   const { user } = useAuth();
@@ -65,7 +66,7 @@ export default function OperatorPage() {
     station: STATION.BUNDLE,
   });
 
-  const disabledLine = ["3A"].includes(String(user?.line?.name));
+  const disabledLine = [ROLES.OPERATOR as string].includes(user?.role ?? "");
 
   return (
     <FormProvider {...form}>

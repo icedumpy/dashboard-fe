@@ -18,3 +18,6 @@ export const PRODUCTION_LINE_ENDPOINT = "/production_line";
 // Upload
 export const IMAGE_PATH_ENDPOINT = "/image/{image_path}";
 export const IMAGE_UPLOAD_ENDPOINT = "/image/upload";
+
+// Defect
+export const DEFECT_TYPE_ENDPOINT = "/defect_type";

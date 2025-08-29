@@ -16,6 +16,7 @@ export const Layout: React.FC<LayoutProps> = ({ children, title }) => {
       case ROLES.OPERATOR:
         return "bg-green-100 text-green-800";
       case ROLES.QC:
+      case ROLES.INSPECTOR:
         return "bg-blue-100 text-blue-800";
       case ROLES.SUPERADMIN:
         return "bg-purple-100 text-purple-800";
