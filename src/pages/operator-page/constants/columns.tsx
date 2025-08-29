@@ -61,6 +61,8 @@ export const COLUMNS: ColumnDef<StationItemType>[] = [
       const status = row.original
         ?.status_code as StationItemType["status_code"];
       const is_pending_review = row.original?.is_pending_review;
+
+      const isClassifyScrap = status === STATION_STATUS.RECHECK;
       return (
         <div className="flex items-center gap-2">
           {id && (
@@ -71,9 +73,7 @@ export const COLUMNS: ColumnDef<StationItemType>[] = [
             />
           )}
           <ConfirmButton status={status} id={id} />
-          {status === STATION_STATUS.RECHECK && (
-            <ClassifyScrapButton id={id} status={status} />
-          )}
+          {isClassifyScrap && <ClassifyScrapButton id={id} status={status} />}
         </div>
       );
     },

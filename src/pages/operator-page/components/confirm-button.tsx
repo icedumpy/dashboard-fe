@@ -65,7 +65,13 @@ export default function ConfirmButton({ id, status }: CheckButtonProps) {
     );
   }, [id, imageUpload, itemFixRequest, queryClient]);
 
-  if (![STATION_STATUS.DEFECT, STATION_STATUS.SCRAP].includes(status))
+  if (
+    ![
+      STATION_STATUS.DEFECT,
+      STATION_STATUS.SCRAP,
+      STATION_STATUS.REJECTED,
+    ].includes(status)
+  )
     return null;
 
   return (
