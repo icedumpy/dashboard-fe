@@ -21,7 +21,7 @@ export default function QCPage() {
   const { user } = useAuth();
   const [page, setPage] = useQueryState("page", parseAsInteger.withDefault(1));
   const [line, setLine] = useQueryState("line", {
-    defaultValue: user?.line.id ? String(user.line.id) : "",
+    defaultValue: user?.line?.id ? String(user.line?.id) : "",
   });
   const [defect, setDefect] = useQueryState("defect", {
     defaultValue: "",

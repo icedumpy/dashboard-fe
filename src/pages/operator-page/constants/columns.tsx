@@ -63,11 +63,13 @@ export const COLUMNS: ColumnDef<StationItemType>[] = [
       const is_pending_review = row.original?.is_pending_review;
       return (
         <div className="flex items-center gap-2">
-          <CheckButton
-            status={status}
-            id={id}
-            is_pending_review={is_pending_review}
-          />
+          {id && (
+            <CheckButton
+              status={status}
+              id={id}
+              is_pending_review={is_pending_review}
+            />
+          )}
           <ConfirmButton status={status} id={id} />
           {status === STATION_STATUS.RECHECK && (
             <ClassifyScrapButton id={id} status={status} />
