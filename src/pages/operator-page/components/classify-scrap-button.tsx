@@ -29,10 +29,7 @@ interface ClassifyScrapButtonProps {
   status: StationItemType["status_code"];
 }
 
-export default function ClassifyScrapButton({
-  id,
-  status,
-}: ClassifyScrapButtonProps) {
+export default function ClassifyScrapButton({ id }: ClassifyScrapButtonProps) {
   const [open, setOpen] = useState(false);
   const { data } = useItemDetailAPI(String(id), {
     enabled: open,
@@ -53,7 +50,6 @@ export default function ClassifyScrapButton({
           <Button
             size="sm"
             className="text-xs rounded bg-amber-600 hover:bg-amber-600/90 h-fit py-0.5"
-            onClick={() => console.log("Confirmed", { id, status })}
           >
             จำแนกประเภทของ Scrap
           </Button>

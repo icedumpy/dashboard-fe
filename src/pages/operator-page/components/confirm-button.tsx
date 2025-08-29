@@ -74,7 +74,6 @@ export default function ConfirmButton({ id, status }: CheckButtonProps) {
         <Button
           size="sm"
           className="text-xs rounded bg-amber-600 hover:bg-amber-600/90 h-fit py-0.5"
-          onClick={() => console.log("Confirmed", { id, status })}
         >
           ยืนยันการแก้ไข
         </Button>
