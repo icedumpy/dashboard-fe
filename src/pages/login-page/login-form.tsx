@@ -21,8 +21,8 @@ export default function LoginCard() {
   const { login, isLoginLoading, loginError } = useAuth();
   const form = useForm({
     defaultValues: {
-      username: "",
-      password: "",
+      username: "QATH03A",
+      password: "456Abc###",
     },
     resolver: zodResolver(loginSchema),
   });
