@@ -23,6 +23,7 @@ export interface StationItemType {
   defects_count: number;
   roll_data: unknown;
   roll_id?: string;
+  is_pending_review: boolean;
 }
 
 export interface StationResponse {

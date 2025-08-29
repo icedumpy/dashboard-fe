@@ -1,5 +1,6 @@
 import { toast } from "sonner";
 import { useCallback, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 
 import { Button } from "@/components/ui/button";
 import FileUpload from "@/components/ui/file-upload";
@@ -10,15 +11,19 @@ import {
   DialogClose,
   DialogContent,
   DialogFooter,
+  DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
 
+import { ITEM_ENDPOINT } from "@/contants/api";
 import { STATION_STATUS } from "@/contants/station";
 import { useImageUpload } from "@/hooks/upload/use-image-upload";
 import { useItemDetailAPI } from "@/hooks/item/use-item-detail";
+import { useItemFixRequest } from "@/hooks/item/use-item-fix-request";
 
 import type { CheckButtonProps } from "../types";
+import type { ImageT } from "@/types/image";
 
 export default function ConfirmButton({ id, status }: CheckButtonProps) {
   const [open, setOpen] = useState(false);
@@ -27,12 +32,38 @@ export default function ConfirmButton({ id, status }: CheckButtonProps) {
     staleTime: Infinity,
   });
 
+  const queryClient = useQueryClient();
   const imageUpload = useImageUpload();
+  const itemFixRequest = useItemFixRequest();
 
   const onConfirmEdit = useCallback(() => {
-    // TODO: Implement confirm edit logic
-    console.log("Confirmed", { id, status });
-  }, [id, status]);
+    itemFixRequest.mutate(
+      {
+        item_data: String(id),
+        image_ids:
+          (imageUpload.data?.data as ImageT[]).map((img) => Number(img.id)) ||
+          [],
+        kinds: "Fixed defect using patching method",
+      },
+      {
+        onSuccess() {
+          toast.success("แก้ไขสำเร็จ");
+          queryClient.invalidateQueries({
+            queryKey: [ITEM_ENDPOINT],
+            exact: false,
+          });
+          imageUpload.reset();
+
+          setOpen(false);
+        },
+        onError(error) {
+          toast.error("แก้ไขไม่สำเร็จ", {
+            description: JSON.stringify(error),
+          });
+        },
+      }
+    );
+  }, [id, imageUpload, itemFixRequest, queryClient]);
 
   if (![STATION_STATUS.DEFECT, STATION_STATUS.SCRAP].includes(status))
     return null;
@@ -49,7 +80,9 @@ export default function ConfirmButton({ id, status }: CheckButtonProps) {
         </Button>
       </DialogTrigger>
       <DialogContent>
-        <DialogTitle>ยืนยันการแก้ไข</DialogTitle>
+        <DialogHeader>
+          <DialogTitle>ยืนยันการแก้ไข</DialogTitle>
+        </DialogHeader>
         <div className="space-y-4">
           <ConfirmDetail data={data?.data} />
           <ConfirmEditChecklist />

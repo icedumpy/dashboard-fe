@@ -30,7 +30,11 @@ import { ITEM_ENDPOINT } from "@/contants/api";
 import type { CheckButtonProps } from "../types";
 import type { ImageT } from "@/types/image";
 
-export default function CheckButton({ id, status }: CheckButtonProps) {
+export default function CheckButton({
+  id,
+  status,
+  is_pending_review,
+}: CheckButtonProps) {
   const [open, setOpen] = useState(false);
   const [mode, setMode] = useState<"VIEW" | "EDIT">("VIEW");
   const { user } = useAuth();
@@ -53,7 +57,7 @@ export default function CheckButton({ id, status }: CheckButtonProps) {
     STATION_STATUS.QC_PASSED,
   ].includes(status);
   const isCrossLine = Number(user?.line.id) !== Number(line);
-  const canEdit = isEditable && !isCrossLine;
+  const canEdit = isEditable && !isCrossLine && !is_pending_review;
 
   const toggleOpen = useCallback(() => {
     setOpen(!open);
@@ -99,7 +103,7 @@ export default function CheckButton({ id, status }: CheckButtonProps) {
             className="text-xs rounded h-fit py-0.5"
             onClick={() => setOpen(true)}
           >
-            ตรวจสอบ
+            {is_pending_review ? "รอการตรวจสอบ" : "ตรวจสอบ"}
           </Button>
         </DialogTrigger>
         <DialogContent
