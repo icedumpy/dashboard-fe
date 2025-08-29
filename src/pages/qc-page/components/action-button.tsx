@@ -1,5 +1,5 @@
 import { useQueryClient } from "@tanstack/react-query";
-import { CheckIcon, EyeIcon, XIcon } from "lucide-react";
+import { CheckIcon, XIcon } from "lucide-react";
 import { useCallback } from "react";
 import { toast } from "sonner";
 
@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 
 import { ITEM_ENDPOINT } from "@/contants/api";
 import { useReviewDecisionAPI } from "@/hooks/review/use-review-decision";
+import ViewDetailButton from "./view-detail-button";
 
 export default function ActionButton({ id }: { id: string }) {
   const reviewDecision = useReviewDecisionAPI();
@@ -35,9 +36,7 @@ export default function ActionButton({ id }: { id: string }) {
 
   return (
     <div className="flex gap-2">
-      <Button className="size-8 text-primary" variant="secondary">
-        <EyeIcon />
-      </Button>
+      <ViewDetailButton id={id} />
       <Button
         className="text-green-600 size-8"
         variant="secondary"
