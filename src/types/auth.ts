@@ -6,8 +6,8 @@ export interface UserType {
   display_name: string;
   role: RoleType;
   is_active: boolean;
-  line: LineType;
-  shift: ShiftType;
+  line?: LineType;
+  shift?: ShiftType;
 }
 
 export interface LineType {

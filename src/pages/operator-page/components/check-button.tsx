@@ -39,7 +39,7 @@ export default function CheckButton({
   const [mode, setMode] = useState<"VIEW" | "EDIT">("VIEW");
   const { user } = useAuth();
   const [line] = useQueryState("line", {
-    defaultValue: String(user?.line.id),
+    defaultValue: String(user?.line?.id),
   });
 
   const queryClient = useQueryClient();
@@ -56,7 +56,7 @@ export default function CheckButton({
     STATION_STATUS.NORMAL,
     STATION_STATUS.QC_PASSED,
   ].includes(status);
-  const isCrossLine = Number(user?.line.id) !== Number(line);
+  const isCrossLine = Number(user?.line?.id) !== Number(line);
   const canEdit = isEditable && !isCrossLine && !is_pending_review;
 
   const toggleOpen = useCallback(() => {

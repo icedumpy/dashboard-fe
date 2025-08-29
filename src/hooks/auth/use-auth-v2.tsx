@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 
 import axiosInstance from "@/lib/axios-instance";
@@ -30,6 +30,7 @@ const authApi = {
 
 export function useAuth() {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   // Get current user query
   const { data: user, isLoading } = useQuery({
@@ -45,6 +46,7 @@ export function useAuth() {
     onSuccess: async (data) => {
       setCookie(ACCESS_TOKEN, data.access_token);
       setCookie(REFRESH_TOKEN, data.refresh_token);
+      queryClient.invalidateQueries({ queryKey: [PROFILE_ENDPOINT] });
       navigate("/");
     },
   });
@@ -53,6 +55,7 @@ export function useAuth() {
   const logoutMutation = useMutation({
     mutationFn: authApi.logout,
     onSuccess: () => {
+      queryClient.clear();
       navigate("/login", { replace: true });
     },
   });

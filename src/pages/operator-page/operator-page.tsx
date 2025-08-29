@@ -42,7 +42,9 @@ export default function OperatorPage() {
   });
   const { data: productionLineOptions } = useProductionLineOptions();
   const [line, setLine] = useQueryState("line", {
-    defaultValue: String(user?.line?.id),
+    defaultValue: user?.line?.id
+      ? String(user?.line?.id)
+      : String(productionLineOptions?.[0]?.value),
   });
 
   const form = useForm({
