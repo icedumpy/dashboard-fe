@@ -65,7 +65,7 @@ export default function OperatorPage() {
     station: STATION.BUNDLE,
   });
 
-  const disabledLine = ["3A"].includes(String(user?.line.name));
+  const disabledLine = ["3A"].includes(String(user?.line?.name));
 
   return (
     <FormProvider {...form}>
@@ -74,7 +74,7 @@ export default function OperatorPage() {
           <div className="flex items-center gap-2">
             <p>Production Line:</p>
             <Select
-              value={String(line || user?.line?.code)}
+              value={line}
               onValueChange={setLine}
               disabled={disabledLine}
             >

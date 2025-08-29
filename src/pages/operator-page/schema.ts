@@ -16,3 +16,26 @@ export const filtersSchema = z.object({
   line_id: z.string().optional(),
   page: z.number().optional(),
 });
+
+export const classifyScrapSchema = z
+  .object({
+    type: z.enum(["defect", "scrap"]),
+    images: z
+      .array(
+        z.object({
+          id: z.number(),
+          kind: z.string(),
+          path: z.string(),
+        })
+      )
+      .optional(),
+  })
+  .superRefine((data, ctx) => {
+    if (data.type === "defect" && (!data.images || data.images.length === 0)) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["images"],
+        message: "images is required when type is defect",
+      });
+    }
+  });

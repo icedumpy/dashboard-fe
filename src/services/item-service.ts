@@ -2,6 +2,7 @@ import {
   ITEM_ENDPOINT,
   ITEM_FIX_REQUEST_ENDPOINT,
   ITEM_REPORT_ENDPOINT,
+  ITEM_SCRAP_ENDPOINT,
   ITEM_SUMMARY_ENDPOINT,
 } from "@/contants/api";
 import axiosInstance from "@/lib/axios-instance";
@@ -39,6 +40,12 @@ export const ItemService = {
         image_ids: params.image_ids,
         kinds: params.kinds,
       }
+    );
+    return response.data;
+  },
+  itemScrap: async (item_id: string) => {
+    const response = await axiosInstance.post(
+      ITEM_SCRAP_ENDPOINT.replace("{item_id}", item_id)
     );
     return response.data;
   },

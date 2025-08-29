@@ -1,10 +1,13 @@
 import dayjs from "dayjs";
 import { ColumnDef } from "@tanstack/react-table";
 
-import CheckButton from "../components/check-button";
 import StatusBadge from "@/components/status-badge";
+import CheckButton from "../components/check-button";
+import ConfirmButton from "../components/confirm-button";
+import ClassifyScrapButton from "../components/classify-scrap-button";
 
 import { DATE_TIME_FORMAT } from "@/contants/format";
+import { STATION_STATUS } from "@/contants/station";
 
 import type { StationItemType } from "@/types/station";
 
@@ -53,13 +56,24 @@ export const COLUMNS: ColumnDef<StationItemType>[] = [
   {
     accessorKey: "action",
     header: "Action",
-    cell: ({ row }) => (
-      <div>
-        <CheckButton
-          status={row.original?.status_code as StationItemType["status_code"]}
-          id={row.original.id}
-        />
-      </div>
-    ),
+    cell: ({ row }) => {
+      const id = row.original.id;
+      const status = row.original
+        ?.status_code as StationItemType["status_code"];
+      const is_pending_review = row.original?.is_pending_review;
+      return (
+        <div className="flex items-center gap-2">
+          <CheckButton
+            status={status}
+            id={id}
+            is_pending_review={is_pending_review}
+          />
+          <ConfirmButton status={status} id={id} />
+          {status === STATION_STATUS.RECHECK && (
+            <ClassifyScrapButton id={id} status={status} />
+          )}
+        </div>
+      );
+    },
   },
 ];
