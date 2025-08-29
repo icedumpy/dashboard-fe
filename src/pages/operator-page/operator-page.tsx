@@ -3,7 +3,7 @@ import { useState } from "react";
 import { FilterIcon } from "lucide-react";
 import { FormProvider, useForm } from "react-hook-form";
 import { useQueryState } from "nuqs";
-import { isEmpty } from "radash";
+import { isArray, isEmpty } from "radash";
 
 import Filters from "./components/filters";
 import DataTable from "@/components/data-table";
@@ -44,7 +44,9 @@ export default function OperatorPage() {
   const [line, setLine] = useQueryState("line", {
     defaultValue: user?.line?.id
       ? String(user?.line?.id)
-      : String(productionLineOptions?.[0]?.value),
+      : isArray(productionLineOptions)
+      ? String(productionLineOptions[0].value)
+      : "",
   });
 
   const form = useForm({
