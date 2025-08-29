@@ -1,9 +1,8 @@
 import { ColumnDef } from "@tanstack/react-table";
-import { CheckIcon, EyeIcon, XIcon } from "lucide-react";
 import dayjs from "dayjs";
 
-import { Button } from "@/components/ui/button";
 import StatusBadge from "@/components/status-badge";
+import ActionButton from "../components/action-button";
 
 import { DATE_TIME_FORMAT } from "@/contants/format";
 
@@ -56,18 +55,6 @@ export const COLUMNS: ColumnDef<StationItemType>[] = [
     accessorKey: "id",
     header: "Action",
     meta: { className: "text-center" },
-    cell: () => (
-      <div className="flex gap-2">
-        <Button className="size-8 text-primary" variant="secondary">
-          <EyeIcon />
-        </Button>
-        <Button className="text-green-600 size-8" variant="secondary">
-          <CheckIcon />
-        </Button>
-        <Button className="text-orange-600 size-8" variant="secondary">
-          <XIcon />
-        </Button>
-      </div>
-    ),
+    cell: (info) => <ActionButton id={info.getValue<string>()} />,
   },
 ];

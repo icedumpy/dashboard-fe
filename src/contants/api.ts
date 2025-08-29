@@ -21,3 +21,7 @@ export const IMAGE_UPLOAD_ENDPOINT = "/image/upload";
 
 // Defect
 export const DEFECT_TYPE_ENDPOINT = "/defect_type";
+
+// Review
+export const REVIEW_ENDPOINT = "/review";
+export const REVIEW_DECISION_ENDPOINT = "/review/{review_id}/decision";
