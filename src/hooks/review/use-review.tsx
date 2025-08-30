@@ -1,8 +1,11 @@
+import { useQuery } from "@tanstack/react-query";
+
 import { REVIEW_ENDPOINT } from "@/contants/api";
 import { ReviewService } from "@/services/review-service";
-import { PaginationType } from "@/types/pagination";
-import { ReviewT } from "@/types/review";
-import { useQuery } from "@tanstack/react-query";
+import { sanitizeQueryParams } from "@/utils/sanitize-query-params";
+
+import type { PaginationType } from "@/types/pagination";
+import type { ReviewT } from "@/types/review";
 
 interface ReviewQueryResponse {
   data: ReviewT[];
@@ -12,5 +15,5 @@ interface ReviewQueryResponse {
 export const useReviewAPI = (params: unknown) =>
   useQuery<ReviewQueryResponse>({
     queryKey: [REVIEW_ENDPOINT, params],
-    queryFn: () => ReviewService.getReviews(params),
+    queryFn: () => ReviewService.getReviews(sanitizeQueryParams(params)),
   });
