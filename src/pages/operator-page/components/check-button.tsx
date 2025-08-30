@@ -34,6 +34,7 @@ export default function CheckButton({
   id,
   status,
   is_pending_review,
+  item_data,
 }: CheckButtonProps) {
   const [open, setOpen] = useState(false);
   const [mode, setMode] = useState<'VIEW' | 'EDIT'>('VIEW');
@@ -112,7 +113,9 @@ export default function CheckButton({
           <DialogHeader>
             <DialogTitle asChild>
               <div>
-                <h3 className="text-xl font-bold">ตรวจสอบ Defect</h3>
+                <h3 className="text-xl font-bold">
+                  ตรวจสอบ {item_data?.station.toUpperCase()}
+                </h3>
                 <p className="text-sm font-normal text-muted-foreground">
                   {data?.data?.product_code} - Role {data?.data.roll_number}
                 </p>
@@ -121,16 +124,22 @@ export default function CheckButton({
           </DialogHeader>
           <div className="space-y-4">
             <div className="space-y-2">
-              <blockquote className="font-bold">
-                การเปรียบเทียบรูป Defect และรูปหลังการแก้ไข
-              </blockquote>
+              <blockquote className="font-bold">รูปปที่ระบบตรวจพบ</blockquote>
               <div className="flex flex-col gap-2 md:flex-row">
-                <div className="w-full md:w-1/2">
+                <div
+                  className={
+                    item_data?.status_code != 'NORMAL'
+                      ? 'w-full md:w-1/2'
+                      : 'w-full md'
+                  }
+                >
                   <ImageDefect images={data?.images?.DETECTED} />
                 </div>
-                <div className="w-full md:w-1/2">
-                  <ImageRepair images={data?.images?.FIX} />
-                </div>
+                {item_data?.status_code != 'NORMAL' && (
+                  <div className="w-full md:w-1/2">
+                    <ImageRepair images={data?.images?.FIX} />
+                  </div>
+                )}
               </div>
             </div>
             <div className="space-y-2">

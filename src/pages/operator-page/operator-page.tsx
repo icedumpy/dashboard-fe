@@ -1,57 +1,57 @@
-import dayjs from "dayjs";
-import { useState } from "react";
-import { FilterIcon } from "lucide-react";
-import { FormProvider, useForm } from "react-hook-form";
-import { useQueryState } from "nuqs";
-import { isArray, isEmpty } from "radash";
+import dayjs from 'dayjs';
+import { FilterIcon } from 'lucide-react';
+import { useQueryState } from 'nuqs';
+import { isArray, isEmpty } from 'radash';
+import { useState } from 'react';
+import { FormProvider, useForm } from 'react-hook-form';
 
-import Filters from "./components/filters";
-import DataTable from "@/components/data-table";
-import StatisticRoll from "./components/statistic-roll";
-import StatisticBundle from "./components/statistic-bundle";
-import { Layout } from "@/components/Layout";
-import { Button } from "@/components/ui/button";
-import ReportSection from "@/components/report-section";
+import DataTable from '@/components/data-table';
+import { Layout } from '@/components/Layout';
+import ReportSection from '@/components/report-section';
+import { Button } from '@/components/ui/button';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from '@/components/ui/select';
+import Filters from './components/filters';
+import StatisticBundle from './components/statistic-bundle';
+import StatisticRoll from './components/statistic-roll';
 
-import { useAuth } from "@/hooks/auth/use-auth-v2";
-import { useItemAPI } from "@/hooks/item/use-item";
-import { STATION } from "@/contants/station";
-import { COLUMNS } from "./constants/columns";
-import { DATE_TIME_FORMAT } from "@/contants/format";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { filtersSchema } from "./schema";
-import { useItemSummaryAPI } from "@/hooks/item/use-sumary";
-import { useProductionLineOptions } from "@/hooks/option/use-production-line-option";
+import { DATE_TIME_FORMAT } from '@/contants/format';
+import { STATION } from '@/contants/station';
+import { useAuth } from '@/hooks/auth/use-auth-v2';
+import { useItemAPI } from '@/hooks/item/use-item';
+import { useItemSummaryAPI } from '@/hooks/item/use-sumary';
+import { useProductionLineOptions } from '@/hooks/option/use-production-line-option';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { COLUMNS } from './constants/columns';
+import { filtersSchema } from './schema';
 // import { ROLES } from "@/contants/auth";
 
 export default function OperatorPage() {
   const { user } = useAuth();
   const [toggleFilter, setToggleFilter] = useState(false);
-  const [rollPage, setRollPage] = useQueryState("rollPage", {
-    defaultValue: "1",
+  const [rollPage, setRollPage] = useQueryState('rollPage', {
+    defaultValue: '1',
   });
-  const [bundlePage, setBundlePage] = useQueryState("bundlePage", {
-    defaultValue: "1",
+  const [bundlePage, setBundlePage] = useQueryState('bundlePage', {
+    defaultValue: '1',
   });
   const { data: productionLineOptions } = useProductionLineOptions();
-  const [line, setLine] = useQueryState("line", {
+  const [line, setLine] = useQueryState('line', {
     defaultValue: user?.line?.id
       ? String(user?.line?.id)
       : isArray(productionLineOptions)
       ? String(productionLineOptions[0].value)
-      : "",
+      : '',
   });
 
   const form = useForm({
     resolver: zodResolver(filtersSchema),
-    mode: "onChange",
+    mode: 'onChange',
   });
 
   const filterParams = form.watch();
@@ -77,25 +77,29 @@ export default function OperatorPage() {
       <Layout title="Operator Dashboard">
         <div className="space-y-4 ">
           <div className="flex items-center gap-2">
-            <p>Production Line:</p>
-            <Select
-              value={line}
-              onValueChange={setLine}
-              // disabled={disabledLine}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Select a line" />
-              </SelectTrigger>
-              <SelectContent>
-                {productionLineOptions?.map((line) => (
-                  <SelectItem key={line.value} value={line.value}>
-                    {line.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            {user?.role == 'VIEWER' && (
+              <>
+                <p>Production Line:</p>
+                <Select
+                  value={line}
+                  onValueChange={setLine}
+                  // disabled={disabledLine}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a line" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {productionLineOptions?.map(line => (
+                      <SelectItem key={line.value} value={line.value}>
+                        {line.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </>
+            )}
             <Button
-              variant={toggleFilter ? "default" : "outline"}
+              variant={toggleFilter ? 'default' : 'outline'}
               onClick={() => setToggleFilter(!toggleFilter)}
             >
               <FilterIcon /> ตัวกรอง

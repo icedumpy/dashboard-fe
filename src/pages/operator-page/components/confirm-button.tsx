@@ -85,7 +85,7 @@ export default function ConfirmButton({
           className="text-xs rounded bg-amber-600 hover:bg-amber-600/90 h-fit py-0.5"
           disabled={is_pending_review}
         >
-          {is_pending_review ? 'รอการตรวจสอบ' : 'ยืนยันการแก้ไข'}
+          {is_pending_review ? 'รอการตรวจสอบ' : 'ส่งเรื่องแก้ไข'}
         </Button>
       </DialogTrigger>
       <DialogContent>

@@ -54,7 +54,7 @@ export const COLUMNS: ColumnDef<StationItemType>[] = [
       const normalBadge = <StatusBadge status={row.status_code} />;
       const rejectedBadge = [
         <StatusBadge status={row.status_code} note="ยังคงเห็น Defect อยู่" />,
-        ...defectsBadges,
+        ...row.defects.map(def => <StatusBadge status={'DEFECT'} note={def} />),
       ];
 
       return row.status_code == 'DEFECT'
@@ -78,12 +78,17 @@ export const COLUMNS: ColumnDef<StationItemType>[] = [
         <div className="flex items-center gap-2">
           {id && (
             <CheckButton
-              status={status}
               id={id}
+              status={status}
               is_pending_review={is_pending_review}
+              item_data={row.original}
             />
           )}
-          {!is_pending_review && <ConfirmButton status={status} id={id} />}
+          <ConfirmButton
+            status={status}
+            id={id}
+            is_pending_review={is_pending_review}
+          />
           {isClassifyScrap && <ClassifyScrapButton id={id} status={status} />}
         </div>
       );
