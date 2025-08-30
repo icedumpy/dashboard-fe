@@ -1,0 +1,72 @@
+import { ColumnDef } from "@tanstack/react-table";
+import dayjs from "dayjs";
+
+import StatusBadge from "@/components/status-badge";
+import ViewDetailButton from "../components/view-detail-button";
+
+import { DATE_TIME_FORMAT } from "@/contants/format";
+
+import type { ReviewT } from "@/types/review";
+
+export const COLUMNS: ColumnDef<ReviewT>[] = [
+  {
+    accessorKey: "line_id",
+    header: "Production Line",
+    meta: { className: "text-center" },
+    cell: (info) => info.row.original.item.line_id,
+  },
+  {
+    accessorKey: "station",
+    header: "Station",
+    meta: { className: "text-center" },
+    cell: (info) => info.row.original.item.station,
+  },
+  {
+    accessorKey: "product_code",
+    header: "Product Code",
+    meta: { className: "text-center" },
+    cell: (info) => info.row.original.item.product_code,
+  },
+  {
+    accessorKey: "number",
+    header: "Roll/Bundle Number",
+    meta: { className: "text-center" },
+    cell: (info) => info.row.original.item.number,
+  },
+  {
+    accessorKey: "job_order_number",
+    header: "Job Order Number",
+    meta: { className: "text-center" },
+    cell: (info) => info.row.original.item.job_order_number,
+  },
+  {
+    accessorKey: "status",
+    header: "Status",
+    meta: { className: "text-start" },
+    cell: (info) => <StatusBadge status={info.row.original.item.status.code} />,
+  },
+  {
+    accessorKey: "decision_note",
+    header: "Decision",
+    meta: { className: "text-center" },
+  },
+  {
+    accessorKey: "reviewed_by",
+    header: "Reviewed By",
+    meta: { className: "text-center" },
+  },
+  {
+    accessorKey: "reviewed_at",
+    header: "Reviewed At",
+    meta: { className: "text-center" },
+    cell: (info) =>
+      info.getValue<string>() &&
+      dayjs(info.getValue<string>()).format(DATE_TIME_FORMAT),
+  },
+  {
+    accessorKey: "id",
+    header: "Action",
+    meta: { className: "text-center" },
+    cell: (info) => <ViewDetailButton id={info.getValue<string>()} />,
+  },
+];

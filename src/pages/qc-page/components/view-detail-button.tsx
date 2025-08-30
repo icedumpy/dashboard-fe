@@ -30,7 +30,10 @@ export default function ViewDetailButton({ id }: { id: string }) {
           <EyeIcon />
         </Button>
       </DialogTrigger>
-      <DialogContent className="overflow-auto sm:max-w-4xl">
+      <DialogContent
+        aria-describedby={undefined}
+        className="overflow-auto sm:max-w-4xl"
+      >
         <DialogHeader>
           <DialogTitle asChild>
             <div>
