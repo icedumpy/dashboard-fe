@@ -1,5 +1,5 @@
-import { STATION } from "@/contants/station";
-import { PaginationType } from "./pagination";
+import { STATION } from '@/contants/station';
+import { PaginationType } from './pagination';
 
 export type StationType = (typeof STATION)[keyof typeof STATION];
 
@@ -13,17 +13,23 @@ export interface StationItemType {
   job_order_number?: string;
   roll_width?: number;
   detected_at: string;
-  status_code: string;
+  status_code:
+    | 'DEFECT'
+    | 'REJECTED'
+    | 'NORMAL'
+    | 'RECHECK'
+    | 'QC_PASS'
+    | 'SCRAP';
   ai_note: string;
   scrap_requires_qc: boolean;
   scrap_confirmed_by?: number;
   scrap_confirmed_at?: string;
   current_review_id: string;
-  images_count: number;
-  defects_count: number;
   roll_data: unknown;
   roll_id?: string;
   is_pending_review: boolean;
+  images: number;
+  defects: string[];
 }
 
 export interface StationResponse {

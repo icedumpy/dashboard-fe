@@ -1,11 +1,8 @@
-import { toast } from "sonner";
-import { useCallback, useState } from "react";
-import { useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from '@tanstack/react-query';
+import { useCallback, useState } from 'react';
+import { toast } from 'sonner';
 
-import { Button } from "@/components/ui/button";
-import FileUpload from "@/components/ui/file-upload";
-import ConfirmDetail from "./confirm-detail";
-import ConfirmEditChecklist from "./confirm-edit-check-list";
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogClose,
@@ -14,18 +11,25 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
+} from '@/components/ui/dialog';
+import FileUpload from '@/components/ui/file-upload';
+import ConfirmDetail from './confirm-detail';
+import ConfirmEditChecklist from './confirm-edit-check-list';
 
-import { ITEM_ENDPOINT } from "@/contants/api";
-import { STATION_STATUS } from "@/contants/station";
-import { useImageUpload } from "@/hooks/upload/use-image-upload";
-import { useItemDetailAPI } from "@/hooks/item/use-item-detail";
-import { useItemFixRequest } from "@/hooks/item/use-item-fix-request";
+import { ITEM_ENDPOINT } from '@/contants/api';
+import { STATION_STATUS } from '@/contants/station';
+import { useItemDetailAPI } from '@/hooks/item/use-item-detail';
+import { useItemFixRequest } from '@/hooks/item/use-item-fix-request';
+import { useImageUpload } from '@/hooks/upload/use-image-upload';
 
-import type { CheckButtonProps } from "../types";
-import type { ImageT } from "@/types/image";
+import type { ImageT } from '@/types/image';
+import type { CheckButtonProps } from '../types';
 
-export default function ConfirmButton({ id, status }: CheckButtonProps) {
+export default function ConfirmButton({
+  id,
+  status,
+  is_pending_review,
+}: CheckButtonProps) {
   const [open, setOpen] = useState(false);
   const { data } = useItemDetailAPI(String(id), {
     enabled: open,
@@ -41,13 +45,12 @@ export default function ConfirmButton({ id, status }: CheckButtonProps) {
       {
         item_data: String(id),
         image_ids:
-          (imageUpload.data?.data as ImageT[]).map((img) => Number(img.id)) ||
-          [],
-        kinds: "Fixed defect using patching method",
+          (imageUpload.data?.data as ImageT[]).map(img => Number(img.id)) || [],
+        kinds: 'Fixed defect using patching method',
       },
       {
         onSuccess() {
-          toast.success("แก้ไขสำเร็จ");
+          toast.success('แก้ไขสำเร็จ');
           queryClient.invalidateQueries({
             queryKey: [ITEM_ENDPOINT],
             exact: false,
@@ -57,11 +60,11 @@ export default function ConfirmButton({ id, status }: CheckButtonProps) {
           setOpen(false);
         },
         onError(error) {
-          toast.error("แก้ไขไม่สำเร็จ", {
+          toast.error('แก้ไขไม่สำเร็จ', {
             description: JSON.stringify(error),
           });
         },
-      }
+      },
     );
   }, [id, imageUpload, itemFixRequest, queryClient]);
 
@@ -80,8 +83,9 @@ export default function ConfirmButton({ id, status }: CheckButtonProps) {
         <Button
           size="sm"
           className="text-xs rounded bg-amber-600 hover:bg-amber-600/90 h-fit py-0.5"
+          disabled={is_pending_review}
         >
-          ยืนยันการแก้ไข
+          {is_pending_review ? 'รอการตรวจสอบ' : 'ยืนยันการแก้ไข'}
         </Button>
       </DialogTrigger>
       <DialogContent>
@@ -95,7 +99,7 @@ export default function ConfirmButton({ id, status }: CheckButtonProps) {
             <p>อัปโหลดรูปหลังการแก้ไข (จำเป็น) *</p>
             <FileUpload
               value={imageUpload.data?.data[0]?.path}
-              onChange={(e) => {
+              onChange={e => {
                 const files = e.target.files;
                 const payload = {
                   files: files as unknown as FileList,
@@ -104,7 +108,7 @@ export default function ConfirmButton({ id, status }: CheckButtonProps) {
 
                 imageUpload.mutate(payload, {
                   onError(error) {
-                    toast.error("อัพโหลดรูปภาพล้มเหลว", {
+                    toast.error('อัพโหลดรูปภาพล้มเหลว', {
                       description: error.message,
                     });
                   },
