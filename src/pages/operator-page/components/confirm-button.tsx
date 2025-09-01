@@ -91,27 +91,29 @@ export default function ConfirmButton({ id, status }: CheckButtonProps) {
         <div className="space-y-4">
           <ConfirmDetail data={data?.data} />
           <ConfirmEditChecklist />
-          <div className="p-4 space-y-2 border rounded-md">
-            <p>อัปโหลดรูปหลังการแก้ไข (จำเป็น) *</p>
-            <FileUpload
-              value={imageUpload.data?.data[0]?.path}
-              onChange={(e) => {
-                const files = e.target.files;
-                const payload = {
-                  files: files as unknown as FileList,
-                  item_id: String(id),
-                };
+          {data?.data.status_code != STATION_STATUS.SCRAP && (
+            <div className="p-4 space-y-2 border rounded-md">
+              <p>อัปโหลดรูปหลังการแก้ไข (จำเป็น) *</p>
+              <FileUpload
+                value={imageUpload.data?.data[0]?.path}
+                onChange={(e) => {
+                  const files = e.target.files;
+                  const payload = {
+                    files: files as unknown as FileList,
+                    item_id: String(id),
+                  };
 
-                imageUpload.mutate(payload, {
-                  onError(error) {
-                    toast.error("อัพโหลดรูปภาพล้มเหลว", {
-                      description: error.message,
-                    });
-                  },
-                });
-              }}
-            />
-          </div>
+                  imageUpload.mutate(payload, {
+                    onError(error) {
+                      toast.error("อัพโหลดรูปภาพล้มเหลว", {
+                        description: error.message,
+                      });
+                    },
+                  });
+                }}
+              />
+            </div>
+          )}
         </div>
         <DialogFooter>
           <DialogClose>
