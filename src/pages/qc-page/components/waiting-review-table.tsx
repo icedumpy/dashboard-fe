@@ -10,10 +10,10 @@ import {
 } from "@/components/ui/select";
 
 import { useAuth } from "@/hooks/auth/use-auth-v2";
-import { useItemAPI } from "@/hooks/item/use-item";
 import { useDefectOptionAPI } from "@/hooks/option/use-defect-option";
 import { useProductionLineOptions } from "@/hooks/option/use-production-line-option";
 import { COLUMNS } from "../constants/columns";
+import { useReviewAPI } from "@/hooks/review/use-review";
 
 export default function WaitingReviewTable() {
   const { user } = useAuth();
@@ -27,10 +27,12 @@ export default function WaitingReviewTable() {
 
   const { data: lineOptions } = useProductionLineOptions();
   const { data: defectOptions } = useDefectOptionAPI();
-  const { data } = useItemAPI({
+  const { data } = useReviewAPI({
     page: page,
     line_id: line,
   });
+
+  console.log(data);
 
   return (
     <div className="p-4 space-y-3 bg-white border rounded-md">
