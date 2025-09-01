@@ -1,12 +1,11 @@
 import { RotateCcwIcon } from "lucide-react";
 import { useFormContext } from "react-hook-form";
-import dayjs from "dayjs";
 
+import z from "zod";
 import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -15,26 +14,12 @@ import { Input } from "@/components/ui/input";
 import { MultiSelect } from "@/components/ui/multi-select";
 
 import { useStationStatusOptions } from "@/hooks/option/use-station-status-option";
+import { filtersSchema } from "../schema";
 
 export default function Filters() {
-  const DEFAULT_VALUES = {
-    product_code: undefined,
-    roll_number: undefined,
-    job_order_number: undefined,
-    number: undefined,
-    status: [],
-    time_range: undefined,
-    station: undefined,
-    detected_to: dayjs().toISOString(),
-    detected_from: dayjs().toISOString(),
-    line_id: undefined,
-  };
-
-  const form = useFormContext();
-
+  const form = useFormContext<z.infer<typeof filtersSchema>>();
   const values = form.watch();
   const filledCount = Object.values(values).filter((v) => v && v !== "").length;
-
   const statusOptions = useStationStatusOptions();
 
   return (
@@ -47,7 +32,7 @@ export default function Filters() {
             size="sm"
             variant="outline"
             disabled={filledCount === 0}
-            onClick={() => form.reset(DEFAULT_VALUES)}
+            onClick={() => form.reset()}
           >
             <RotateCcwIcon />
             ล้างตัวกรอง
@@ -55,10 +40,7 @@ export default function Filters() {
         </div>
       </div>
       <Form {...form}>
-        <form
-          className="grid items-baseline grid-cols-1 gap-4 md:grid-cols-4"
-          onSubmit={form.handleSubmit((data) => console.log(data))}
-        >
+        <form className="grid items-baseline grid-cols-1 gap-4 md:grid-cols-4">
           <FormField
             control={form.control}
             name="product_code"
@@ -66,7 +48,7 @@ export default function Filters() {
               <FormItem>
                 <FormLabel>Product Code</FormLabel>
                 <FormControl>
-                  <Input {...field} />
+                  <Input {...field} placeholder="ค้นหา Product Code" />
                 </FormControl>
               </FormItem>
             )}
@@ -78,7 +60,7 @@ export default function Filters() {
               <FormItem>
                 <FormLabel>Roll/Bundle Number</FormLabel>
                 <FormControl>
-                  <Input {...field} />
+                  <Input {...field} placeholder="ค้นหา Roll/Bundle Number" />
                 </FormControl>
               </FormItem>
             )}
@@ -90,42 +72,66 @@ export default function Filters() {
               <FormItem>
                 <FormLabel>Job Order Number</FormLabel>
                 <FormControl>
-                  <Input {...field} />
+                  <Input {...field} placeholder="ค้นหา Job Order Number" />
                 </FormControl>
               </FormItem>
             )}
           />
-          <FormField
-            control={form.control}
-            name="roll_width_min"
-            render={() => (
-              <FormItem>
-                <FormLabel>Roll Width</FormLabel>
-                <Input
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    const [min, max] = value.split("-").map((v) => v.trim());
-
-                    // Simple validation: check if min is a valid number
-                    if (min && isNaN(Number(min))) {
-                      form.setError("roll_width_min", {
-                        type: "manual",
-                        message: "Min width ต้องเป็นตัวเลข",
-                      });
-                    } else {
-                      form.clearErrors("roll_width_min");
-                      form.setValue("roll_width_min", +min);
-                      form.setValue("roll_width_max", +max);
-                      form.trigger("roll_width_min");
-                    }
-                  }}
-                />
-                <FormDescription className="text-xs">
-                  ใส่ค่าเดียว หรือช่วง (100-200)
-                </FormDescription>
-              </FormItem>
-            )}
-          />
+          <div className="flex flex-col gap-2">
+            <div className="flex items-end gap-2">
+              <FormField
+                control={form.control}
+                name="roll_width_min"
+                render={({ field }) => (
+                  <FormItem className="flex-1">
+                    <FormLabel>Roll Width (Min)</FormLabel>
+                    <Input
+                      {...field}
+                      placeholder="Min"
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        if (value && isNaN(Number(value))) {
+                          form.setError("roll_width_min", {
+                            type: "manual",
+                            message: "Min ต้องเป็นตัวเลข",
+                          });
+                        } else {
+                          form.clearErrors("roll_width_min");
+                          field.onChange(value);
+                        }
+                      }}
+                    />
+                  </FormItem>
+                )}
+              />
+              <span>-</span>
+              <FormField
+                control={form.control}
+                name="roll_width_max"
+                render={({ field }) => (
+                  <FormItem className="flex-1">
+                    <FormLabel>Roll Width (Max)</FormLabel>
+                    <Input
+                      {...field}
+                      placeholder="Max"
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        if (value && isNaN(Number(value))) {
+                          form.setError("roll_width_max", {
+                            type: "manual",
+                            message: "Max ต้องเป็นตัวเลข",
+                          });
+                        } else {
+                          form.clearErrors("roll_width_max");
+                          field.onChange(value);
+                        }
+                      }}
+                    />
+                  </FormItem>
+                )}
+              />
+            </div>
+          </div>
           <FormField
             control={form.control}
             name="status"
@@ -136,25 +142,13 @@ export default function Filters() {
                   <MultiSelect
                     placeholder="เลือกสถานะ"
                     options={statusOptions}
-                    value={field.value as unknown as string[]}
+                    value={field.value as string[]}
                     onChange={field.onChange}
                   />
                 </FormControl>
               </FormItem>
             )}
           />
-          {/* <FormField
-            control={form.control}
-            name="detected_to"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>ช่วงเวลา</FormLabel>
-                <FormControl>
-                  <Input {...field} />
-                </FormControl>
-              </FormItem>
-            )}
-          /> */}
           <FormField
             control={form.control}
             name="detected_from"
@@ -162,7 +156,12 @@ export default function Filters() {
               <FormItem>
                 <FormLabel>วันที่เริ่มต้น</FormLabel>
                 <FormControl>
-                  <Input className="w-full" type="date" {...field} />
+                  <Input
+                    className="w-full"
+                    type="date"
+                    {...field}
+                    placeholder="ค้นหา วันที่เริ่มต้น"
+                  />
                 </FormControl>
               </FormItem>
             )}
@@ -174,7 +173,11 @@ export default function Filters() {
               <FormItem>
                 <FormLabel>วันที่สิ้นสุด</FormLabel>
                 <FormControl>
-                  <Input type="date" {...field} />
+                  <Input
+                    type="date"
+                    {...field}
+                    placeholder="ค้นหา วันที่สิ้นสุด"
+                  />
                 </FormControl>
               </FormItem>
             )}

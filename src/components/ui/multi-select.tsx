@@ -18,6 +18,7 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 
 import type { OptionT } from "@/types/option";
+import { isEmpty } from "radash";
 
 interface MultiSelectProps {
   options: OptionT[];
@@ -89,7 +90,7 @@ export function MultiSelect({
           disabled={disabled}
         >
           <div className="flex items-center w-full min-w-0 gap-1 overflow-hidden flex-nowrap">
-            {value?.length === 0 && (
+            {isEmpty(value) && (
               <span className="text-muted-foreground">{placeholder}</span>
             )}
             {value?.length > 0 && (
