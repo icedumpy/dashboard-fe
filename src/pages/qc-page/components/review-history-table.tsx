@@ -14,6 +14,7 @@ import {
 
 import { useReviewAPI } from "@/hooks/review/use-review";
 import { REVIEW_STATE_OPTION } from "@/contants/review";
+import { ALL_OPTION } from "@/contants/option";
 
 export default function ReviewHistoryTable() {
   const { user } = useAuth();
@@ -33,7 +34,7 @@ export default function ReviewHistoryTable() {
   const { data } = useReviewAPI({
     page: page,
     line_id: line,
-    defect_type_id: defect,
+    defect_type_id: defect === "all" ? undefined : defect,
     review_state: state === "all" ? undefined : state,
   });
   return (
@@ -70,7 +71,7 @@ export default function ReviewHistoryTable() {
               <SelectValue className="w-2xs" placeholder="เลือกประเภทความผิด" />
             </SelectTrigger>
             <SelectContent>
-              {defectOptions?.map((option) => (
+              {[...ALL_OPTION, ...(defectOptions ?? [])]?.map((option) => (
                 <SelectItem key={option.value} value={option.value}>
                   {option.label}
                 </SelectItem>
