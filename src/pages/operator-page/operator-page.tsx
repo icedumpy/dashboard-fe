@@ -53,8 +53,20 @@ export default function OperatorPage() {
   });
 
   const form = useForm({
+    defaultValues: {
+      product_code: "",
+      roll_width_max: "",
+      roll_width_min: "",
+      job_order_number: "",
+      number: "",
+      status: undefined,
+      time_range: "",
+      station: "",
+      detected_to: "",
+      detected_from: "",
+      line_id: "",
+    },
     resolver: zodResolver(filtersSchema),
-    mode: "onChange",
   });
 
   const filterParams = form.watch();
@@ -119,8 +131,8 @@ export default function OperatorPage() {
               line_id: line,
               number: filterParams.number,
               product_code: filterParams.product_code,
-              roll_width_max: filterParams.roll_width_max,
-              roll_width_min: filterParams.roll_width_min,
+              roll_width_max: Number(filterParams.roll_width_max),
+              roll_width_min: Number(filterParams.roll_width_min),
               station: STATION.ROLL,
               status: filterParams.status,
             }}
