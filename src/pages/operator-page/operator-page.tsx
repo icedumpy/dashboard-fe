@@ -4,6 +4,7 @@ import { useQueryState } from "nuqs";
 import { isArray, isEmpty } from "radash";
 import { useMemo, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 import DataTable from "@/components/data-table";
 import { Layout } from "@/components/Layout";
@@ -26,7 +27,6 @@ import { useAuth } from "@/hooks/auth/use-auth-v2";
 import { useItemAPI } from "@/hooks/item/use-item";
 import { useItemSummaryAPI } from "@/hooks/item/use-sumary";
 import { useProductionLineOptions } from "@/hooks/option/use-production-line-option";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { COLUMNS } from "./constants/columns";
 import { filtersSchema } from "./schema";
 import { useLineAPI } from "@/hooks/line/use-line";
@@ -96,7 +96,7 @@ export default function OperatorPage() {
   return (
     <FormProvider {...form}>
       <Layout title="Operator Dashboard">
-        <div className="space-y-4 ">
+        <div className="space-y-4">
           <div className="flex items-center gap-2">
             <p>Production Line:</p>
             <Select
@@ -104,7 +104,7 @@ export default function OperatorPage() {
               onValueChange={setLine}
               // disabled={disabledLine}
             >
-              <SelectTrigger>
+              <SelectTrigger className="bg-white">
                 <SelectValue placeholder="Select a line" />
               </SelectTrigger>
               <SelectContent>
@@ -137,7 +137,7 @@ export default function OperatorPage() {
               status: filterParams.status,
             }}
           />
-          <div className="border rounded">
+          <div className="bg-white border rounded">
             <div className="flex items-center justify-between p-4 text-white rounded-t bg-gradient-to-r from-primary to-blue-700">
               <div>
                 <h2 className="text-lg font-bold">{getLineName}</h2>

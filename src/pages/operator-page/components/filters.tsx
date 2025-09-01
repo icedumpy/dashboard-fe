@@ -1,7 +1,7 @@
 import { RotateCcwIcon } from "lucide-react";
 import { useFormContext } from "react-hook-form";
-
 import z from "zod";
+
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -23,7 +23,7 @@ export default function Filters() {
   const statusOptions = useStationStatusOptions();
 
   return (
-    <div className="p-4 py-6 space-y-3 border rounded">
+    <div className="p-4 py-6 space-y-3 bg-white border rounded">
       <div className="flex items-center justify-between">
         <p>ตัวกรอง</p>
         <div className="flex items-center gap-2">
