@@ -1,0 +1,5 @@
+export const REVIEW_DECISION = {
+  APPROVED: "APPROVED",
+  REJECTED: "REJECTED",
+  PENDING: "PENDING",
+} as const;
