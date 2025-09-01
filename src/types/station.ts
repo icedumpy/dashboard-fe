@@ -21,6 +21,7 @@ export interface StationItemType {
   current_review_id: string;
   images_count: number;
   defects_count: number;
+  defects?: string[];
   roll_data: unknown;
   roll_id?: string;
   is_pending_review: boolean;

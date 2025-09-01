@@ -49,7 +49,7 @@ export const COLUMNS: ColumnDef<StationItemType>[] = [
     cell: (info) => (
       <StatusBadge
         status={info.getValue<string>()}
-        note={info.row.original.ai_note}
+        note={info.row.original.defects?.join(", ")}
       />
     ),
   },
