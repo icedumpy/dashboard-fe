@@ -14,6 +14,7 @@ import { useDefectOptionAPI } from "@/hooks/option/use-defect-option";
 import { useProductionLineOptions } from "@/hooks/option/use-production-line-option";
 import { COLUMNS } from "../constants/columns";
 import { useReviewAPI } from "@/hooks/review/use-review";
+import { REVIEW_DECISION } from "@/contants/review";
 
 export default function WaitingReviewTable() {
   const { user } = useAuth();
@@ -30,9 +31,8 @@ export default function WaitingReviewTable() {
   const { data } = useReviewAPI({
     page: page,
     line_id: line,
+    status: REVIEW_DECISION.PENDING,
   });
-
-  console.log(data);
 
   return (
     <div className="p-4 space-y-3 bg-white border rounded-md">

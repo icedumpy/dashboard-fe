@@ -2,7 +2,7 @@ import dayjs from "dayjs";
 import { FilterIcon } from "lucide-react";
 import { useQueryState } from "nuqs";
 import { isArray, isEmpty } from "radash";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 
 import DataTable from "@/components/data-table";
@@ -29,6 +29,7 @@ import { useProductionLineOptions } from "@/hooks/option/use-production-line-opt
 import { zodResolver } from "@hookform/resolvers/zod";
 import { COLUMNS } from "./constants/columns";
 import { filtersSchema } from "./schema";
+import { useLineAPI } from "@/hooks/line/use-line";
 // import { ROLES } from "@/contants/auth";
 
 export default function OperatorPage() {
@@ -40,6 +41,8 @@ export default function OperatorPage() {
   const [bundlePage, setBundlePage] = useQueryState("bundlePage", {
     defaultValue: "1",
   });
+
+  const { data: lines } = useLineAPI();
   const { data: productionLineOptions } = useProductionLineOptions();
   const [line, setLine] = useQueryState("line", {
     defaultValue: user?.line?.id
@@ -69,6 +72,12 @@ export default function OperatorPage() {
     line_id: line,
     station: STATION.BUNDLE,
   });
+
+  const getLineName = useMemo(() => {
+    return lines?.data?.find(
+      (l) => String(l.id) === (line || productionLineOptions?.[0]?.value)
+    )?.name;
+  }, [line, lines?.data, productionLineOptions]);
 
   // const disabledLine = [ROLES.OPERATOR as string].includes(user?.role ?? "");
 
@@ -119,7 +128,7 @@ export default function OperatorPage() {
           <div className="border rounded">
             <div className="flex items-center justify-between p-4 text-white rounded-t bg-gradient-to-r from-primary to-blue-700">
               <div>
-                <h2 className="text-lg font-bold">Production Line {line}</h2>
+                <h2 className="text-lg font-bold">{getLineName}</h2>
                 {!isEmpty(user?.shift) && (
                   <p>
                     กะ: {user?.shift?.start_time} - {user?.shift?.end_time}
