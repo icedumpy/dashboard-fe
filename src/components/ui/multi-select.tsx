@@ -77,6 +77,7 @@ export function MultiSelect({
     <Popover>
       <PopoverTrigger className="overflow-hidden">
         <Button
+          type="button"
           variant="outline"
           role="combobox"
           aria-expanded={open}
@@ -84,7 +85,7 @@ export function MultiSelect({
             "w-full min-w-0 justify-between text-left font-normal",
             className
           )}
-          onClick={() => setOpen(!open)}
+          onClick={() => setOpen((prev) => !prev)}
           disabled={disabled}
         >
           <div className="flex items-center w-full min-w-0 gap-1 overflow-hidden flex-nowrap">
@@ -116,7 +117,7 @@ export function MultiSelect({
           <CommandList>
             <CommandEmpty>No results found.</CommandEmpty>
             <CommandGroup>
-              {selectables.map((option) => {
+              {selectables?.map((option) => {
                 const IconComponent = option.icon;
                 return (
                   <CommandItem
