@@ -8,7 +8,7 @@ import RejectButton from "./reject-button";
 
 import { ITEM_ENDPOINT } from "@/contants/api";
 import { useReviewDecisionAPI } from "@/hooks/review/use-review-decision";
-import { REVIEW_DECISION } from "@/contants/review";
+import { REVIEW_STATE } from "@/contants/review";
 import useDismissDialog from "@/hooks/use-dismiss-dialog";
 
 export default function ActionButton({ id }: { id: string }) {
@@ -44,12 +44,12 @@ export default function ActionButton({ id }: { id: string }) {
       <ApproveButton
         id={id}
         isLoading={reviewDecision.isPending}
-        onSubmit={(value) => handleReview(REVIEW_DECISION.APPROVED, value.note)}
+        onSubmit={(value) => handleReview(REVIEW_STATE.APPROVED, value.note)}
       />
       <RejectButton
         id={id}
         isLoading={reviewDecision.isPending}
-        onSubmit={(value) => handleReview(REVIEW_DECISION.REJECTED, value.note)}
+        onSubmit={(value) => handleReview(REVIEW_STATE.REJECTED, value.note)}
       />
     </div>
   );

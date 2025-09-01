@@ -1,11 +1,10 @@
+import { useMemo } from "react";
 import { CheckIcon, LineChartIcon, XIcon } from "lucide-react";
 import { parseAsInteger, useQueryState } from "nuqs";
 
 import { useAuth } from "@/hooks/auth/use-auth-v2";
 import { useReviewAPI } from "@/hooks/review/use-review";
-import { REVIEW_DECISION } from "@/contants/review";
-import { useMemo } from "react";
-import { STATION_STATUS } from "@/contants/station";
+import { REVIEW_STATE } from "@/contants/review";
 
 export default function StatisticCard() {
   const { user } = useAuth();
@@ -20,35 +19,28 @@ export default function StatisticCard() {
   const { data } = useReviewAPI({
     page: page,
     line_id: line,
-    status: REVIEW_DECISION.PENDING,
+    status: REVIEW_STATE.PENDING,
     defect_type_id: defect,
   });
 
-  const getWeaitingCount = useMemo(() => {
+  const getPendingCount = useMemo(() => {
     return (
-      data?.data.filter((item) =>
-        [
-          STATION_STATUS.DEFECT,
-          STATION_STATUS.SCRAP,
-          STATION_STATUS.RECHECK,
-        ].includes(item.item.status.code)
-      ).length || "-"
+      data?.data.filter((item) => item.state === REVIEW_STATE.PENDING).length ||
+      "-"
     );
   }, [data]);
 
   const getApprovedCount = useMemo(() => {
     return (
-      data?.data.filter(
-        (item) => item.item.status.code === STATION_STATUS.QC_PASSED
-      ).length || "-"
+      data?.data.filter((item) => item.state === REVIEW_STATE.APPROVED)
+        .length || "-"
     );
   }, [data]);
 
   const getRejectedCount = useMemo(() => {
     return (
-      data?.data.filter(
-        (item) => item.item.status.code === STATION_STATUS.REJECTED
-      ).length || "-"
+      data?.data.filter((item) => item.state === REVIEW_STATE.REJECTED)
+        .length || "-"
     );
   }, [data]);
 
@@ -58,7 +50,7 @@ export default function StatisticCard() {
         <div className="flex items-center justify-between">
           <div>
             <p>รอการตรวจสอบ</p>
-            <p className="text-3xl font-bold">{getWeaitingCount}</p>
+            <p className="text-3xl font-bold">{getPendingCount}</p>
           </div>
           <div>
             <div className="flex items-center justify-center rounded size-12 bg-primary/10 text-primary">

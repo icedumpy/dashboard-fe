@@ -1,4 +1,4 @@
-export const REVIEW_DECISION = {
+export const REVIEW_STATE = {
   APPROVED: "APPROVED",
   REJECTED: "REJECTED",
   PENDING: "PENDING",
