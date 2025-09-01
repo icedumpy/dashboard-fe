@@ -21,12 +21,15 @@ import { STATION_STATUS } from "@/contants/station";
 import { useImageUpload } from "@/hooks/upload/use-image-upload";
 import { useItemDetailAPI } from "@/hooks/item/use-item-detail";
 import { useItemFixRequest } from "@/hooks/item/use-item-fix-request";
+import { useAuth } from "@/hooks/auth/use-auth-v2";
+import { ROLES } from "@/contants/auth";
 
 import type { CheckButtonProps } from "../types";
 import type { ImageT } from "@/types/image";
 
 export default function ConfirmButton({ id, status }: CheckButtonProps) {
   const [open, setOpen] = useState(false);
+  const { user } = useAuth();
   const { data } = useItemDetailAPI(String(id), {
     enabled: open,
     staleTime: Infinity,
@@ -65,13 +68,13 @@ export default function ConfirmButton({ id, status }: CheckButtonProps) {
     );
   }, [id, imageUpload, itemFixRequest, queryClient]);
 
-  if (
-    ![
-      STATION_STATUS.DEFECT,
-      STATION_STATUS.SCRAP,
-      STATION_STATUS.REJECTED,
-    ].includes(status)
-  )
+  const ALLOWED_STATUSES = [
+    STATION_STATUS.DEFECT,
+    STATION_STATUS.SCRAP,
+    STATION_STATUS.REJECTED,
+  ];
+
+  if (!ALLOWED_STATUSES.includes(status) || user?.role === ROLES.VIEWER)
     return null;
 
   return (
