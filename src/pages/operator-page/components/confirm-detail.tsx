@@ -14,8 +14,7 @@ export default function ConfirmDetail({
       <p>Job Order Number: {data?.job_order_number}</p>
       <p>Station: {data?.station}</p>
       <p>
-        สถานะ:{" "}
-        <StatusBadge status={String(data?.status_code)} note={data?.ai_note} />
+        สถานะ: <StatusBadge status={String(data?.status_code)} />
       </p>
     </div>
   );

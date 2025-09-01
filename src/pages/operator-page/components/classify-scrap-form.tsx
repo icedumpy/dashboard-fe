@@ -51,7 +51,7 @@ export default function ClassifyScrapForm({ id }: { id: number }) {
         <FormField
           name="images"
           render={({ field }) => (
-            <FormItem className="w-full">
+            <FormItem className="flex flex-col gap-1">
               <FormControl>
                 <FileUpload
                   value={field.value?.[0]?.path}

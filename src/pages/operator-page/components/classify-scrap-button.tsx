@@ -21,6 +21,8 @@ import { useItemDetailAPI } from "@/hooks/item/use-item-detail";
 import { useItemScrapAPI } from "@/hooks/item/use-item-scrap";
 import { ITEM_ENDPOINT } from "@/contants/api";
 import { classifyScrapSchema } from "../schema";
+import { useAuth } from "@/hooks/auth/use-auth-v2";
+import { ROLES } from "@/contants/auth";
 
 import type { StationItemType } from "@/types/station";
 
@@ -31,6 +33,7 @@ interface ClassifyScrapButtonProps {
 
 export default function ClassifyScrapButton({ id }: ClassifyScrapButtonProps) {
   const [open, setOpen] = useState(false);
+  const { user } = useAuth();
   const { data } = useItemDetailAPI(String(id), {
     enabled: open,
     staleTime: Infinity,
@@ -42,6 +45,8 @@ export default function ClassifyScrapButton({ id }: ClassifyScrapButtonProps) {
   });
 
   const itemScrap = useItemScrapAPI();
+
+  if (user?.role === ROLES.VIEWER) return null;
 
   return (
     <FormProvider {...form}>

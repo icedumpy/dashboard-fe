@@ -1,8 +1,8 @@
-import { useQueryClient } from '@tanstack/react-query';
-import { useCallback, useState } from 'react';
-import { toast } from 'sonner';
+import { useQueryClient } from "@tanstack/react-query";
+import { useCallback, useState } from "react";
+import { toast } from "sonner";
 
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogClose,
@@ -11,19 +11,21 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog';
-import FileUpload from '@/components/ui/file-upload';
-import ConfirmDetail from './confirm-detail';
-import ConfirmEditChecklist from './confirm-edit-check-list';
+} from "@/components/ui/dialog";
+import FileUpload from "@/components/ui/file-upload";
+import ConfirmDetail from "./confirm-detail";
+import ConfirmEditChecklist from "./confirm-edit-check-list";
 
-import { ITEM_ENDPOINT } from '@/contants/api';
-import { STATION_STATUS } from '@/contants/station';
-import { useItemDetailAPI } from '@/hooks/item/use-item-detail';
-import { useItemFixRequest } from '@/hooks/item/use-item-fix-request';
-import { useImageUpload } from '@/hooks/upload/use-image-upload';
+import { ITEM_ENDPOINT } from "@/contants/api";
+import { STATION_STATUS } from "@/contants/station";
+import { useImageUpload } from "@/hooks/upload/use-image-upload";
+import { useItemDetailAPI } from "@/hooks/item/use-item-detail";
+import { useItemFixRequest } from "@/hooks/item/use-item-fix-request";
+import { useAuth } from "@/hooks/auth/use-auth-v2";
+import { ROLES } from "@/contants/auth";
 
-import type { ImageT } from '@/types/image';
-import type { CheckButtonProps } from '../types';
+import type { ImageT } from "@/types/image";
+import type { CheckButtonProps } from "../types";
 
 export default function ConfirmButton({
   id,
@@ -31,6 +33,7 @@ export default function ConfirmButton({
   is_pending_review,
 }: CheckButtonProps) {
   const [open, setOpen] = useState(false);
+  const { user } = useAuth();
   const { data } = useItemDetailAPI(String(id), {
     enabled: open,
     staleTime: Infinity,
@@ -45,12 +48,13 @@ export default function ConfirmButton({
       {
         item_data: String(id),
         image_ids:
-          (imageUpload.data?.data as ImageT[]).map(img => Number(img.id)) || [],
-        kinds: 'Fixed defect using patching method',
+          (imageUpload.data?.data as ImageT[]).map((img) => Number(img.id)) ||
+          [],
+        kinds: "Fixed defect using patching method",
       },
       {
         onSuccess() {
-          toast.success('แก้ไขสำเร็จ');
+          toast.success("แก้ไขสำเร็จ");
           queryClient.invalidateQueries({
             queryKey: [ITEM_ENDPOINT],
             exact: false,
@@ -60,21 +64,21 @@ export default function ConfirmButton({
           setOpen(false);
         },
         onError(error) {
-          toast.error('แก้ไขไม่สำเร็จ', {
+          toast.error("แก้ไขไม่สำเร็จ", {
             description: JSON.stringify(error),
           });
         },
-      },
+      }
     );
   }, [id, imageUpload, itemFixRequest, queryClient]);
 
-  if (
-    ![
-      STATION_STATUS.DEFECT,
-      STATION_STATUS.SCRAP,
-      STATION_STATUS.REJECTED,
-    ].includes(status)
-  )
+  const ALLOWED_STATUSES = [
+    STATION_STATUS.DEFECT,
+    STATION_STATUS.SCRAP,
+    STATION_STATUS.REJECTED,
+  ];
+
+  if (!ALLOWED_STATUSES.includes(status) || user?.role === ROLES.VIEWER)
     return null;
 
   return (
@@ -85,7 +89,7 @@ export default function ConfirmButton({
           className="text-xs rounded bg-amber-600 hover:bg-amber-600/90 h-fit py-0.5"
           disabled={is_pending_review}
         >
-          {is_pending_review ? 'รอการตรวจสอบ' : 'ส่งเรื่องแก้ไข'}
+          {is_pending_review ? "รอการตรวจสอบ" : "ส่งเรื่องแก้ไข"}
         </Button>
       </DialogTrigger>
       <DialogContent>
@@ -95,27 +99,29 @@ export default function ConfirmButton({
         <div className="space-y-4">
           <ConfirmDetail data={data?.data} />
           <ConfirmEditChecklist />
-          <div className="p-4 space-y-2 border rounded-md">
-            <p>อัปโหลดรูปหลังการแก้ไข (จำเป็น) *</p>
-            <FileUpload
-              value={imageUpload.data?.data[0]?.path}
-              onChange={e => {
-                const files = e.target.files;
-                const payload = {
-                  files: files as unknown as FileList,
-                  item_id: String(id),
-                };
+          {data?.data.status_code != STATION_STATUS.SCRAP && (
+            <div className="p-4 space-y-2 border rounded-md">
+              <p>อัปโหลดรูปหลังการแก้ไข (จำเป็น) *</p>
+              <FileUpload
+                value={imageUpload.data?.data[0]?.path}
+                onChange={(e) => {
+                  const files = e.target.files;
+                  const payload = {
+                    files: files as unknown as FileList,
+                    item_id: String(id),
+                  };
 
-                imageUpload.mutate(payload, {
-                  onError(error) {
-                    toast.error('อัพโหลดรูปภาพล้มเหลว', {
-                      description: error.message,
-                    });
-                  },
-                });
-              }}
-            />
-          </div>
+                  imageUpload.mutate(payload, {
+                    onError(error) {
+                      toast.error("อัพโหลดรูปภาพล้มเหลว", {
+                        description: error.message,
+                      });
+                    },
+                  });
+                }}
+              />
+            </div>
+          )}
         </div>
         <DialogFooter>
           <DialogClose>

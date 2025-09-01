@@ -1,10 +1,19 @@
 import dayjs from "dayjs";
+import { useCallback } from "react";
 
 import { DATE_TIME_FORMAT } from "@/contants/format";
+import { useLineAPI } from "@/hooks/line/use-line";
 
 import type { StationItemType } from "@/types/station";
 
 export default function ProductDetail({ data }: { data?: StationItemType }) {
+  const { data: line } = useLineAPI();
+
+  const getLineCode = useCallback(() => {
+    return line?.data?.find((item) => Number(item.id) === Number(data?.line_id))
+      ?.code;
+  }, [line, data?.line_id]);
+
   return (
     <>
       <blockquote className="prose">รายละเอียดการผลิต</blockquote>
@@ -12,7 +21,7 @@ export default function ProductDetail({ data }: { data?: StationItemType }) {
         {[
           {
             label: "Production Line:",
-            value: data?.line_id,
+            value: getLineCode(),
           },
           {
             label: "Job Order Number:",
