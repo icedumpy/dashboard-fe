@@ -1,10 +1,10 @@
-import dayjs from "dayjs";
 import { ColumnDef } from "@tanstack/react-table";
+import dayjs from "dayjs";
 
 import StatusBadge from "@/components/status-badge";
 import CheckButton from "../components/check-button";
-import ConfirmButton from "../components/confirm-button";
 import ClassifyScrapButton from "../components/classify-scrap-button";
+import ConfirmButton from "../components/confirm-button";
 
 import { DATE_TIME_FORMAT } from "@/contants/format";
 import { STATION_STATUS } from "@/contants/station";
@@ -67,12 +67,17 @@ export const COLUMNS: ColumnDef<StationItemType>[] = [
         <div className="flex items-center gap-2">
           {id && (
             <CheckButton
-              status={status}
               id={id}
+              status={status}
               is_pending_review={is_pending_review}
+              item_data={row.original}
             />
           )}
-          <ConfirmButton status={status} id={id} />
+          <ConfirmButton
+            status={status}
+            id={id}
+            is_pending_review={is_pending_review}
+          />
           {isClassifyScrap && <ClassifyScrapButton id={id} status={status} />}
         </div>
       );

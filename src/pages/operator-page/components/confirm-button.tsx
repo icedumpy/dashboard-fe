@@ -1,11 +1,8 @@
-import { toast } from "sonner";
-import { useCallback, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
+import { useCallback, useState } from "react";
+import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
-import FileUpload from "@/components/ui/file-upload";
-import ConfirmDetail from "./confirm-detail";
-import ConfirmEditChecklist from "./confirm-edit-check-list";
 import {
   Dialog,
   DialogClose,
@@ -15,6 +12,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import FileUpload from "@/components/ui/file-upload";
+import ConfirmDetail from "./confirm-detail";
+import ConfirmEditChecklist from "./confirm-edit-check-list";
 
 import { ITEM_ENDPOINT } from "@/contants/api";
 import { STATION_STATUS } from "@/contants/station";
@@ -24,10 +24,14 @@ import { useItemFixRequest } from "@/hooks/item/use-item-fix-request";
 import { useAuth } from "@/hooks/auth/use-auth-v2";
 import { ROLES } from "@/contants/auth";
 
-import type { CheckButtonProps } from "../types";
 import type { ImageT } from "@/types/image";
+import type { CheckButtonProps } from "../types";
 
-export default function ConfirmButton({ id, status }: CheckButtonProps) {
+export default function ConfirmButton({
+  id,
+  status,
+  is_pending_review,
+}: CheckButtonProps) {
   const [open, setOpen] = useState(false);
   const { user } = useAuth();
   const { data } = useItemDetailAPI(String(id), {
@@ -83,8 +87,9 @@ export default function ConfirmButton({ id, status }: CheckButtonProps) {
         <Button
           size="sm"
           className="text-xs rounded bg-amber-600 hover:bg-amber-600/90 h-fit py-0.5"
+          disabled={is_pending_review}
         >
-          ยืนยันการแก้ไข
+          {is_pending_review ? "รอการตรวจสอบ" : "ส่งเรื่องแก้ไข"}
         </Button>
       </DialogTrigger>
       <DialogContent>
