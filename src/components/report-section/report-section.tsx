@@ -18,7 +18,7 @@ export default function ReportSection({
   }
 
   return (
-    <div className="flex items-center justify-between p-4 border rounded">
+    <div className="flex items-center justify-between p-4 bg-white border rounded">
       <div>
         <p className="text-lg font-bold">สร้างรายงานตามสถานี</p>
         <span className="text-sm text-muted-foreground">
