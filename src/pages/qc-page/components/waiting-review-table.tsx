@@ -30,7 +30,6 @@ export default function WaitingReviewTable() {
   const { data } = useItemAPI({
     page: page,
     line_id: line,
-    status: [defect],
   });
 
   return (
