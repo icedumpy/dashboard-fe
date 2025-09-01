@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/select";
 
 import { useReviewAPI } from "@/hooks/review/use-review";
+import { REVIEW_STATE_OPTION } from "@/contants/review";
 
 export default function ReviewHistoryTable() {
   const { user } = useAuth();
@@ -23,6 +24,9 @@ export default function ReviewHistoryTable() {
   const [defect, setDefect] = useQueryState("defect", {
     defaultValue: "",
   });
+  const [state, setState] = useQueryState("state", {
+    defaultValue: "all",
+  });
 
   const { data: lineOptions } = useProductionLineOptions();
   const { data: defectOptions } = useDefectOptionAPI();
@@ -30,12 +34,25 @@ export default function ReviewHistoryTable() {
     page: page,
     line_id: line,
     defect_type_id: defect,
+    review_state: state === "all" ? undefined : state,
   });
   return (
     <div className="p-4 space-y-3 bg-white border rounded-md">
       <div className="flex justify-between gap-2">
         <p>รายการที่รอตรวจสอบ</p>
         <div className="flex justify-between gap-2">
+          <Select value={state} onValueChange={setState}>
+            <SelectTrigger className="w-28">
+              <SelectValue placeholder="เลือกการตรวจสอบ" />
+            </SelectTrigger>
+            <SelectContent>
+              {REVIEW_STATE_OPTION?.map((option) => (
+                <SelectItem key={option.value} value={option.value}>
+                  {option.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
           <Select value={line} onValueChange={setLine}>
             <SelectTrigger>
               <SelectValue placeholder="เลือกสถานะ" />
