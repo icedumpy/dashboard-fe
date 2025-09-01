@@ -79,7 +79,7 @@ export default function OperatorPage() {
           <div className="flex items-center gap-2">
             <p>Production Line:</p>
             <Select
-              value={line}
+              value={line || productionLineOptions?.[0]?.value}
               onValueChange={setLine}
               // disabled={disabledLine}
             >
