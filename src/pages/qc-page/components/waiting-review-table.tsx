@@ -32,6 +32,7 @@ export default function WaitingReviewTable() {
     page: page,
     line_id: line,
     status: REVIEW_DECISION.PENDING,
+    defect_type_id: defect,
   });
 
   return (
