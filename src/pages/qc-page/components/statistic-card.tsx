@@ -24,24 +24,18 @@ export default function StatisticCard() {
   });
 
   const getPendingCount = useMemo(() => {
-    return (
-      data?.data.filter((item) => item.state === REVIEW_STATE.PENDING).length ||
-      "-"
-    );
+    return data?.data.filter((item) => item.state === REVIEW_STATE.PENDING)
+      .length;
   }, [data]);
 
   const getApprovedCount = useMemo(() => {
-    return (
-      data?.data.filter((item) => item.state === REVIEW_STATE.APPROVED)
-        .length || "-"
-    );
+    return data?.data.filter((item) => item.state === REVIEW_STATE.APPROVED)
+      .length;
   }, [data]);
 
   const getRejectedCount = useMemo(() => {
-    return (
-      data?.data.filter((item) => item.state === REVIEW_STATE.REJECTED)
-        .length || "-"
-    );
+    return data?.data.filter((item) => item.state === REVIEW_STATE.REJECTED)
+      .length;
   }, [data]);
 
   return (
