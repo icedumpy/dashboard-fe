@@ -15,6 +15,7 @@ import { useProductionLineOptions } from "@/hooks/option/use-production-line-opt
 import { COLUMNS } from "../constants/columns";
 import { useReviewAPI } from "@/hooks/review/use-review";
 import { REVIEW_STATE } from "@/contants/review";
+import { ALL_OPTION } from "@/contants/option";
 
 export default function WaitingReviewTable() {
   const { user } = useAuth();
@@ -23,7 +24,7 @@ export default function WaitingReviewTable() {
     defaultValue: user?.line?.id ? String(user.line?.id) : "",
   });
   const [defect, setDefect] = useQueryState("defect", {
-    defaultValue: "",
+    defaultValue: "all",
   });
 
   const { data: lineOptions } = useProductionLineOptions();
@@ -32,7 +33,7 @@ export default function WaitingReviewTable() {
     page: page,
     line_id: line,
     status: REVIEW_STATE.PENDING,
-    defect_type_id: defect,
+    defect_type_id: defect === "all" ? undefined : defect,
   });
 
   return (
@@ -57,7 +58,7 @@ export default function WaitingReviewTable() {
               <SelectValue className="w-2xs" placeholder="เลือกประเภทความผิด" />
             </SelectTrigger>
             <SelectContent>
-              {defectOptions?.map((option) => (
+              {[...ALL_OPTION, ...(defectOptions ?? [])]?.map((option) => (
                 <SelectItem key={option.value} value={option.value}>
                   {option.label}
                 </SelectItem>
