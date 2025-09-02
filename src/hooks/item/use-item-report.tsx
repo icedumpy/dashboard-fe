@@ -2,6 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 
 import { STATION, STATION_STATUS } from "@/contants/station";
 import { ItemService } from "@/services/item-service";
+import { sanitizeQueryParams } from "@/utils/sanitize-query-params";
 
 export interface DownloadReportParams {
   detected_from?: string;
@@ -19,7 +20,9 @@ export interface DownloadReportParams {
 export const useItemReportAPI = () =>
   useMutation({
     mutationFn: async (params?: DownloadReportParams) => {
-      const response = await ItemService.itemReport(params);
+      const response = await ItemService.itemReport(
+        sanitizeQueryParams(params)
+      );
       return response;
     },
   });

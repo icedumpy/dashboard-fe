@@ -30,7 +30,7 @@ import { useProductionLineOptions } from "@/hooks/option/use-production-line-opt
 import { COLUMNS } from "./constants/columns";
 import { filtersSchema } from "./schema";
 import { useLineAPI } from "@/hooks/line/use-line";
-// import { ROLES } from "@/contants/auth";
+import { ROLES } from "@/contants/auth";
 
 export default function OperatorPage() {
   const { user } = useAuth();
@@ -91,18 +91,21 @@ export default function OperatorPage() {
     )?.name;
   }, [line, lines?.data, productionLineOptions]);
 
-  // const disabledLine = [ROLES.OPERATOR as string].includes(user?.role ?? "");
+  const disabledLine = [ROLES.OPERATOR as string].includes(String(user?.role));
+
+  const title =
+    user?.role === ROLES.OPERATOR ? "Operator Dashboard" : "Viewer Dashboard";
 
   return (
     <FormProvider {...form}>
-      <Layout title="Operator Dashboard">
+      <Layout title={title}>
         <div className="space-y-4">
           <div className="flex items-center gap-2">
             <p>Production Line:</p>
             <Select
               value={line || productionLineOptions?.[0]?.value}
               onValueChange={setLine}
-              // disabled={disabledLine}
+              disabled={disabledLine}
             >
               <SelectTrigger className="bg-white">
                 <SelectValue placeholder="Select a line" />

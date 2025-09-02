@@ -1,6 +1,6 @@
 import { DownloadIcon, FileIcon } from "lucide-react";
 import { useQueryState } from "nuqs";
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import dayjs from "dayjs";
 
 import { Button } from "@/components/ui/button";
@@ -21,14 +21,16 @@ import {
 } from "@/hooks/item/use-item-report";
 import { STATION } from "@/contants/station";
 import { downloadFile } from "@/utils/download-file";
+import { useLineAPI } from "@/hooks/line/use-line";
 
 export default function ExportBundleButton({
   filters,
 }: {
   filters: DownloadReportParams;
 }) {
+  const { data } = useLineAPI();
   const [line] = useQueryState("line", {
-    defaultValue: "3",
+    defaultValue: String(data?.data[0].id),
   });
 
   const itemReport = useItemReportAPI();
@@ -47,6 +49,10 @@ export default function ExportBundleButton({
     );
   }, [itemReport, line, filters]);
 
+  const getLineCode = useMemo(() => {
+    return data?.data.find((item) => item.id === Number(line))?.code;
+  }, [data, line]);
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -62,7 +68,9 @@ export default function ExportBundleButton({
           <div className="grid rounded-full size-10 place-content-center bg-primary/20 text-primary">
             <FileIcon className="size-4" />
           </div>
-          <p>ยืนยันการดาวน์โหลดรายงานสำหรับ Roll Station - Line {line}</p>
+          <p>
+            ยืนยันการดาวน์โหลดรายงานสำหรับ Roll Station - Line {getLineCode}
+          </p>
         </div>
         <DialogFooter>
           <DialogClose asChild>

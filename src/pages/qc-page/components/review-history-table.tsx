@@ -23,7 +23,7 @@ export default function ReviewHistoryTable() {
     defaultValue: user?.line?.id ? String(user.line?.id) : "",
   });
   const [defect, setDefect] = useQueryState("defect", {
-    defaultValue: "",
+    defaultValue: "all",
   });
   const [state, setState] = useQueryState("state", {
     defaultValue: "all",
