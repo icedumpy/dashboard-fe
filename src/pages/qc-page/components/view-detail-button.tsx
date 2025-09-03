@@ -61,7 +61,11 @@ export default function ViewDetailButton({ id }: { id: string }) {
               </div>
             </div>
             <div className="space-y-2">
-              <ProductDetail data={data?.data} defects={data?.defects} />
+              <ProductDetail
+                data={data?.data}
+                defects={data?.defects}
+                reviews={data?.reviews}
+              />
             </div>
           </div>
         </div>

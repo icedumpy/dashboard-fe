@@ -44,7 +44,7 @@ export interface StationDetailResponse {
   data: StationItemType;
   defects?: { defect_type_code: string }[];
   images?: Images;
-  reviews?: unknown[];
+  reviews?: ReviewT[];
 }
 
 export interface Images {
@@ -56,4 +56,17 @@ export interface Images {
 export interface ImageType {
   id: number;
   path: string;
+}
+
+export interface ReviewT {
+  id: number;
+  review_type: string;
+  state: string;
+  submitted_by: number;
+  submitted_at: string;
+  reviewed_by: string;
+  reviewed_at: string;
+  submit_note: string;
+  review_note: string;
+  reject_reason: string;
 }

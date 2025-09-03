@@ -1,18 +1,25 @@
 import dayjs from "dayjs";
 import { useMemo } from "react";
+import { isEmpty } from "radash";
 
 import { useLineAPI } from "@/hooks/line/use-line";
 import { DATE_TIME_FORMAT } from "@/contants/format";
 import { useDefectOptionAPI } from "@/hooks/option/use-defect-option";
+import { REVIEW_STATE_OPTION } from "@/contants/review";
 
 import type { StationDetailResponse } from "@/types/station";
 
 interface ProductDetailProps {
   data?: StationDetailResponse["data"];
   defects?: StationDetailResponse["defects"];
+  reviews?: StationDetailResponse["reviews"];
 }
 
-export default function ProductDetail({ data, defects }: ProductDetailProps) {
+export default function ProductDetail({
+  data,
+  defects,
+  reviews,
+}: ProductDetailProps) {
   const { data: line } = useLineAPI();
   const { data: defectOptions } = useDefectOptionAPI();
 
@@ -25,24 +32,45 @@ export default function ProductDetail({ data, defects }: ProductDetailProps) {
 
   const defectNames = useMemo(() => {
     if (!defects || !defectOptions) return "-";
-    return defects
-      .map(
-        (defect) =>
-          defectOptions.find(
-            (item) => item?.meta?.code === defect.defect_type_code
-          )?.label ?? "-"
-      )
-      .join(", ");
+    return (
+      defects
+        .map(
+          (defect) =>
+            defectOptions.find(
+              (item) => item?.meta?.code === defect.defect_type_code
+            )?.label ?? "-"
+        )
+        .join(", ") ?? "-"
+    );
   }, [defects, defectOptions]);
+
+  const currentState = useMemo(() => {
+    if (isEmpty(reviews)) return "-";
+    const sorted =
+      reviews
+        ?.sort(
+          (a, b) =>
+            new Date(a.submitted_at).getTime() -
+            new Date(b.submitted_at).getTime()
+        )
+        .map((review) => review.state) ?? [];
+
+    const latestState = sorted[sorted.length - 1];
+    const mappedLabel = REVIEW_STATE_OPTION.find(
+      (option) => option.value === latestState
+    )?.label;
+
+    return mappedLabel ?? "-";
+  }, [reviews]);
 
   const details = useMemo(
     () => [
       { label: "Production Line:", value: lineCode },
       { label: "Job Order Number:", value: data?.job_order_number ?? "-" },
-      { label: "ประเภท Defect:", value: defectNames || "-" },
+      { label: "ประเภท Defect:", value: defectNames },
       { label: "สถานี:", value: data?.station ?? "-" },
       { label: "Roll Width:", value: data?.roll_width ?? "-" },
-      { label: "สถานะปัจจุบัน:", value: data?.scrap_confirmed_at ?? "-" },
+      { label: "สถานะปัจจุบัน:", value: currentState },
       { label: "Product Code:", value: data?.product_code ?? "-" },
       {
         label: "ตรวจพบเมื่อ:",
@@ -52,7 +80,17 @@ export default function ProductDetail({ data, defects }: ProductDetailProps) {
       },
       { label: "Roll Number:", value: data?.roll_number ?? "-" },
     ],
-    [lineCode, data, defectNames]
+    [
+      lineCode,
+      data?.job_order_number,
+      data?.station,
+      data?.roll_width,
+      data?.product_code,
+      data?.detected_at,
+      data?.roll_number,
+      defectNames,
+      currentState,
+    ]
   );
 
   return (
