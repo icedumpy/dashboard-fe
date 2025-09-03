@@ -25,7 +25,6 @@ import { DATE_TIME_FORMAT } from "@/contants/format";
 import { STATION } from "@/contants/station";
 import { useAuth } from "@/hooks/auth/use-auth-v2";
 import { useItemAPI } from "@/hooks/item/use-item";
-import { useItemSummaryAPI } from "@/hooks/item/use-sumary";
 import { useProductionLineOptions } from "@/hooks/option/use-production-line-option";
 import { COLUMNS_ROLL } from "./constants/columns-roll";
 import { COLUMNS_BUNDLE } from "./constants/columns-bundle";
@@ -72,7 +71,6 @@ export default function OperatorPage() {
 
   const filterParams = form.watch();
 
-  const { data: summary } = useItemSummaryAPI();
   const { data: roll } = useItemAPI({
     ...filterParams,
     page: +rollPage,
@@ -159,7 +157,7 @@ export default function OperatorPage() {
             <div className="p-4 space-y-3">
               <div className="space-y-2">
                 <h3 className="font-medium text-md">Roll</h3>
-                <StatisticRoll data={summary?.roll} />
+                <StatisticRoll data={roll?.summary} />
                 <DataTable
                   data={roll?.data || []}
                   columns={COLUMNS_ROLL}
@@ -173,7 +171,7 @@ export default function OperatorPage() {
               </div>
               <div className="space-y-2">
                 <h3 className="font-medium text-md">Bundle</h3>
-                <StatisticBundle data={summary?.bundle} />
+                <StatisticBundle data={bundle?.summary} />
                 <DataTable
                   data={bundle?.data || []}
                   columns={COLUMNS_BUNDLE}

@@ -29,7 +29,7 @@ export default function ImageRepair({ images }: { images?: ImageType[] }) {
   });
 
   // Extract blobs from queries
-  const imageBlobs = imageQueries.map((q) => q.data);
+  const imageBlobs = imageQueries.map((q) => q.data ?? q.error);
 
   // สร้าง URL ชั่วคราวจาก blob
   const imageUrls = useMemo(() => {
@@ -88,7 +88,9 @@ export default function ImageRepair({ images }: { images?: ImageType[] }) {
                     />
                   ) : (
                     <div className="grid w-full h-full text-sm place-content-center bg-accent text-muted-foreground">
-                      Image Not Found
+                      {imageBlobs[idx] instanceof Error
+                        ? imageBlobs[idx].message
+                        : "Loading..."}
                     </div>
                   )}
                 </CarouselItem>
