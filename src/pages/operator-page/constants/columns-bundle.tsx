@@ -11,7 +11,7 @@ import { STATION_STATUS } from "@/contants/station";
 
 import type { StationItemType } from "@/types/station";
 
-export const COLUMNS: ColumnDef<StationItemType>[] = [
+export const COLUMNS_BUNDLE: ColumnDef<StationItemType>[] = [
   {
     accessorKey: "product_code",
     header: "Product Code",
@@ -24,7 +24,7 @@ export const COLUMNS: ColumnDef<StationItemType>[] = [
   },
   {
     accessorKey: "roll_number",
-    header: "Roll Number",
+    header: "Bundle Number",
     meta: { className: "text-center" },
   },
   {

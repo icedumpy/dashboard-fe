@@ -27,7 +27,8 @@ import { useAuth } from "@/hooks/auth/use-auth-v2";
 import { useItemAPI } from "@/hooks/item/use-item";
 import { useItemSummaryAPI } from "@/hooks/item/use-sumary";
 import { useProductionLineOptions } from "@/hooks/option/use-production-line-option";
-import { COLUMNS } from "./constants/columns";
+import { COLUMNS_ROLL } from "./constants/columns-roll";
+import { COLUMNS_BUNDLE } from "./constants/columns-bundle";
 import { filtersSchema } from "./schema";
 import { useLineAPI } from "@/hooks/line/use-line";
 import { ROLES } from "@/contants/auth";
@@ -161,7 +162,7 @@ export default function OperatorPage() {
                 <StatisticRoll data={summary?.roll} />
                 <DataTable
                   data={roll?.data || []}
-                  columns={COLUMNS}
+                  columns={COLUMNS_ROLL}
                   pagination={{
                     ...roll?.pagination,
                     onPageChange(page) {
@@ -175,7 +176,7 @@ export default function OperatorPage() {
                 <StatisticBundle data={summary?.bundle} />
                 <DataTable
                   data={bundle?.data || []}
-                  columns={COLUMNS}
+                  columns={COLUMNS_BUNDLE}
                   pagination={{
                     ...bundle?.pagination,
                     onPageChange(page) {
