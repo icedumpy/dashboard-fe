@@ -14,6 +14,7 @@ import DataTablePagination from "./data-table-pagination";
 import { cn } from "@/lib/utils";
 
 import type { DataTableProps } from "./types";
+import { isEmpty } from "radash";
 
 export function DataTable<T extends object>({
   data,
@@ -100,7 +101,27 @@ export function DataTable<T extends object>({
           )}
         </TableBody>
       </Table>
-      <div className="flex justify-end w-full p-2 border-t">
+      <div className="flex items-center justify-between w-full p-2 border-t">
+        <div>
+          <p className="space-x-1 text-sm">
+            <span>แสดง</span>
+            <span>
+              {isEmpty(pagination?.total)
+                ? "0"
+                : (Number(pagination?.page) - 1) * pageSize + 1}
+            </span>
+            <span>ถึง</span>
+            <span>
+              {pagination && Number(pagination.page) > 0
+                ? Math.min(
+                    Number(pagination.page) * pageSize,
+                    pagination.total || 0
+                  )
+                : 0}
+            </span>
+            <span>จากทั้งหมด {pagination?.total ?? 0} ข้อมูล</span>
+          </p>
+        </div>
         <DataTablePagination
           {...pagination}
           onPageChange={pagination?.onPageChange ?? (() => {})}
