@@ -1,12 +1,12 @@
 import { useQueryState } from "nuqs";
 
 import StatisticCard from "./components/statistic-card";
-import { Layout } from "@/components/Layout";
 import TabsCard from "./components/tabs-card";
 import WaitingReviewTable from "./components/waiting-review-table";
+import ReviewHistoryTable from "./components/review-history-table";
+import { Layout } from "@/components/Layout";
 
 import { TABS } from "./constants/tabs";
-import ReviewHistoryTable from "./components/review-history-table";
 
 export default function QCPage() {
   const [tabs] = useQueryState("tabs", {
