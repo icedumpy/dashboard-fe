@@ -58,6 +58,23 @@ axiosInstance.interceptors.response.use(
         return Promise.reject(refreshError);
       }
     }
+
+    // Handle blob error responses (e.g. image API)
+    if (
+      error.response?.config?.responseType === "blob" &&
+      error.response?.headers["content-type"] === "application/json"
+    ) {
+      try {
+        const text = await error.response.data.text();
+        const json = JSON.parse(text);
+        const message =
+          json.detail || json.message || error.message || "Unexpected error";
+        return Promise.reject(new Error(message));
+      } catch {
+        return Promise.reject(new Error(error.message || "Unexpected error"));
+      }
+    }
+
     // 🔹 ดึงข้อความจาก response
     const message =
       error.response?.data?.detail ||
