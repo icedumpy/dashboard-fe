@@ -43,7 +43,14 @@ export const COLUMNS: ColumnDef<ReviewT>[] = [
     accessorKey: "status",
     header: "Status",
     meta: { className: "text-start" },
-    cell: (info) => <StatusBadge status={info.row.original.item.status.code} />,
+    cell: (info) => (
+      <StatusBadge
+        status={info.row.original.item.status.code}
+        note={info.row.original.defects
+          ?.map((defect) => defect.defect_type_name)
+          ?.join(", ")}
+      />
+    ),
   },
   {
     accessorKey: "decision_note",
