@@ -1,5 +1,6 @@
 import { STATION } from "@/contants/station";
-import { PaginationType } from "./pagination";
+
+import type { PaginationType } from "./pagination";
 
 export type StationType = (typeof STATION)[keyof typeof STATION];
 
@@ -41,7 +42,7 @@ export interface StationResponse {
 
 export interface StationDetailResponse {
   data: StationItemType;
-  defects?: unknown[];
+  defects?: { defect_type_code: string }[];
   images?: Images;
   reviews?: unknown[];
 }
