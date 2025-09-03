@@ -98,7 +98,7 @@ export default function CheckButton({
     <>
       {/* Edit */}
       <Dialog open={mode === "VIEW" && open} onOpenChange={toggleOpen}>
-        <DialogTrigger>
+        <DialogTrigger asChild>
           <Button
             size="sm"
             className="text-xs rounded h-fit py-0.5"

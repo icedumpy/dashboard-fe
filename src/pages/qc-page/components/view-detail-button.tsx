@@ -26,7 +26,7 @@ export default function ViewDetailButton({ id }: { id: string }) {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger>
+      <DialogTrigger asChild>
         <Button className="size-8 text-primary" variant="secondary">
           <EyeIcon />
         </Button>
