@@ -94,6 +94,11 @@ export default function CheckButton({
     );
   }, [id, imageUpload, itemFixRequest, queryClient]);
 
+  const hiddenRepairImages = ![
+    STATION_STATUS.NORMAL,
+    STATION_STATUS.SCRAP,
+  ].includes(String(item_data?.status_code));
+
   return (
     <>
       {/* Edit */}
@@ -129,14 +134,12 @@ export default function CheckButton({
               <div className="flex flex-col gap-2 md:flex-row">
                 <div
                   className={
-                    item_data?.status_code != "NORMAL"
-                      ? "w-full md:w-1/2"
-                      : "w-full md"
+                    hiddenRepairImages ? "w-full md:w-1/2" : "w-full md"
                   }
                 >
                   <ImageDefect images={data?.images?.DETECTED} />
                 </div>
-                {item_data?.status_code != "NORMAL" && (
+                {hiddenRepairImages && (
                   <div className="w-full md:w-1/2">
                     <ImageRepair images={data?.images?.FIX} />
                   </div>
