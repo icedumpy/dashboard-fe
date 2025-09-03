@@ -74,9 +74,9 @@ export default function RejectButton({
                 name="note"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>ความคิดเห็นเพิ่มเติม (ไม่บังคับ)</FormLabel>
+                    <FormLabel>ความคิดเห็นเพิ่มเติม (บังคับ)</FormLabel>
                     <FormControl>
-                      <Textarea {...field} />
+                      <Textarea placeholder="กรุณากรอกความคิดเห็น" {...field} />
                     </FormControl>
                   </FormItem>
                 )}
@@ -88,7 +88,10 @@ export default function RejectButton({
           <DialogClose>
             <Button variant="outline">ยกเลิก</Button>
           </DialogClose>
-          <Button disabled={isLoading} onClick={form.handleSubmit(onSubmit)}>
+          <Button
+            disabled={isLoading || !form.formState.isValid}
+            onClick={form.handleSubmit(onSubmit)}
+          >
             ยืนยัน
           </Button>
         </DialogFooter>
