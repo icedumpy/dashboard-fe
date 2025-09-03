@@ -32,16 +32,14 @@ export default function ProductDetail({
 
   const defectNames = useMemo(() => {
     if (!defects || !defectOptions) return "-";
-    return (
-      defects
-        .map(
-          (defect) =>
-            defectOptions.find(
-              (item) => item?.meta?.code === defect.defect_type_code
-            )?.label ?? "-"
-        )
-        .join(", ") ?? "-"
-    );
+    return defects
+      .map(
+        (defect) =>
+          defectOptions.find(
+            (item) => item?.meta?.code === defect.defect_type_code
+          )?.label ?? "-"
+      )
+      .join(", ");
   }, [defects, defectOptions]);
 
   const currentState = useMemo(() => {
@@ -67,7 +65,7 @@ export default function ProductDetail({
     () => [
       { label: "Production Line:", value: lineCode },
       { label: "Job Order Number:", value: data?.job_order_number ?? "-" },
-      { label: "ประเภท Defect:", value: defectNames },
+      { label: "ประเภท Defect:", value: defectNames || "-" },
       { label: "สถานี:", value: data?.station ?? "-" },
       { label: "Roll Width:", value: data?.roll_width ?? "-" },
       { label: "สถานะปัจจุบัน:", value: currentState },
