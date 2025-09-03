@@ -1,5 +1,5 @@
-import { isEmpty } from 'radash';
-import { useEffect, useMemo, useState } from 'react';
+import { isEmpty } from "radash";
+import { useEffect, useMemo, useState } from "react";
 
 import {
   Carousel,
@@ -7,14 +7,14 @@ import {
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
-} from '@/components/ui/carousel';
+} from "@/components/ui/carousel";
 
-import { IMAGE_PATH_ENDPOINT } from '@/contants/api';
-import { UploadService } from '@/services/upload-service';
-import { useQueries } from '@tanstack/react-query';
+import { IMAGE_PATH_ENDPOINT } from "@/contants/api";
+import { UploadService } from "@/services/upload-service";
+import { useQueries } from "@tanstack/react-query";
 
-import type { CarouselApi } from '@/components/ui/carousel';
-import type { ImageType } from '@/types/station';
+import type { CarouselApi } from "@/components/ui/carousel";
+import type { ImageType } from "@/types/station";
 
 export default function ImageDefect({ images }: { images?: ImageType[] }) {
   const [api, setApi] = useState<CarouselApi>();
@@ -22,14 +22,16 @@ export default function ImageDefect({ images }: { images?: ImageType[] }) {
 
   const imageQueries = useQueries({
     queries:
-      images?.map(img => ({
+      images?.map((img) => ({
         queryKey: [IMAGE_PATH_ENDPOINT, img.path],
         queryFn: () => UploadService.getImageBold(img.path),
       })) ?? [],
   });
 
   // Extract blobs from queries
-  const imageBlobs = imageQueries.map(q => q.data);
+  const imageBlobs = imageQueries.map((q) => q.data ?? q.error);
+
+  console.log("imageBlobs", imageBlobs);
 
   // สร้าง URL ชั่วคราวจาก blob
   const imageUrls = useMemo(() => {
@@ -44,7 +46,7 @@ export default function ImageDefect({ images }: { images?: ImageType[] }) {
 
   useEffect(() => {
     return () => {
-      imageUrls.forEach(url => {
+      imageUrls.forEach((url) => {
         if (url) URL.revokeObjectURL(url);
       });
     };
@@ -59,10 +61,10 @@ export default function ImageDefect({ images }: { images?: ImageType[] }) {
 
     update();
 
-    api.on('select', update);
+    api.on("select", update);
 
     return () => {
-      api.off('select', update);
+      api.off("select", update);
     };
   }, [api]);
 
@@ -88,7 +90,9 @@ export default function ImageDefect({ images }: { images?: ImageType[] }) {
                     />
                   ) : (
                     <div className="grid w-full h-full text-sm place-content-center bg-accent text-muted-foreground">
-                      ไม่มีรูปภาพ
+                      {imageBlobs[idx] instanceof Error
+                        ? imageBlobs[idx].message
+                        : "Loading..."}
                     </div>
                   )}
                 </CarouselItem>
