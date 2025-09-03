@@ -3,6 +3,7 @@ import dayjs from "dayjs";
 
 import StatusBadge from "@/components/status-badge";
 import ViewDetailButton from "../components/view-detail-button";
+import ReviewedBy from "../components/reviewed-by";
 
 import { DATE_TIME_FORMAT } from "@/contants/format";
 
@@ -61,6 +62,7 @@ export const COLUMNS: ColumnDef<ReviewT>[] = [
     accessorKey: "reviewed_by",
     header: "Reviewed By",
     meta: { className: "text-center" },
+    cell: (info) => <ReviewedBy itemId={info.row.original.item.id} />,
   },
   {
     accessorKey: "reviewed_at",

@@ -69,4 +69,12 @@ export interface ReviewT {
   submit_note: string;
   review_note: string;
   reject_reason: string;
+  reviewed_by_user?: ReviewedByUserT;
+}
+
+export interface ReviewedByUserT {
+  id: number;
+  username: string;
+  display_name: string;
+  role: string;
 }
