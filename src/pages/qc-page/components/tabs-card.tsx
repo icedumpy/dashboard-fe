@@ -1,6 +1,7 @@
 import { parseAsInteger, useQueryState } from "nuqs";
 
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
 import { TABS } from "../constants/tabs";
 
 export default function TabsCard() {

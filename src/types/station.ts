@@ -1,6 +1,7 @@
 import { STATION } from "@/contants/station";
 
 import type { PaginationType } from "./pagination";
+import type { ImageT } from "./image";
 
 export type StationType = (typeof STATION)[keyof typeof STATION];
 
@@ -57,14 +58,9 @@ export interface StationDetailResponse {
 }
 
 export interface Images {
-  DETECTED: ImageType[];
-  FIX: ImageType[];
-  OTHER: ImageType[];
-}
-
-export interface ImageType {
-  id: number;
-  path: string;
+  DETECTED: ImageT[];
+  FIX: ImageT[];
+  OTHER: ImageT[];
 }
 
 export interface ReviewT {
