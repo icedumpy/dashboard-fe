@@ -31,8 +31,6 @@ export default function ImageDefect({ images }: { images?: ImageType[] }) {
   // Extract blobs from queries
   const imageBlobs = imageQueries.map((q) => q.data ?? q.error);
 
-  console.log("imageBlobs", imageBlobs);
-
   // สร้าง URL ชั่วคราวจาก blob
   const imageUrls = useMemo(() => {
     if (!images || images.length === 0) return [];
