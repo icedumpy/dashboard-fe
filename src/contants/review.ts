@@ -14,6 +14,10 @@ export const REVIEW_STATE_OPTION = [
     value: REVIEW_STATE.APPROVED,
   },
   {
+    label: "รอตรวจสอบ",
+    value: REVIEW_STATE.PENDING,
+  },
+  {
     label: "ปฏิเสธ",
     value: REVIEW_STATE.REJECTED,
   },

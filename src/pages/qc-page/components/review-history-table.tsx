@@ -40,7 +40,7 @@ export default function ReviewHistoryTable() {
   return (
     <div className="p-4 space-y-3 bg-white border rounded-md">
       <div className="flex justify-between gap-2">
-        <p>รายการที่รอตรวจสอบ</p>
+        <p>ประวัติการตรวจสอบ</p>
         <div className="flex justify-between gap-2">
           <Select value={state} onValueChange={setState}>
             <SelectTrigger className="w-28">

@@ -20,6 +20,9 @@ export const OptionService = {
     const options = (response?.data?.data as DefectT[]).map((item) => ({
       value: String(item.id),
       label: item.name_th,
+      meta: {
+        code: item.code,
+      },
     }));
 
     return options as OptionT[];

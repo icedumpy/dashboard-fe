@@ -1,5 +1,6 @@
 import { STATION } from "@/contants/station";
-import { PaginationType } from "./pagination";
+
+import type { PaginationType } from "./pagination";
 
 export type StationType = (typeof STATION)[keyof typeof STATION];
 
@@ -41,9 +42,9 @@ export interface StationResponse {
 
 export interface StationDetailResponse {
   data: StationItemType;
-  defects?: unknown[];
+  defects?: { defect_type_code: string }[];
   images?: Images;
-  reviews?: unknown[];
+  reviews?: ReviewT[];
 }
 
 export interface Images {
@@ -55,4 +56,25 @@ export interface Images {
 export interface ImageType {
   id: number;
   path: string;
+}
+
+export interface ReviewT {
+  id: number;
+  review_type: string;
+  state: string;
+  submitted_by: number;
+  submitted_at: string;
+  reviewed_by: string;
+  reviewed_at: string;
+  submit_note: string;
+  review_note: string;
+  reject_reason: string;
+  reviewed_by_user?: ReviewedByUserT;
+}
+
+export interface ReviewedByUserT {
+  id: number;
+  username: string;
+  display_name: string;
+  role: string;
 }

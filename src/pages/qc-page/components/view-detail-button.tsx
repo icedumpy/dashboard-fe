@@ -23,6 +23,7 @@ export default function ViewDetailButton({ id }: { id: string }) {
     enabled: open,
     staleTime: Infinity,
   });
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger>
@@ -60,7 +61,11 @@ export default function ViewDetailButton({ id }: { id: string }) {
               </div>
             </div>
             <div className="space-y-2">
-              <ProductDetail data={data?.data} />
+              <ProductDetail
+                data={data?.data}
+                defects={data?.defects}
+                reviews={data?.reviews}
+              />
             </div>
           </div>
         </div>

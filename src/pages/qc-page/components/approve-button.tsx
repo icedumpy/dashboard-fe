@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { CheckIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
 import z from "zod";
@@ -36,6 +37,7 @@ export default function ApproveButton({
   onSubmit: (data: z.infer<typeof schema>) => void;
   isLoading?: boolean;
 }) {
+  const [open, setOpen] = useState(false);
   const form = useForm({
     defaultValues: {
       note: "",
@@ -43,10 +45,12 @@ export default function ApproveButton({
     resolver: zodResolver(schema),
   });
 
-  const { data } = useItemDetailAPI(id);
+  const { data } = useItemDetailAPI(id, {
+    enabled: !id && open,
+  });
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button className="text-green-600 size-8" variant="secondary">
           <CheckIcon />
