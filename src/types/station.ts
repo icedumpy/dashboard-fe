@@ -38,6 +38,15 @@ export interface StationItemType {
 export interface StationResponse {
   data: StationItemType[];
   pagination: PaginationType;
+  summary: SummaryT;
+}
+
+export interface SummaryT {
+  total: number;
+  defects: number;
+  scrap: number;
+  pending_defect: number;
+  pending_scrap: number;
 }
 
 export interface StationDetailResponse {
