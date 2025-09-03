@@ -22,15 +22,17 @@ export default function ActionButton({ id }: { id: string }) {
         { reviewId: id, decision: decision, note: note ?? "" },
         {
           onSuccess() {
-            toast.success("Review submitted successfully!");
+            toast.success("อนุมัติการแก้ไขสำเร็จ");
             queryClient.invalidateQueries({
               queryKey: [ITEM_ENDPOINT],
               exact: false,
             });
             dismissDialog.dismiss();
           },
-          onError() {
-            toast.error("Failed to submit review. Please try again.");
+          onError(error) {
+            toast.error("อนุมัติการแก้ไขไม่สำเร็จ", {
+              description: error.message,
+            });
           },
         }
       );

@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { XIcon } from "lucide-react";
@@ -37,6 +38,7 @@ export default function RejectButton({
   onSubmit: (data: z.infer<typeof schema>) => void;
   isLoading?: boolean;
 }) {
+  const [open, setOpen] = useState(false);
   const form = useForm({
     defaultValues: {
       note: "",
@@ -44,10 +46,12 @@ export default function RejectButton({
     resolver: zodResolver(schema),
   });
 
-  const { data } = useItemDetailAPI(id);
+  const { data } = useItemDetailAPI(id, {
+    enabled: open,
+  });
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button className="text-orange-600 size-8" variant="secondary">
           <XIcon />
