@@ -19,7 +19,7 @@ export default function StatisticCard() {
   const { data } = useReviewAPI({
     page: page,
     line_id: line,
-    status: REVIEW_STATE.PENDING,
+    review_state: REVIEW_STATE.PENDING,
     defect_type_id: defect,
   });
 

@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/select";
 
 import { useReviewAPI } from "@/hooks/review/use-review";
-import { REVIEW_STATE_OPTION } from "@/contants/review";
+import { REVIEW_STATE_OPTION, REVIEW_STATE } from "@/contants/review";
 import { ALL_OPTION } from "@/contants/option";
 
 export default function ReviewHistoryTable() {
@@ -35,7 +35,10 @@ export default function ReviewHistoryTable() {
     page: page,
     line_id: line,
     defect_type_id: defect === "all" ? undefined : defect,
-    review_state: state === "all" ? undefined : state,
+    review_state:
+      state === "all"
+        ? undefined
+        : (state as (typeof REVIEW_STATE)[keyof typeof REVIEW_STATE]),
   });
   return (
     <div className="p-4 space-y-3 bg-white border rounded-md">
