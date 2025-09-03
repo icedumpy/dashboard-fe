@@ -1,0 +1,13 @@
+version: "3.9"
+
+services:
+  qc_app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: qc_app
+    ports:
+      - "4173:80"
+    restart: unless-stopped
+
+        
