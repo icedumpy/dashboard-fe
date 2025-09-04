@@ -2,8 +2,8 @@ import { ColumnDef } from "@tanstack/react-table";
 import dayjs from "dayjs";
 
 import StatusBadge from "@/components/status-badge";
-import ViewDetailButton from "../components/view-detail-button";
 import ReviewedBy from "../components/reviewed-by";
+import ActionButton from "../components/action-button";
 
 import { DATE_TIME_FORMAT } from "@/contants/format";
 
@@ -77,7 +77,10 @@ export const COLUMNS: ColumnDef<ReviewT>[] = [
     header: "Action",
     meta: { className: "text-center" },
     cell: (info) => (
-      <ViewDetailButton itemId={String(info.row.original.item.id)} />
+      <ActionButton
+        item_id={String(info.row?.original?.item?.id)}
+        review_id={String(info.row?.original?.id)}
+      />
     ),
   },
 ];

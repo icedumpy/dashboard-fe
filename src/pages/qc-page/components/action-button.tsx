@@ -1,15 +1,17 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { useCallback } from "react";
 import { toast } from "sonner";
+import { useQueryState } from "nuqs";
 
 import ApproveButton from "./approve-button";
 import RejectButton from "./reject-button";
 import ViewDetailButton from "./view-detail-button";
 
+import useDismissDialog from "@/hooks/use-dismiss-dialog";
 import { REVIEW_ENDPOINT } from "@/contants/api";
 import { REVIEW_STATE } from "@/contants/review";
 import { useReviewDecisionAPI } from "@/hooks/review/use-review-decision";
-import useDismissDialog from "@/hooks/use-dismiss-dialog";
+import { TABS } from "../constants/tabs";
 
 export default function ActionButton({
   item_id,
@@ -18,6 +20,9 @@ export default function ActionButton({
   item_id: string;
   review_id: string;
 }) {
+  const [tabs] = useQueryState("tabs", {
+    defaultValue: TABS[0].value,
+  });
   const reviewDecision = useReviewDecisionAPI();
   const queryClient = useQueryClient();
   const dismissDialog = useDismissDialog();
@@ -51,16 +56,24 @@ export default function ActionButton({
   return (
     <div className="flex gap-2">
       <ViewDetailButton itemId={item_id} />
-      <ApproveButton
-        id={item_id}
-        isLoading={reviewDecision.isPending}
-        onSubmit={(value) => handleReview(REVIEW_STATE.APPROVED, value.note)}
-      />
-      <RejectButton
-        id={item_id}
-        isLoading={reviewDecision.isPending}
-        onSubmit={(value) => handleReview(REVIEW_STATE.REJECTED, value.note)}
-      />
+      {tabs === TABS[0].value && (
+        <>
+          <ApproveButton
+            id={item_id}
+            isLoading={reviewDecision.isPending}
+            onSubmit={(value) =>
+              handleReview(REVIEW_STATE.APPROVED, value.note)
+            }
+          />
+          <RejectButton
+            id={item_id}
+            isLoading={reviewDecision.isPending}
+            onSubmit={(value) =>
+              handleReview(REVIEW_STATE.REJECTED, value.note)
+            }
+          />
+        </>
+      )}
     </div>
   );
 }
