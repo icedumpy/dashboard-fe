@@ -28,7 +28,6 @@ export default function ViewDetailButton({ itemId }: { itemId: string }) {
       <DialogTrigger asChild>
         <Button className="size-8 text-primary" variant="secondary">
           <EyeIcon />
-          {itemId}
         </Button>
       </DialogTrigger>
       <DialogContent
