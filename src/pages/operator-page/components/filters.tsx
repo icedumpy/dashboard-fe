@@ -1,5 +1,6 @@
 import { RotateCcwIcon } from "lucide-react";
 import { useFormContext } from "react-hook-form";
+import dayjs from "dayjs";
 import z from "zod";
 
 import { Button } from "@/components/ui/button";
@@ -15,6 +16,7 @@ import { MultiSelect } from "@/components/ui/multi-select";
 
 import { useStationStatusOptions } from "@/hooks/option/use-station-status-option";
 import { filtersSchema } from "../schema";
+import { InputDate } from "@/components/ui/input-date";
 
 export default function Filters() {
   const form = useFormContext<z.infer<typeof filtersSchema>>();
@@ -156,11 +158,12 @@ export default function Filters() {
               <FormItem>
                 <FormLabel>วันที่เริ่มต้น</FormLabel>
                 <FormControl>
-                  <Input
-                    className="w-full"
-                    type="date"
-                    {...field}
-                    placeholder="ค้นหา วันที่เริ่มต้น"
+                  <InputDate
+                    value={
+                      field.value ? dayjs(field.value).toDate() : undefined
+                    }
+                    onChange={field.onChange}
+                    placeholder="วันที่เริ่มต้น"
                   />
                 </FormControl>
               </FormItem>
@@ -173,10 +176,12 @@ export default function Filters() {
               <FormItem>
                 <FormLabel>วันที่สิ้นสุด</FormLabel>
                 <FormControl>
-                  <Input
-                    type="date"
-                    {...field}
-                    placeholder="ค้นหา วันที่สิ้นสุด"
+                  <InputDate
+                    value={
+                      field.value ? dayjs(field.value).toDate() : undefined
+                    }
+                    onChange={field.onChange}
+                    placeholder="วันที่สิ้นสุด"
                   />
                 </FormControl>
               </FormItem>
