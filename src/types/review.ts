@@ -47,3 +47,10 @@ export interface Meta {
 }
 
 export type ReviewStateT = (typeof REVIEW_STATE)[keyof typeof REVIEW_STATE];
+
+export interface ReviewSummaryT {
+  pending: number;
+  approved: number;
+  rejected: number;
+  total: number;
+}
