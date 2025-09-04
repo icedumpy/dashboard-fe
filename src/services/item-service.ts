@@ -1,22 +1,30 @@
+import dayjs from "dayjs";
+
 import {
   ITEM_ENDPOINT,
   ITEM_FIX_REQUEST_ENDPOINT,
   ITEM_REPORT_ENDPOINT,
   ITEM_SCRAP_ENDPOINT,
-  ITEM_SUMMARY_ENDPOINT,
 } from "@/contants/api";
 import axiosInstance from "@/lib/axios-instance";
 
+import type { FilterType } from "@/pages/operator-page/types";
+
 import type { StationDetailResponse, StationResponse } from "@/types/station";
-import type { ItemSummaryResponse } from "@/types/item";
 
 export const ItemService = {
-  getItemSummary: async () => {
-    const response = await axiosInstance.get(ITEM_SUMMARY_ENDPOINT);
-    return response.data as ItemSummaryResponse;
-  },
-  getItems: async (params: unknown) => {
-    const response = await axiosInstance.get(ITEM_ENDPOINT, { params });
+  getItems: async (params: FilterType) => {
+    const response = await axiosInstance.get(ITEM_ENDPOINT, {
+      params: {
+        ...params,
+        detected_from: params.detected_from
+          ? dayjs(params.detected_from).toISOString()
+          : undefined,
+        detected_to: params.detected_to
+          ? dayjs(params.detected_to).toISOString()
+          : undefined,
+      },
+    });
     return response.data as StationResponse;
   },
   getItemDetail: async (id?: string) => {

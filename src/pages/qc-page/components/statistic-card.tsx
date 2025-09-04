@@ -5,9 +5,13 @@ import { parseAsInteger, useQueryState } from "nuqs";
 import { useAuth } from "@/hooks/auth/use-auth-v2";
 import { useReviewAPI } from "@/hooks/review/use-review";
 import { REVIEW_STATE } from "@/contants/review";
+import { TABS } from "../constants/tabs";
 
 export default function StatisticCard() {
   const { user } = useAuth();
+  const [tabs] = useQueryState("tabs", {
+    defaultValue: TABS[0].value,
+  });
   const [page] = useQueryState("page", parseAsInteger.withDefault(1));
   const [line] = useQueryState("line", {
     defaultValue: user?.line?.id ? String(user.line?.id) : "",
@@ -19,7 +23,8 @@ export default function StatisticCard() {
   const { data } = useReviewAPI({
     page: page,
     line_id: line,
-    status: REVIEW_STATE.PENDING,
+    review_state:
+      tabs === TABS[0].value ? REVIEW_STATE.PENDING : REVIEW_STATE.REJECTED,
     defect_type_id: defect,
   });
 

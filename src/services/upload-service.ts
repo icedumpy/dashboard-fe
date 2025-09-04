@@ -5,9 +5,7 @@ export const UploadService = {
   getImageBold: async (image_path?: string) => {
     const response = await axiosInstance.get(
       IMAGE_PATH_ENDPOINT.replace("{image_path}", image_path || ""),
-      {
-        responseType: "blob",
-      }
+      { responseType: "blob" }
     );
 
     return response.data;

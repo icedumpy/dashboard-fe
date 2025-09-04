@@ -1,11 +1,11 @@
 import { cn } from "@/lib/utils";
 
-import type { ItemSummaryResponse } from "@/types/item";
+import type { StationResponse } from "@/types/station";
 
 export default function StatisticRoll({
   data,
 }: {
-  data?: ItemSummaryResponse["roll"];
+  data?: StationResponse["summary"];
 }) {
   return (
     <div className="flex flex-wrap gap-2">
@@ -44,7 +44,7 @@ export default function StatisticRoll({
         <p className="text-xl font-bold">{data?.pending_defect ?? 0}</p>
         <span className="text-xs">จำนวน Defect ที่รอการตรวจสอบ</span>
       </div>
-      <div
+      {/* <div
         className={cn(
           "min-w-[120px] p-2 border rounded text-center flex-1 min-w-[120px",
           "bg-red-100 border-red-300 text-red-700"
@@ -52,7 +52,7 @@ export default function StatisticRoll({
       >
         <p className="text-xl font-bold">{data?.pending_scrap ?? 0}</p>
         <span className="text-xs">จำนวน Scrap ที่รอการตรวจสอบ</span>
-      </div>
+      </div> */}
     </div>
   );
 }

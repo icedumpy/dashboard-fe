@@ -72,11 +72,7 @@ export default function ConfirmButton({
     );
   }, [id, imageUpload, itemFixRequest, queryClient]);
 
-  const ALLOWED_STATUSES = [
-    STATION_STATUS.DEFECT,
-    STATION_STATUS.SCRAP,
-    STATION_STATUS.REJECTED,
-  ];
+  const ALLOWED_STATUSES = [STATION_STATUS.DEFECT, STATION_STATUS.REJECTED];
 
   if (!ALLOWED_STATUSES.includes(status) || user?.role === ROLES.VIEWER)
     return null;

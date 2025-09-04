@@ -6,7 +6,7 @@ import ViewDetailButton from "./view-detail-button";
 import ApproveButton from "./approve-button";
 import RejectButton from "./reject-button";
 
-import { ITEM_ENDPOINT } from "@/contants/api";
+import { REVIEW_ENDPOINT } from "@/contants/api";
 import { useReviewDecisionAPI } from "@/hooks/review/use-review-decision";
 import { REVIEW_STATE } from "@/contants/review";
 import useDismissDialog from "@/hooks/use-dismiss-dialog";
@@ -22,15 +22,17 @@ export default function ActionButton({ id }: { id: string }) {
         { reviewId: id, decision: decision, note: note ?? "" },
         {
           onSuccess() {
-            toast.success("Review submitted successfully!");
+            toast.success("อนุมัติการแก้ไขสำเร็จ");
             queryClient.invalidateQueries({
-              queryKey: [ITEM_ENDPOINT],
+              queryKey: [REVIEW_ENDPOINT],
               exact: false,
             });
             dismissDialog.dismiss();
           },
-          onError() {
-            toast.error("Failed to submit review. Please try again.");
+          onError(error) {
+            toast.error("อนุมัติการแก้ไขไม่สำเร็จ", {
+              description: error.message,
+            });
           },
         }
       );
