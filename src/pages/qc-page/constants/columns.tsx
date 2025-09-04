@@ -63,6 +63,11 @@ export const COLUMNS: ColumnDef<ReviewT>[] = [
     accessorKey: 'id',
     header: 'Action',
     meta: { className: 'text-center' },
-    cell: info => <ActionButton id={String(info.row?.original?.item?.id)} />,
+    cell: info => (
+      <ActionButton
+        item_id={String(info.row?.original?.item?.id)}
+        review_id={String(info.row?.original?.id)}
+      />
+    ),
   },
 ];

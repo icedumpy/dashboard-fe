@@ -1,17 +1,24 @@
-import { useQueryClient } from "@tanstack/react-query";
-import { useCallback } from "react";
-import { toast } from "sonner";
+import { useQueryClient } from '@tanstack/react-query';
+import { useCallback } from 'react';
+import { toast } from 'sonner';
 
-import ViewDetailButton from "./view-detail-button";
-import ApproveButton from "./approve-button";
-import RejectButton from "./reject-button";
+import ApproveButton from './approve-button';
+import RejectButton from './reject-button';
+import ViewDetailButton from './view-detail-button';
 
-import { REVIEW_ENDPOINT } from "@/contants/api";
-import { useReviewDecisionAPI } from "@/hooks/review/use-review-decision";
-import { REVIEW_STATE } from "@/contants/review";
-import useDismissDialog from "@/hooks/use-dismiss-dialog";
+import { REVIEW_ENDPOINT } from '@/contants/api';
+import { REVIEW_STATE } from '@/contants/review';
+import { useReviewDecisionAPI } from '@/hooks/review/use-review-decision';
+import useDismissDialog from '@/hooks/use-dismiss-dialog';
+import { id } from 'zod/v4/locales';
 
-export default function ActionButton({ id }: { id: string }) {
+export default function ActionButton({
+  item_id,
+  review_id,
+}: {
+  item_id: string;
+  review_id: string;
+}) {
   const reviewDecision = useReviewDecisionAPI();
   const queryClient = useQueryClient();
   const dismissDialog = useDismissDialog();
@@ -19,10 +26,10 @@ export default function ActionButton({ id }: { id: string }) {
   const handleReview = useCallback(
     (decision: string, note?: string) => {
       reviewDecision.mutate(
-        { reviewId: id, decision: decision, note: note ?? "" },
+        { reviewId: review_id, decision: decision, note: note ?? '' },
         {
           onSuccess() {
-            toast.success("อนุมัติการแก้ไขสำเร็จ");
+            toast.success('อนุมัติการแก้ไขสำเร็จ');
             queryClient.invalidateQueries({
               queryKey: [REVIEW_ENDPOINT],
               exact: false,
@@ -30,28 +37,28 @@ export default function ActionButton({ id }: { id: string }) {
             dismissDialog.dismiss();
           },
           onError(error) {
-            toast.error("อนุมัติการแก้ไขไม่สำเร็จ", {
+            toast.error('อนุมัติการแก้ไขไม่สำเร็จ', {
               description: error.message,
             });
           },
-        }
+        },
       );
     },
-    [id, reviewDecision, queryClient, dismissDialog]
+    [id, reviewDecision, queryClient, dismissDialog],
   );
 
   return (
     <div className="flex gap-2">
-      <ViewDetailButton id={id} />
+      <ViewDetailButton id={item_id} />
       <ApproveButton
-        id={id}
+        id={review_id}
         isLoading={reviewDecision.isPending}
-        onSubmit={(value) => handleReview(REVIEW_STATE.APPROVED, value.note)}
+        onSubmit={value => handleReview(REVIEW_STATE.APPROVED, value.note)}
       />
       <RejectButton
-        id={id}
+        id={review_id}
         isLoading={reviewDecision.isPending}
-        onSubmit={(value) => handleReview(REVIEW_STATE.REJECTED, value.note)}
+        onSubmit={value => handleReview(REVIEW_STATE.REJECTED, value.note)}
       />
     </div>
   );
