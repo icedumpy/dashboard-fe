@@ -46,7 +46,7 @@ export default function ApproveButton({
   });
 
   const { data } = useItemDetailAPI(id, {
-    enabled: !id && open,
+    enabled: open,
   });
 
   return (
