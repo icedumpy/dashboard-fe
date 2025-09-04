@@ -24,11 +24,13 @@ export default function ActionButton({
 
   const handleReview = useCallback(
     (decision: string, note?: string) => {
+      const title =
+        decision === REVIEW_STATE.APPROVED ? "อนุมัติ" : "ไม่อนุมัติ";
       reviewDecision.mutate(
         { reviewId: review_id, decision: decision, note: note ?? "" },
         {
           onSuccess() {
-            toast.success("อนุมัติการแก้ไขสำเร็จ");
+            toast.success(`${title}การแก้ไขสำเร็จ`);
             queryClient.invalidateQueries({
               queryKey: [REVIEW_ENDPOINT],
               exact: false,
@@ -36,7 +38,7 @@ export default function ActionButton({
             dismissDialog.dismiss();
           },
           onError(error) {
-            toast.error("อนุมัติการแก้ไขไม่สำเร็จ", {
+            toast.error(`${title}การแก้ไขไม่สำเร็จ`, {
               description: error.message,
             });
           },
