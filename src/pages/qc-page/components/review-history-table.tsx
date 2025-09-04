@@ -63,7 +63,13 @@ export default function ReviewHistoryTable() {
               ))}
             </SelectContent>
           </Select>
-          <Select value={line} onValueChange={setLine}>
+          <Select
+            value={line}
+            onValueChange={(value) => {
+              setPage(1);
+              setLine(value);
+            }}
+          >
             <SelectTrigger>
               <SelectValue placeholder="เลือกสถานะ" />
             </SelectTrigger>

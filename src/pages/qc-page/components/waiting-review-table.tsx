@@ -41,7 +41,13 @@ export default function WaitingReviewTable() {
       <div className="flex justify-between gap-2">
         <p>รายการที่รอตรวจสอบ</p>
         <div className="flex justify-between gap-2">
-          <Select value={line} onValueChange={setLine}>
+          <Select
+            value={line}
+            onValueChange={(value) => {
+              setPage(1);
+              setLine(value);
+            }}
+          >
             <SelectTrigger>
               <SelectValue placeholder="เลือกสถานะ" />
             </SelectTrigger>
