@@ -1,30 +1,30 @@
-import { parseAsInteger, useQueryState } from 'nuqs';
+import { parseAsInteger, useQueryState } from "nuqs";
 
-import DataTable from '@/components/data-table';
+import DataTable from "@/components/data-table";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
+} from "@/components/ui/select";
 
-import { ALL_OPTION } from '@/contants/option';
-import { REVIEW_STATE } from '@/contants/review';
-import { useAuth } from '@/hooks/auth/use-auth-v2';
-import { useDefectOptionAPI } from '@/hooks/option/use-defect-option';
-import { useProductionLineOptions } from '@/hooks/option/use-production-line-option';
-import { useReviewAPI } from '@/hooks/review/use-review';
-import { COLUMNS } from '../constants/columns';
+import { ALL_OPTION } from "@/contants/option";
+import { REVIEW_STATE } from "@/contants/review";
+import { useAuth } from "@/hooks/auth/use-auth-v2";
+import { useDefectOptionAPI } from "@/hooks/option/use-defect-option";
+import { useProductionLineOptions } from "@/hooks/option/use-production-line-option";
+import { useReviewAPI } from "@/hooks/review/use-review";
+import { COLUMNS } from "../constants/columns";
 
 export default function WaitingReviewTable() {
   const { user } = useAuth();
-  const [page, setPage] = useQueryState('page', parseAsInteger.withDefault(1));
-  const [line, setLine] = useQueryState('line', {
-    defaultValue: user?.line?.id ? String(user.line?.id) : '',
+  const [page, setPage] = useQueryState("page", parseAsInteger.withDefault(1));
+  const [line, setLine] = useQueryState("line", {
+    defaultValue: user?.line?.id ? String(user.line?.id) : "",
   });
-  const [defect, setDefect] = useQueryState('defect', {
-    defaultValue: 'all',
+  const [defect, setDefect] = useQueryState("defect", {
+    defaultValue: "all",
   });
 
   const { data: lineOptions } = useProductionLineOptions();
@@ -32,8 +32,8 @@ export default function WaitingReviewTable() {
   const { data } = useReviewAPI({
     page: page,
     line_id: line,
-    review_state: REVIEW_STATE.PENDING,
-    defect_type_id: defect === 'all' ? undefined : defect,
+    review_state: [REVIEW_STATE.PENDING],
+    defect_type_id: defect === "all" ? undefined : defect,
   });
 
   return (
@@ -46,7 +46,7 @@ export default function WaitingReviewTable() {
               <SelectValue placeholder="เลือกสถานะ" />
             </SelectTrigger>
             <SelectContent>
-              {lineOptions?.map(option => (
+              {lineOptions?.map((option) => (
                 <SelectItem key={option.value} value={option.value}>
                   {option.label}
                 </SelectItem>
@@ -58,7 +58,7 @@ export default function WaitingReviewTable() {
               <SelectValue className="w-2xs" placeholder="เลือกประเภทความผิด" />
             </SelectTrigger>
             <SelectContent>
-              {[...ALL_OPTION, ...(defectOptions ?? [])]?.map(option => (
+              {[...ALL_OPTION, ...(defectOptions ?? [])]?.map((option) => (
                 <SelectItem key={option.value} value={option.value}>
                   {option.label}
                 </SelectItem>

@@ -9,9 +9,12 @@ export default function TabsCard() {
     defaultValue: TABS[0].value,
   });
   const [, setPage] = useQueryState("page", parseAsInteger.withDefault(1));
-
+  const [, setReviewState] = useQueryState("review-state", {
+    defaultValue: "all",
+  });
   const onTabChange = (value: string) => {
     setTabs(value);
+    setReviewState("all");
     setPage(1);
   };
   return (
