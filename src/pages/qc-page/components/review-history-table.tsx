@@ -81,7 +81,13 @@ export default function ReviewHistoryTable() {
               ))}
             </SelectContent>
           </Select>
-          <Select value={defect} onValueChange={setDefect}>
+          <Select
+            value={defect}
+            onValueChange={(value) => {
+              setPage(1);
+              setDefect(value);
+            }}
+          >
             <SelectTrigger>
               <SelectValue className="w-2xs" placeholder="เลือกประเภทความผิด" />
             </SelectTrigger>
