@@ -76,6 +76,8 @@ export const COLUMNS: ColumnDef<ReviewT>[] = [
     accessorKey: "id",
     header: "Action",
     meta: { className: "text-center" },
-    cell: (info) => <ViewDetailButton id={info.getValue<string>()} />,
+    cell: (info) => (
+      <ViewDetailButton itemId={String(info.row.original.item.id)} />
+    ),
   },
 ];

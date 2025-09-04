@@ -48,7 +48,7 @@ export default function ActionButton({
 
   return (
     <div className="flex gap-2">
-      <ViewDetailButton id={item_id} />
+      <ViewDetailButton itemId={item_id} />
       <ApproveButton
         id={item_id}
         isLoading={reviewDecision.isPending}

@@ -17,11 +17,10 @@ import ProductDetail from "@/pages/operator-page/components/production-details";
 
 import { useItemDetailAPI } from "@/hooks/item/use-item-detail";
 
-export default function ViewDetailButton({ id }: { id: string }) {
+export default function ViewDetailButton({ itemId }: { itemId: string }) {
   const [open, setOpen] = useState(false);
-  const { data } = useItemDetailAPI(id, {
+  const { data } = useItemDetailAPI(itemId, {
     enabled: open,
-    staleTime: Infinity,
   });
 
   return (
@@ -29,6 +28,7 @@ export default function ViewDetailButton({ id }: { id: string }) {
       <DialogTrigger asChild>
         <Button className="size-8 text-primary" variant="secondary">
           <EyeIcon />
+          {itemId}
         </Button>
       </DialogTrigger>
       <DialogContent
