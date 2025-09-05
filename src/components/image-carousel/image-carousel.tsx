@@ -72,15 +72,15 @@ export default function ImageCarousel({ images }: ImageCarouselProps) {
         <CarouselContent>
           {images?.map((image, idx) => (
             <CarouselItem key={image.id}>
-              <div className="grid place-content-center">
+              <div className="grid place-content-center aspect-video">
                 {imageUrls[idx] ? (
                   <ImageZoom
-                    className="m-auto aspect-video"
+                    className="object-contain aspect-video"
                     src={imageUrls[idx]}
                     alt={imageUrls[idx]}
                   />
                 ) : (
-                  <div className="grid w-full h-full text-sm place-content-center bg-accent text-muted-foreground">
+                  <div className="bg-accent text-muted-foreground">
                     {imageBlobs[idx] instanceof Error
                       ? imageBlobs[idx].message
                       : "Loading..."}
