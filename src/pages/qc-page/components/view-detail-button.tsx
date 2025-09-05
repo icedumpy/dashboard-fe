@@ -14,14 +14,21 @@ import {
 import ImageDefect from "@/pages/operator-page/components/image-defect";
 import ImageRepair from "@/pages/operator-page/components/image-repair";
 import ProductDetail from "@/pages/operator-page/components/production-details";
+import UpdateStatusButton from "@/components/update-status-button";
 
 import { useItemDetailAPI } from "@/hooks/item/use-item-detail";
+import { STATION_STATUS } from "@/contants/station";
 
 export default function ViewDetailButton({ itemId }: { itemId: string }) {
   const [open, setOpen] = useState(false);
   const { data } = useItemDetailAPI(itemId, {
     enabled: open,
   });
+
+  const canUpdateStatus = [
+    STATION_STATUS.NORMAL,
+    STATION_STATUS.SCRAP,
+  ].includes(data?.data?.status_code || "");
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -69,6 +76,7 @@ export default function ViewDetailButton({ itemId }: { itemId: string }) {
           </div>
         </div>
         <DialogFooter>
+          {canUpdateStatus && <UpdateStatusButton />}
           <DialogClose asChild>
             <Button variant="outline">ปิด</Button>
           </DialogClose>
