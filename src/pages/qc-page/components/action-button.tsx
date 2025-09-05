@@ -50,7 +50,7 @@ export default function ActionButton({
         }
       );
     },
-    [reviewDecision, reviewId, queryClient, dismissDialog]
+    [reviewId, reviewDecision, queryClient, dismissDialog]
   );
 
   return (
