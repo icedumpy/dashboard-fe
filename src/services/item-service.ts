@@ -1,5 +1,3 @@
-import dayjs from "dayjs";
-
 import {
   ITEM_ENDPOINT,
   ITEM_FIX_REQUEST_ENDPOINT,
@@ -7,9 +5,9 @@ import {
   ITEM_SCRAP_ENDPOINT,
 } from "@/contants/api";
 import axiosInstance from "@/lib/axios-instance";
+import { formatDetectedRange } from "@/lib/utils";
 
 import type { FilterType } from "@/pages/operator-page/types";
-
 import type { StationDetailResponse, StationResponse } from "@/types/station";
 
 export const ItemService = {
@@ -17,12 +15,7 @@ export const ItemService = {
     const response = await axiosInstance.get(ITEM_ENDPOINT, {
       params: {
         ...params,
-        detected_from: params.detected_from
-          ? dayjs(params.detected_from).toISOString()
-          : undefined,
-        detected_to: params.detected_to
-          ? dayjs(params.detected_to).toISOString()
-          : undefined,
+        ...formatDetectedRange(params.detected_from, params.detected_to),
       },
     });
     return response.data as StationResponse;

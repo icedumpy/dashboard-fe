@@ -6,10 +6,9 @@ import {
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { Button } from "@/components/ui/button";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, XIcon } from "lucide-react";
 import { DATE_FORMAT } from "@/contants/format";
 import dayjs from "dayjs";
-
 interface InputDateProps {
   value?: Date;
   onChange?: (date: Date | undefined) => void;
@@ -37,14 +36,33 @@ export function InputDate({
           aria-expanded={open}
           id="date"
           disabled={disabled}
-          className="justify-between w-full font-normal"
+          className="justify-between w-full px-3! font-normal group"
         >
           {value ? (
             dayjs(value).format(format)
           ) : (
             <span className="text-muted-foreground">{placeholder}</span>
           )}
-          <CalendarIcon />
+
+          {value ? (
+            <button
+              type="button"
+              aria-label="Clear date"
+              className="hidden cursor-pointer size-4 group-hover:block"
+              tabIndex={0}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                if (onChange) {
+                  onChange(undefined);
+                }
+              }}
+            >
+              <XIcon />
+            </button>
+          ) : (
+            <CalendarIcon />
+          )}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0 overflow-hidden" align="start">
