@@ -78,8 +78,8 @@ export const COLUMNS: ColumnDef<ReviewT>[] = [
     meta: { className: "text-center" },
     cell: (info) => (
       <ActionButton
-        item_id={String(info.row?.original?.item?.id)}
-        review_id={String(info.row?.original?.id)}
+        reviewId={info.getValue<string>()}
+        itemId={String(info.row.original.item.id)}
       />
     ),
   },
