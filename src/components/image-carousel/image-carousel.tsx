@@ -9,6 +9,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import ImageZoom from "../image-zoom";
 
 import { UploadService } from "@/services/upload-service";
 import { IMAGE_PATH_ENDPOINT } from "@/contants/api";
@@ -70,21 +71,22 @@ export default function ImageCarousel({ images }: ImageCarouselProps) {
       <Carousel className="border rounded" setApi={setApi}>
         <CarouselContent>
           {images?.map((image, idx) => (
-            <CarouselItem key={image.id} className="aspect-video">
-              {imageUrls[idx] ? (
-                <img
-                  src={imageUrls[idx]}
-                  className="object-contain w-auto h-full mx-auto"
-                  id={encodeURIComponent(image.path)}
-                  alt={`Defect image ${image.id}`}
-                />
-              ) : (
-                <div className="grid w-full h-full text-sm place-content-center bg-accent text-muted-foreground">
-                  {imageBlobs[idx] instanceof Error
-                    ? imageBlobs[idx].message
-                    : "Loading..."}
-                </div>
-              )}
+            <CarouselItem key={image.id}>
+              <div className="grid place-content-center">
+                {imageUrls[idx] ? (
+                  <ImageZoom
+                    className="m-auto aspect-video"
+                    src={imageUrls[idx]}
+                    alt={imageUrls[idx]}
+                  />
+                ) : (
+                  <div className="grid w-full h-full text-sm place-content-center bg-accent text-muted-foreground">
+                    {imageBlobs[idx] instanceof Error
+                      ? imageBlobs[idx].message
+                      : "Loading..."}
+                  </div>
+                )}
+              </div>
             </CarouselItem>
           ))}
         </CarouselContent>

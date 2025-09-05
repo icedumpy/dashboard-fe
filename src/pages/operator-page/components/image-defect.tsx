@@ -9,7 +9,7 @@ export default function ImageDefect({ images }: { images?: ImageT[] }) {
     <div className="space-y-2">
       <h3 className="font-bold text-orange-600">รูปที่ระบบตรวจพบ</h3>
       {isEmpty(images) ? (
-        <div className="grid pb-2 text-sm border rounded place-content-center aspect-[16/9.4] bg-accent text-muted-foreground">
+        <div className="grid pb-2 text-sm border rounded place-content-center aspect-video bg-accent text-muted-foreground">
           ไม่มีรูปภาพ
         </div>
       ) : (

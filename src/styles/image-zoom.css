@@ -1,0 +1,13 @@
+.rc-image-preview-operations-wrapper {
+  pointer-events: all;
+}
+
+.rc-image-preview-mask {
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(8px);
+}
+
+.rc-image-preview-operations {
+  border-radius: 6px;
+  padding: 0 4px;
+}
