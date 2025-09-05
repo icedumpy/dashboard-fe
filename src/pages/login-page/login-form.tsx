@@ -31,8 +31,6 @@ export default function LoginCard() {
     login(values);
   }
 
-  console.log("loginError", loginError);
-
   return (
     <FormProvider {...form}>
       <form className="space-y-6" onSubmit={form.handleSubmit(onSubmit)}>
