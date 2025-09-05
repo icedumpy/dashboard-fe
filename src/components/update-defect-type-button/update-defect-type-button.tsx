@@ -51,12 +51,12 @@ export default function UpdateDefectTypeButton({ itemId }: { itemId: string }) {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger>
         <Button className="bg-amber-600 hover:bg-amber-600/90">
-          แก้ใขสถานะ
+          แก้ไขประเภท Defect
         </Button>
       </DialogTrigger>
       <DialogContent aria-describedby={undefined}>
         <DialogHeader>
-          <DialogTitle>แก้ใขสถานะ</DialogTitle>
+          <DialogTitle>แก้ไขประเภท Defect</DialogTitle>
         </DialogHeader>
         <div>
           <Form {...form}>
