@@ -14,11 +14,11 @@ import { useReviewDecisionAPI } from "@/hooks/review/use-review-decision";
 import { TABS } from "../constants/tabs";
 
 export default function ActionButton({
-  item_id,
-  review_id,
+  itemId,
+  reviewId,
 }: {
-  item_id: string;
-  review_id: string;
+  itemId: string;
+  reviewId: string;
 }) {
   const [tabs] = useQueryState("tabs", {
     defaultValue: TABS[0].value,
@@ -32,7 +32,7 @@ export default function ActionButton({
       const title =
         decision === REVIEW_STATE.APPROVED ? "อนุมัติ" : "ไม่อนุมัติ";
       reviewDecision.mutate(
-        { reviewId: review_id, decision: decision, note: note ?? "" },
+        { reviewId: reviewId, decision: decision, note: note ?? "" },
         {
           onSuccess() {
             toast.success(`${title}การแก้ไขสำเร็จ`);
@@ -50,23 +50,23 @@ export default function ActionButton({
         }
       );
     },
-    [reviewDecision, review_id, queryClient, dismissDialog]
+    [reviewDecision, reviewId, queryClient, dismissDialog]
   );
 
   return (
     <div className="flex gap-2">
-      <ViewDetailButton itemId={item_id} />
+      <ViewDetailButton itemId={itemId} />
       {tabs === TABS[0].value && (
         <>
           <ApproveButton
-            id={item_id}
+            itemId={itemId}
             isLoading={reviewDecision.isPending}
             onSubmit={(value) =>
               handleReview(REVIEW_STATE.APPROVED, value.note)
             }
           />
           <RejectButton
-            id={item_id}
+            itemId={itemId}
             isLoading={reviewDecision.isPending}
             onSubmit={(value) =>
               handleReview(REVIEW_STATE.REJECTED, value.note)
