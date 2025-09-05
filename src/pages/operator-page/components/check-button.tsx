@@ -87,7 +87,7 @@ export default function CheckButton({
         },
         onError(error) {
           toast.error("แก้ไขไม่สำเร็จ", {
-            description: JSON.stringify(error),
+            description: error.message,
           });
         },
       }

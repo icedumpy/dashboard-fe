@@ -30,11 +30,11 @@ const schema = z.object({
 });
 
 export default function RejectButton({
-  id,
+  itemId,
   onSubmit,
   isLoading,
 }: {
-  id: string;
+  itemId: string;
   onSubmit: (data: z.infer<typeof schema>) => void;
   isLoading?: boolean;
 }) {
@@ -46,7 +46,7 @@ export default function RejectButton({
     resolver: zodResolver(schema),
   });
 
-  const { data } = useItemDetailAPI(id, {
+  const { data } = useItemDetailAPI(itemId, {
     enabled: open,
   });
 
