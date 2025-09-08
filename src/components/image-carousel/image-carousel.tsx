@@ -70,25 +70,27 @@ export default function ImageCarousel({ images }: ImageCarouselProps) {
     <div className="relative overflow-hidden">
       <Carousel className="border rounded" setApi={setApi}>
         <CarouselContent>
-          {images?.map((image, idx) => (
-            <CarouselItem key={image.id}>
-              <div className="grid place-content-center aspect-video">
-                {imageUrls[idx] ? (
-                  <ImageZoom
-                    className="object-contain aspect-video"
-                    src={imageUrls[idx]}
-                    alt={imageUrls[idx]}
-                  />
-                ) : (
-                  <div className="bg-accent text-muted-foreground">
-                    {imageBlobs[idx] instanceof Error
-                      ? imageBlobs[idx].message
-                      : "Loading..."}
-                  </div>
-                )}
-              </div>
-            </CarouselItem>
-          ))}
+          <ImageZoom.PreviewGroup>
+            {images?.map((image, idx) => (
+              <CarouselItem key={image.id}>
+                <div className="grid place-content-center aspect-video">
+                  {imageUrls[idx] ? (
+                    <ImageZoom
+                      className="object-contain aspect-video"
+                      src={imageUrls[idx]}
+                      alt={imageUrls[idx]}
+                    />
+                  ) : (
+                    <div className="bg-accent text-muted-foreground">
+                      {imageBlobs[idx] instanceof Error
+                        ? imageBlobs[idx].message
+                        : "Loading..."}
+                    </div>
+                  )}
+                </div>
+              </CarouselItem>
+            ))}
+          </ImageZoom.PreviewGroup>
         </CarouselContent>
         <CarouselNext className="right-2" />
         <CarouselPrevious className="left-2" />

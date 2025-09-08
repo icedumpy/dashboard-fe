@@ -1,10 +1,16 @@
+.rc-image-preview-root,
+.rc-image-preview-wrap {
+  pointer-events: auto;
+}
+
 .rc-image-preview-operations-wrapper {
-  pointer-events: all;
+  pointer-events: auto;
 }
 
 .rc-image-preview-mask {
   background-color: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(8px);
+  pointer-events: auto;
 }
 
 .rc-image-preview-operations {
