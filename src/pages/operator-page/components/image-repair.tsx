@@ -9,7 +9,7 @@ export default function ImageRepair({ images }: { images?: ImageT[] }) {
     <div className="space-y-2">
       <h3 className="font-bold text-green-600">รูปหลังการแก้ไข (Repair)</h3>
       {isEmpty(images) ? (
-        <div className="grid h-full text-sm border rounded place-content-center aspect-[16/9.4] bg-accent text-muted-foreground">
+        <div className="grid h-full text-sm border rounded place-content-center aspect-video bg-accent text-muted-foreground">
           ไม่มีรูปภาพ
         </div>
       ) : (
