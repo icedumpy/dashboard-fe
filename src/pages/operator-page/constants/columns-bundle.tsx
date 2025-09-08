@@ -10,6 +10,7 @@ import { DATE_TIME_FORMAT } from "@/contants/format";
 import { STATION_STATUS } from "@/contants/station";
 
 import type { StationItemType } from "@/types/station";
+import StatusHistoryButton from "../components/status-history-button";
 
 export const COLUMNS_BUNDLE: ColumnDef<StationItemType>[] = [
   {
@@ -52,6 +53,11 @@ export const COLUMNS_BUNDLE: ColumnDef<StationItemType>[] = [
         note={info.row.original.defects?.join(", ")}
       />
     ),
+  },
+  {
+    accessorKey: "history",
+    header: "History",
+    cell: () => <StatusHistoryButton />,
   },
   {
     accessorKey: "action",
