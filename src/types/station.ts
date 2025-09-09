@@ -7,7 +7,7 @@ export type StationType = (typeof STATION)[keyof typeof STATION];
 
 export interface StationItemType {
   id: number;
-  station: string;
+  station: (typeof STATION)[keyof typeof STATION];
   line_id: number;
   product_code?: string;
   roll_number?: string;

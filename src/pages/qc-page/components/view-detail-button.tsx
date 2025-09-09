@@ -17,18 +17,12 @@ import ProductDetail from "@/pages/operator-page/components/production-details";
 import UpdateStatusButton from "@/components/update-status-button";
 
 import { useItemDetailAPI } from "@/hooks/item/use-item-detail";
-import { STATION_STATUS } from "@/contants/station";
 
 export default function ViewDetailButton({ itemId }: { itemId: string }) {
   const [open, setOpen] = useState(false);
   const { data } = useItemDetailAPI(itemId, {
     enabled: open && Boolean(itemId),
   });
-
-  const canUpdateStatus = ![
-    STATION_STATUS.NORMAL,
-    STATION_STATUS.SCRAP,
-  ].includes(data?.data?.status_code || "");
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -76,7 +70,12 @@ export default function ViewDetailButton({ itemId }: { itemId: string }) {
           </div>
         </div>
         <DialogFooter>
-          {canUpdateStatus && <UpdateStatusButton itemId={itemId} />}
+          {data?.data.station && (
+            <UpdateStatusButton
+              itemId={itemId}
+              stationType={data.data.station}
+            />
+          )}
           <DialogClose asChild>
             <Button variant="outline">ปิด</Button>
           </DialogClose>

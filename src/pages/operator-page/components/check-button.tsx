@@ -19,7 +19,7 @@ import ConfirmEditChecklist from "./confirm-edit-check-list";
 import ImageDefect from "./image-defect";
 import ImageRepair from "./image-repair";
 import ProductDetail from "./production-details";
-import UpdateStatusButton from "./update-status-button";
+import UpdateStatusButton from "@/components/update-status-button";
 
 import { ITEM_ENDPOINT } from "@/contants/api";
 import { STATION_STATUS } from "@/contants/station";
