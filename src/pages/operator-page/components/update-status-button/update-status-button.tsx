@@ -48,6 +48,7 @@ export default function UpdateStatusButton({
     enabled: !!itemId && open,
   });
 
+  const isItemStatusDefect = data?.data.status_code === STATION_STATUS.DEFECT;
   const itemUpdateStatus = useItemStatusUpdate();
 
   const form = useForm<UpdateStatusT>({
@@ -127,13 +128,24 @@ export default function UpdateStatusButton({
     form.trigger("defect_type_ids");
   };
 
-  const RollDefectTypeOptions = useMemo(() => {
+  const statusOptions = useMemo(() => {
+    switch (isItemStatusDefect) {
+      case true:
+        return STATUS_OPTIONS;
+      default:
+        return STATUS_OPTIONS.filter(
+          (option) => option.value === STATION_STATUS.DEFECT
+        );
+    }
+  }, [isItemStatusDefect]);
+
+  const rollDefectTypeOptions = useMemo(() => {
     return defectOptions?.filter((option) =>
       ["LABEL", "BARCODE"].includes(String(option.meta?.code))
     );
   }, [defectOptions]);
 
-  const BundledDefectTypeOptions = useMemo(() => {
+  const bundledDefectTypeOptions = useMemo(() => {
     return defectOptions;
   }, [defectOptions]);
 
@@ -154,7 +166,7 @@ export default function UpdateStatusButton({
                 control={form.control}
                 render={({ field }) => (
                   <FormItem className="space-y-3">
-                    <FormLabel>สถานะ</FormLabel>
+                    <FormLabel>เลือกสถานะ</FormLabel>
                     <FormControl>
                       <RadioGroup
                         onValueChange={(value) => {
@@ -166,7 +178,7 @@ export default function UpdateStatusButton({
                         value={field.value}
                         className="grid grid-cols-1 gap-2 mb-0"
                       >
-                        {STATUS_OPTIONS.map((option) => (
+                        {statusOptions.map((option) => (
                           <FormItem key={option.value}>
                             <FormControl>
                               <div className="flex items-center space-x-2">
@@ -203,7 +215,7 @@ export default function UpdateStatusButton({
                                 }}
                                 className="grid grid-cols-2"
                               >
-                                {RollDefectTypeOptions?.map((item) => (
+                                {rollDefectTypeOptions?.map((item) => (
                                   <FormItem key={item.value} className="w-full">
                                     <FormControl>
                                       <Label
@@ -238,7 +250,7 @@ export default function UpdateStatusButton({
                         ) : (
                           <FormItem>
                             <div className="grid grid-cols-2 gap-2 lg:grid-cols-4">
-                              {BundledDefectTypeOptions?.map((item) => (
+                              {bundledDefectTypeOptions?.map((item) => (
                                 <Label
                                   key={item.value}
                                   className="hover:bg-accent/50 flex items-start gap-1 rounded border p-2 
