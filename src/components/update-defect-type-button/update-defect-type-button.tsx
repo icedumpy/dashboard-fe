@@ -98,8 +98,6 @@ export default function UpdateDefectTypeButton({
         },
       }
     );
-
-    setOpen(false);
   };
 
   const handleOnCheckedChange = (value: string) => (checked: boolean) => {
