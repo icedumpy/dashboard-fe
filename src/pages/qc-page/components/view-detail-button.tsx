@@ -25,7 +25,7 @@ export default function ViewDetailButton({ itemId }: { itemId: string }) {
     enabled: open,
   });
 
-  const canUpdateStatus = [
+  const canUpdateStatus = ![
     STATION_STATUS.NORMAL,
     STATION_STATUS.SCRAP,
   ].includes(data?.data?.status_code || "");
@@ -76,7 +76,7 @@ export default function ViewDetailButton({ itemId }: { itemId: string }) {
           </div>
         </div>
         <DialogFooter>
-          {canUpdateStatus && <UpdateStatusButton />}
+          {canUpdateStatus && <UpdateStatusButton itemId={itemId} />}
           <DialogClose asChild>
             <Button variant="outline">ปิด</Button>
           </DialogClose>

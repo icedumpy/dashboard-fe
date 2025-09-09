@@ -1,6 +1,8 @@
-import { useForm } from "react-hook-form";
+import { useQueryClient } from "@tanstack/react-query";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
 import { useState } from "react";
+import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -21,42 +23,62 @@ import {
 } from "@/components/ui/form";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
-import { STATION_STATUS } from "@/contants/station";
+import { useItemStatusUpdate } from "@/hooks/item/use-item-status-update";
+import { ITEM_ENDPOINT } from "@/contants/api";
 import { updateStatusSchema } from "./schema";
+import { STATUS_OPTIONS } from "./constants";
 
-import type { UpdateStatusT } from "./types";
+import type { UpdateStatusButtonProps, UpdateStatusT } from "./types";
 
-export default function UpdateStatusButton() {
+export default function UpdateStatusButton({
+  itemId,
+}: UpdateStatusButtonProps) {
+  const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
+  const updateItemStatus = useItemStatusUpdate();
   const form = useForm<UpdateStatusT>({
     defaultValues: {
       status: undefined,
+      defect_type_ids: undefined,
     },
     resolver: zodResolver(updateStatusSchema),
   });
 
-  const options = [
-    {
-      label: STATION_STATUS.NORMAL,
-      value: STATION_STATUS.NORMAL,
-    },
-    {
-      label: STATION_STATUS.SCRAP,
-      value: STATION_STATUS.SCRAP,
-    },
-  ];
+  const toggleOpen = () => {
+    setOpen((prev) => !prev);
+    form.reset();
+  };
 
-  const handleSubmit = (data: UpdateStatusT) => {
-    console.log(data);
+  const handleSubmit = (values: UpdateStatusT) => {
+    updateItemStatus.mutate(
+      {
+        itemId: String(itemId),
+        status: values.status,
+        defect_type_ids: values.defect_type_ids,
+      },
+      {
+        onSuccess() {
+          queryClient.invalidateQueries({ queryKey: [ITEM_ENDPOINT, itemId] });
+          toast.success("อัพเดตสถานะสำเร็จ");
+          form.reset();
+          setOpen(false);
+        },
+        onError(error) {
+          toast.error("อัพเดตสถานะไม่สำเร็จ", {
+            description: error.message,
+          });
+        },
+      }
+    );
   };
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={toggleOpen}>
       <DialogTrigger>
         <Button className="bg-amber-600 hover:bg-amber-600/90">
           แก้ไขสถานะ
         </Button>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent aria-describedby={undefined}>
         <DialogHeader>
           <DialogTitle>แก้ไขสถานะ</DialogTitle>
         </DialogHeader>
@@ -75,7 +97,7 @@ export default function UpdateStatusButton() {
                         defaultValue={field.value}
                         className="flex flex-col"
                       >
-                        {options?.map((option) => (
+                        {STATUS_OPTIONS?.map((option) => (
                           <FormItem
                             className="flex items-center gap-3"
                             key={option?.value}
@@ -98,7 +120,10 @@ export default function UpdateStatusButton() {
           </Form>
         </div>
         <DialogFooter>
-          <Button type="submit" onClick={form.handleSubmit(handleSubmit)}>
+          <Button
+            disabled={updateItemStatus.isPending || !form.formState.isValid}
+            onClick={form.handleSubmit(handleSubmit)}
+          >
             ยืนยัน
           </Button>
         </DialogFooter>
