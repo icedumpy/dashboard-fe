@@ -1,6 +1,7 @@
+import { useQueryClient } from "@tanstack/react-query";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
@@ -23,15 +24,21 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "../ui/label";
 
+import { useItemStatusUpdate } from "@/hooks/item/use-item-status-update";
 import { useDefectOptionAPI } from "@/hooks/option/use-defect-option";
 import { updateDefectTypeSchema } from "./schema";
+import { STATION_STATUS } from "@/contants/station";
+import { ITEM_ENDPOINT } from "@/contants/api";
+import useDismissDialog from "@/hooks/use-dismiss-dialog";
 
 import type { UpdateDefectTypeT } from "./type";
 
 export default function UpdateDefectTypeButton({ itemId }: { itemId: string }) {
+  const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
-
   const { data: defectOptions } = useDefectOptionAPI();
+  const updateItemStatus = useItemStatusUpdate();
+  const dialog = useDismissDialog();
 
   const toggleOpen = () => {
     setOpen((prev) => !prev);
@@ -46,8 +53,29 @@ export default function UpdateDefectTypeButton({ itemId }: { itemId: string }) {
   });
 
   const handleSubmit = (value: UpdateDefectTypeT) => {
-    console.log(itemId, value);
-    toast.success("อัพเดทประเภท Defect สำเร็จ");
+    updateItemStatus.mutate(
+      {
+        itemId: String(itemId),
+        status: STATION_STATUS.DEFECT,
+        defect_type_ids: value.type,
+      },
+      {
+        onSuccess() {
+          queryClient.invalidateQueries({ queryKey: [ITEM_ENDPOINT, itemId] });
+          queryClient.invalidateQueries({ queryKey: [ITEM_ENDPOINT] });
+          toast.success("อัพเดตสถานะสำเร็จ");
+          form.reset();
+          dialog.dismiss();
+          setOpen(false);
+        },
+        onError(error) {
+          toast.error("อัพเดตสถานะไม่สำเร็จ", {
+            description: error.message,
+          });
+        },
+      }
+    );
+
     setOpen(false);
   };
 
@@ -61,7 +89,6 @@ export default function UpdateDefectTypeButton({ itemId }: { itemId: string }) {
         currentType.filter((item) => item !== value)
       );
     }
-
     form.trigger("type");
   };
 
