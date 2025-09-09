@@ -14,12 +14,12 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import FileUpload from "@/components/ui/file-upload";
-import UpdateDefectTypeButton from "@/components/update-defect-type-button/update-defect-type-button";
 import ConfirmDetail from "./confirm-detail";
 import ConfirmEditChecklist from "./confirm-edit-check-list";
 import ImageDefect from "./image-defect";
 import ImageRepair from "./image-repair";
 import ProductDetail from "./production-details";
+import UpdateStatusButton from "./update-status-button";
 
 import { ITEM_ENDPOINT } from "@/contants/api";
 import { STATION_STATUS } from "@/contants/station";
@@ -27,7 +27,6 @@ import { useAuth } from "@/hooks/auth/use-auth-v2";
 import { useItemDetailAPI } from "@/hooks/item/use-item-detail";
 import { useItemFixRequest } from "@/hooks/item/use-item-fix-request";
 import { useImageUpload } from "@/hooks/upload/use-image-upload";
-import { ROLES } from "@/contants/auth";
 
 import type { ImageT } from "@/types/image";
 import type { CheckButtonProps } from "../types";
@@ -37,6 +36,7 @@ export default function CheckButton({
   status,
   is_pending_review,
   item_data,
+  stationType,
 }: CheckButtonProps) {
   const [open, setOpen] = useState(false);
   const [mode, setMode] = useState<"VIEW" | "EDIT">("VIEW");
@@ -49,7 +49,6 @@ export default function CheckButton({
 
   const { data } = useItemDetailAPI(String(id), {
     enabled: open,
-    staleTime: Infinity,
   });
 
   const imageUpload = useImageUpload();
@@ -61,10 +60,6 @@ export default function CheckButton({
   ].includes(status);
   const isCrossLine = Number(user?.line?.id) !== Number(line);
   const canEdit = isEditable && !isCrossLine && !is_pending_review;
-  const canUpdateDefectType = [
-    String(ROLES.OPERATOR),
-    String(ROLES.INSPECTOR),
-  ].includes(String(user?.role));
 
   const toggleOpen = useCallback(() => {
     setOpen(!open);
@@ -126,7 +121,7 @@ export default function CheckButton({
             <DialogTitle asChild>
               <div>
                 <h3 className="text-xl font-bold">
-                  ตรวจสอบ {item_data?.station.toUpperCase()} ({id})
+                  ตรวจสอบ {item_data?.station.toUpperCase()}
                 </h3>
                 <p className="text-sm font-normal text-muted-foreground">
                   {data?.data?.product_code} - Role {data?.data.roll_number}
@@ -162,12 +157,7 @@ export default function CheckButton({
           </div>
           <DialogFooter>
             {canEdit && <Button onClick={() => setMode("EDIT")}>แก้ไข</Button>}
-            {canUpdateDefectType && (
-              <UpdateDefectTypeButton
-                itemId={String(id)}
-                defects={data?.defects}
-              />
-            )}
+            <UpdateStatusButton itemId={String(id)} stationType={stationType} />
             <DialogClose asChild>
               <Button variant="outline">ปิด</Button>
             </DialogClose>
