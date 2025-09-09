@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useMemo, useState } from "react";
-import { Form, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { isEmpty } from "radash";
 import { toast } from "sonner";
 
@@ -15,6 +15,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import {
+  Form,
   FormControl,
   FormField,
   FormItem,
@@ -151,7 +152,7 @@ export default function UpdateStatusButton({
 
   return (
     <Dialog open={open} onOpenChange={toggleOpen}>
-      <DialogTrigger>
+      <DialogTrigger asChild>
         <Button variant="update">แก้ไขสถานะ</Button>
       </DialogTrigger>
       <DialogContent aria-describedby={undefined}>
@@ -159,7 +160,7 @@ export default function UpdateStatusButton({
           <DialogTitle>แก้ไขสถานะ </DialogTitle>
         </DialogHeader>
         <div>
-          <Form>
+          <Form {...form}>
             <form className="space-y-2">
               <FormField
                 name="status"
