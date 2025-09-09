@@ -1,7 +1,7 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
@@ -22,23 +22,28 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Label } from "../ui/label";
+import { Label } from "@/components/ui/label";
 
 import { useItemStatusUpdate } from "@/hooks/item/use-item-status-update";
 import { useDefectOptionAPI } from "@/hooks/option/use-defect-option";
 import { updateDefectTypeSchema } from "./schema";
 import { STATION_STATUS } from "@/contants/station";
 import { ITEM_ENDPOINT } from "@/contants/api";
-import useDismissDialog from "@/hooks/use-dismiss-dialog";
 
 import type { UpdateDefectTypeT } from "./type";
+import type { StationDetailResponse } from "@/types/station";
 
-export default function UpdateDefectTypeButton({ itemId }: { itemId: string }) {
+export default function UpdateDefectTypeButton({
+  itemId,
+  defects,
+}: {
+  itemId: string;
+  defects: StationDetailResponse["defects"];
+}) {
   const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
   const { data: defectOptions } = useDefectOptionAPI();
   const updateItemStatus = useItemStatusUpdate();
-  const dialog = useDismissDialog();
 
   const toggleOpen = () => {
     setOpen((prev) => !prev);
@@ -52,12 +57,31 @@ export default function UpdateDefectTypeButton({ itemId }: { itemId: string }) {
     resolver: zodResolver(updateDefectTypeSchema),
   });
 
+  useEffect(() => {
+    if (defects && defectOptions) {
+      const defaultDefectTypeIds =
+        defects
+          .map(
+            (defect) =>
+              defectOptions.find(
+                (option) => option.meta?.code === defect.defect_type_code
+              )?.value
+          )
+          .filter(Boolean)
+          .map(Number) ?? [];
+
+      form.reset({
+        type: defaultDefectTypeIds,
+      });
+    }
+  }, [defects, defectOptions, form]);
+
   const handleSubmit = (value: UpdateDefectTypeT) => {
     updateItemStatus.mutate(
       {
         itemId: String(itemId),
         status: STATION_STATUS.DEFECT,
-        defect_type_ids: value.type,
+        defect_type_ids: value.type.map(Number),
       },
       {
         onSuccess() {
@@ -65,7 +89,6 @@ export default function UpdateDefectTypeButton({ itemId }: { itemId: string }) {
           queryClient.invalidateQueries({ queryKey: [ITEM_ENDPOINT] });
           toast.success("อัพเดตสถานะสำเร็จ");
           form.reset();
-          dialog.dismiss();
           setOpen(false);
         },
         onError(error) {
@@ -82,11 +105,11 @@ export default function UpdateDefectTypeButton({ itemId }: { itemId: string }) {
   const handleOnCheckedChange = (value: string) => (checked: boolean) => {
     const currentType = form.getValues("type") || [];
     if (checked) {
-      form.setValue("type", [...currentType, value]);
+      form.setValue("type", [...currentType, Number(value)]);
     } else {
       form.setValue(
         "type",
-        currentType.filter((item) => item !== value)
+        currentType.filter((item) => item !== Number(value))
       );
     }
     form.trigger("type");
@@ -133,7 +156,9 @@ export default function UpdateDefectTypeButton({ itemId }: { itemId: string }) {
                                     id={item.value}
                                     className="data-[state=checked]:border-blue-600 data-[state=checked]:bg-blue-600 data-[state=checked]:text-white dark:data-[state=checked]:border-blue-700 dark:data-[state=checked]:bg-blue-700"
                                     value={item.value}
-                                    checked={field.value?.includes(item.value)}
+                                    checked={field.value?.includes(
+                                      Number(item.value)
+                                    )}
                                     onCheckedChange={handleOnCheckedChange(
                                       item.value
                                     )}

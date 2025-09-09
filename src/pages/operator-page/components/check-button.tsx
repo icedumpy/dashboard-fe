@@ -125,7 +125,7 @@ export default function CheckButton({
             <DialogTitle asChild>
               <div>
                 <h3 className="text-xl font-bold">
-                  ตรวจสอบ {item_data?.station.toUpperCase()}
+                  ตรวจสอบ {item_data?.station.toUpperCase()} ({id})
                 </h3>
                 <p className="text-sm font-normal text-muted-foreground">
                   {data?.data?.product_code} - Role {data?.data.roll_number}
@@ -162,7 +162,10 @@ export default function CheckButton({
           <DialogFooter>
             {canEdit && <Button onClick={() => setMode("EDIT")}>แก้ไข</Button>}
             {canUpdateDefectType && (
-              <UpdateDefectTypeButton itemId={String(id)} />
+              <UpdateDefectTypeButton
+                itemId={String(id)}
+                defects={data?.defects}
+              />
             )}
             <DialogClose asChild>
               <Button variant="outline">ปิด</Button>

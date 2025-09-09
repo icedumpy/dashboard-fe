@@ -4,7 +4,7 @@ import { useMutation } from "@tanstack/react-query";
 
 export interface ItemStatusUpdateParams {
   status: string;
-  defect_type_ids?: string[];
+  defect_type_ids?: number[];
 }
 
 export const useItemStatusUpdate = () =>
