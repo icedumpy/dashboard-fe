@@ -2,6 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useMemo, useState } from "react";
 import { Form, useForm } from "react-hook-form";
+import { isEmpty } from "radash";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
@@ -71,13 +72,12 @@ export default function UpdateStatusButton({
 
       form.reset({
         status: data.data.status_code,
-        defect_type_ids: defectIds,
+        defect_type_ids: isEmpty(defectIds) ? undefined : defectIds,
       });
     }
   }, [data?.data, data?.defects, defectOptions, form]);
 
   const handleSubmit = (values: UpdateStatusT) => {
-    console.log(values);
     itemUpdateStatus.mutate(
       {
         itemId: String(itemId),
@@ -112,11 +112,16 @@ export default function UpdateStatusButton({
   const handleOnCheckedChange = (value: string) => (checked: boolean) => {
     const currentType = form.getValues("defect_type_ids") || [];
     if (checked) {
-      form.setValue("defect_type_ids", [...currentType, Number(value)]);
+      form.setValue("defect_type_ids", [...currentType, Number(value)], {
+        shouldDirty: true,
+      });
     } else {
       form.setValue(
         "defect_type_ids",
-        currentType.filter((item) => item !== Number(value))
+        currentType.filter((item) => item !== Number(value)),
+        {
+          shouldDirty: true,
+        }
       );
     }
     form.trigger("defect_type_ids");
@@ -155,7 +160,7 @@ export default function UpdateStatusButton({
                         onValueChange={(value) => {
                           field.onChange(value);
                           if (value !== STATION_STATUS.DEFECT) {
-                            form.setValue("defect_type_ids", []); // เคลียร์ค่า
+                            form.setValue("defect_type_ids", []);
                           }
                         }}
                         value={field.value}
@@ -190,15 +195,12 @@ export default function UpdateStatusButton({
                                 value={form
                                   .watch("defect_type_ids")?.[0]
                                   ?.toString()}
-                                onValueChange={(value) =>
-                                  form.setValue(
-                                    "defect_type_ids",
-                                    [Number(value)],
-                                    {
-                                      shouldDirty: true,
-                                    }
-                                  )
-                                }
+                                onValueChange={(value) => {
+                                  form.setValue("defect_type_ids", [
+                                    Number(value),
+                                  ]);
+                                  form.trigger("defect_type_ids");
+                                }}
                                 className="grid grid-cols-2"
                               >
                                 {RollDefectTypeOptions?.map((item) => (
