@@ -27,6 +27,7 @@ import { useAuth } from "@/hooks/auth/use-auth-v2";
 import { useItemDetailAPI } from "@/hooks/item/use-item-detail";
 import { useItemFixRequest } from "@/hooks/item/use-item-fix-request";
 import { useImageUpload } from "@/hooks/upload/use-image-upload";
+import { ROLES } from "@/contants/auth";
 
 import type { ImageT } from "@/types/image";
 import type { CheckButtonProps } from "../types";
@@ -61,9 +62,9 @@ export default function CheckButton({
   const isCrossLine = Number(user?.line?.id) !== Number(line);
   const canEdit = isEditable && !isCrossLine && !is_pending_review;
   const canUpdateDefectType = [
-    STATION_STATUS.SCRAP,
-    STATION_STATUS.NORMAL,
-  ].includes(status);
+    String(ROLES.OPERATOR),
+    String(ROLES.INSPECTOR),
+  ].includes(String(user?.role));
 
   const toggleOpen = useCallback(() => {
     setOpen(!open);

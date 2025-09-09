@@ -21,7 +21,6 @@ function App() {
       case ROLES.OPERATOR:
       case ROLES.VIEWER:
         return <OperatorPage />; //V2
-      case ROLES.QC:
       case ROLES.INSPECTOR:
         return <QCPage />; // V2
       case ROLES.SUPERADMIN:
