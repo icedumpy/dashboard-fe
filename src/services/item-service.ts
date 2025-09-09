@@ -3,6 +3,7 @@ import {
   ITEM_FIX_REQUEST_ENDPOINT,
   ITEM_REPORT_ENDPOINT,
   ITEM_SCRAP_ENDPOINT,
+  ITEM_STATUS_HISTORY_ENDPOINT,
   ITEM_STATUS_UPDATE_ENDPOINT,
 } from "@/contants/api";
 import { ItemStatusUpdateParams } from "@/hooks/item/use-item-status-update";
@@ -59,6 +60,12 @@ export const ItemService = {
         status: params.status,
         defect_type_ids: params.defect_type_ids ?? [],
       }
+    );
+    return response.data;
+  },
+  itemStatusHistory: async (itemId?: string) => {
+    const response = await axiosInstance.get(
+      ITEM_STATUS_HISTORY_ENDPOINT.replace("{item_id}", String(itemId))
     );
     return response.data;
   },
