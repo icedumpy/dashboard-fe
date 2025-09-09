@@ -22,7 +22,7 @@ import { STATION_STATUS } from "@/contants/station";
 export default function ViewDetailButton({ itemId }: { itemId: string }) {
   const [open, setOpen] = useState(false);
   const { data } = useItemDetailAPI(itemId, {
-    enabled: open,
+    enabled: open && Boolean(itemId),
   });
 
   const canUpdateStatus = ![

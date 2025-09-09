@@ -24,17 +24,19 @@ import {
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 import { useItemStatusUpdate } from "@/hooks/item/use-item-status-update";
-import { ITEM_ENDPOINT } from "@/contants/api";
+import { ITEM_ENDPOINT, REVIEW_ENDPOINT } from "@/contants/api";
 import { updateStatusSchema } from "./schema";
 import { STATUS_OPTIONS } from "./constants";
 
 import type { UpdateStatusButtonProps, UpdateStatusT } from "./types";
+import useDismissDialog from "@/hooks/use-dismiss-dialog";
 
 export default function UpdateStatusButton({
   itemId,
 }: UpdateStatusButtonProps) {
   const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
+  const dialog = useDismissDialog();
   const updateItemStatus = useItemStatusUpdate();
   const form = useForm<UpdateStatusT>({
     defaultValues: {
@@ -59,7 +61,12 @@ export default function UpdateStatusButton({
       {
         onSuccess() {
           queryClient.invalidateQueries({ queryKey: [ITEM_ENDPOINT, itemId] });
+          queryClient.invalidateQueries({
+            queryKey: [REVIEW_ENDPOINT],
+            exact: false,
+          });
           toast.success("อัพเดตสถานะสำเร็จ");
+          dialog.dismiss();
           form.reset();
           setOpen(false);
         },
