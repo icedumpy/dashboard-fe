@@ -3,7 +3,9 @@ import {
   ITEM_FIX_REQUEST_ENDPOINT,
   ITEM_REPORT_ENDPOINT,
   ITEM_SCRAP_ENDPOINT,
+  ITEM_STATUS_UPDATE_ENDPOINT,
 } from "@/contants/api";
+import { ItemStatusUpdateParams } from "@/hooks/item/use-item-status-update";
 import axiosInstance from "@/lib/axios-instance";
 import { formatDetectedRange } from "@/lib/utils";
 
@@ -47,6 +49,16 @@ export const ItemService = {
   itemScrap: async (item_id: string) => {
     const response = await axiosInstance.post(
       ITEM_SCRAP_ENDPOINT.replace("{item_id}", item_id)
+    );
+    return response.data;
+  },
+  itemStateUpdate: async (itemId: string, params: ItemStatusUpdateParams) => {
+    const response = await axiosInstance.patch(
+      ITEM_STATUS_UPDATE_ENDPOINT.replace("{item_id}", itemId),
+      {
+        status: params.status,
+        defect_type_ids: params.defect_type_ids ?? [],
+      }
     );
     return response.data;
   },

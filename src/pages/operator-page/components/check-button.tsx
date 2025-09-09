@@ -14,6 +14,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import FileUpload from "@/components/ui/file-upload";
+import UpdateDefectTypeButton from "@/components/update-defect-type-button/update-defect-type-button";
 import ConfirmDetail from "./confirm-detail";
 import ConfirmEditChecklist from "./confirm-edit-check-list";
 import ImageDefect from "./image-defect";
@@ -59,6 +60,10 @@ export default function CheckButton({
   ].includes(status);
   const isCrossLine = Number(user?.line?.id) !== Number(line);
   const canEdit = isEditable && !isCrossLine && !is_pending_review;
+  const canUpdateDefectType = [
+    STATION_STATUS.SCRAP,
+    STATION_STATUS.NORMAL,
+  ].includes(status);
 
   const toggleOpen = useCallback(() => {
     setOpen(!open);
@@ -156,6 +161,9 @@ export default function CheckButton({
           </div>
           <DialogFooter>
             {canEdit && <Button onClick={() => setMode("EDIT")}>แก้ไข</Button>}
+            {canUpdateDefectType && (
+              <UpdateDefectTypeButton itemId={String(id)} />
+            )}
             <DialogClose asChild>
               <Button variant="outline">ปิด</Button>
             </DialogClose>
