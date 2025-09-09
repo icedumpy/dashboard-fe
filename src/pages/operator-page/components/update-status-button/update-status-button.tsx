@@ -199,21 +199,34 @@ export default function UpdateStatusButton({
                                     }
                                   )
                                 }
-                                className="flex flex-col"
+                                className="grid grid-cols-2"
                               >
                                 {RollDefectTypeOptions?.map((item) => (
-                                  <FormItem
-                                    key={item.value}
-                                    className="flex items-center gap-3"
-                                  >
+                                  <FormItem key={item.value} className="w-full">
                                     <FormControl>
-                                      <RadioGroupItem
-                                        value={item.value.toString()}
-                                      />
+                                      <Label
+                                        htmlFor={`defect-radio-${item.value}`}
+                                        className="hover:bg-accent/50 flex items-start gap-1 rounded border p-2 
+                                        has-[[aria-checked=true]]:border-blue-600 
+                                        has-[[aria-checked=true]]:bg-blue-50 
+                                        dark:has-[[aria-checked=true]]:border-blue-900 
+                                      dark:has-[[aria-checked=true]]:bg-blue-950"
+                                      >
+                                        <RadioGroupItem
+                                          value={item.value.toString()}
+                                          id={`defect-radio-${item.value}`}
+                                          className="mr-2"
+                                        />
+                                        <div className="grid gap-1.5 font-normal">
+                                          <p className="text-sm font-medium leading-none">
+                                            {item.label}
+                                          </p>
+                                          <p className="text-sm text-muted-foreground">
+                                            {item.meta?.code}
+                                          </p>
+                                        </div>
+                                      </Label>
                                     </FormControl>
-                                    <FormLabel className="font-normal">
-                                      {item.label}
-                                    </FormLabel>
                                   </FormItem>
                                 ))}
                               </RadioGroup>
@@ -227,10 +240,10 @@ export default function UpdateStatusButton({
                                 <Label
                                   key={item.value}
                                   className="hover:bg-accent/50 flex items-start gap-1 rounded border p-2 
-                               has-[[aria-checked=true]]:border-blue-600 
-                               has-[[aria-checked=true]]:bg-blue-50 
-                               dark:has-[[aria-checked=true]]:border-blue-900 
-                               dark:has-[[aria-checked=true]]:bg-blue-950"
+                                  has-[[aria-checked=true]]:border-blue-600 
+                                  has-[[aria-checked=true]]:bg-blue-50 
+                                  dark:has-[[aria-checked=true]]:border-blue-900 
+                                  dark:has-[[aria-checked=true]]:bg-blue-950"
                                 >
                                   <Checkbox
                                     id={item.value.toString()}
@@ -242,10 +255,10 @@ export default function UpdateStatusButton({
                                       item.value
                                     )}
                                     className="data-[state=checked]:border-blue-600 
-                                 data-[state=checked]:bg-blue-600 
-                                 data-[state=checked]:text-white 
-                                 dark:data-[state=checked]:border-blue-700 
-                                 dark:data-[state=checked]:bg-blue-700"
+                                    data-[state=checked]:bg-blue-600 
+                                    data-[state=checked]:text-white 
+                                    dark:data-[state=checked]:border-blue-700 
+                                    dark:data-[state=checked]:bg-blue-700"
                                   />
                                   <div className="grid gap-1.5 font-normal">
                                     <p className="text-sm font-medium leading-none">
