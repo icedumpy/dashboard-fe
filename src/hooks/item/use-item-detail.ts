@@ -10,6 +10,5 @@ export const useItemDetailAPI = (
   useQuery({
     queryKey: [ITEM_ENDPOINT, id],
     queryFn: () => ItemService.getItemDetail(id),
-    enabled: !!id,
     ...options,
   });
