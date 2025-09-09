@@ -3,6 +3,7 @@ import dayjs from "dayjs";
 
 import StatusBadge from "@/components/status-badge";
 import ActionButton from "../components/action-button";
+import StatusHistoryButton from "@/components/status-history-button";
 
 import { DATE_TIME_FORMAT } from "@/contants/format";
 
@@ -58,6 +59,11 @@ export const COLUMNS: ColumnDef<ReviewT>[] = [
           .join(", ")}
       />
     ),
+  },
+  {
+    accessorKey: "history",
+    header: "History",
+    cell: ({ row }) => <StatusHistoryButton itemId={row.original.id} />,
   },
   {
     accessorKey: "id",

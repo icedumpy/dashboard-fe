@@ -5,12 +5,12 @@ import StatusBadge from "@/components/status-badge";
 import CheckButton from "../components/check-button";
 import ClassifyScrapButton from "../components/classify-scrap-button";
 import ConfirmButton from "../components/confirm-button";
+import StatusHistoryButton from "@/components/status-history-button/status-history-button";
 
 import { DATE_TIME_FORMAT } from "@/contants/format";
 import { STATION_STATUS } from "@/contants/station";
 
 import type { StationItemType } from "@/types/station";
-import StatusHistoryButton from "../components/status-history-button";
 
 export const COLUMNS_BUNDLE: ColumnDef<StationItemType>[] = [
   {
