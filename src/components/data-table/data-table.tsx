@@ -1,4 +1,5 @@
 import React from "react";
+import { isEmpty } from "radash";
 import {
   useReactTable,
   getCoreRowModel,
@@ -8,13 +9,19 @@ import {
   SortingState,
 } from "@tanstack/react-table";
 
-import { Table, TableBody, TableHeader } from "@/components/ui/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import DataTablePagination from "./data-table-pagination";
 
 import { cn } from "@/lib/utils";
 
 import type { DataTableProps } from "./types";
-import { isEmpty } from "radash";
 
 export function DataTable<T extends object>({
   data,
@@ -59,44 +66,47 @@ export function DataTable<T extends object>({
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
-            <tr key={headerGroup.id}>
+            <TableRow key={headerGroup.id}>
               {headerGroup.headers.map((header) => (
-                <th key={header.id} className="px-4 py-2">
+                <TableHead key={header.id} className="px-4 py-2">
                   {flexRender(
                     header.column.columnDef.header,
                     header.getContext()
                   )}
-                </th>
+                </TableHead>
               ))}
-            </tr>
+            </TableRow>
           ))}
         </TableHeader>
         <TableBody>
           {table.getRowModel().rows.length === 0 ? (
-            <tr>
-              <td colSpan={columns.length}>
+            <TableRow>
+              <TableCell colSpan={columns.length}>
                 <div className="p-4 text-center text-muted-foreground">
                   No results.
                 </div>
-              </td>
-            </tr>
+              </TableCell>
+            </TableRow>
           ) : (
             table.getRowModel().rows.map((row) => (
-              <tr key={row.id} className="border-t">
+              <TableRow key={row.id} className="border-t">
                 {row.getVisibleCells().map((cell) => {
                   const metaClass =
                     (cell.column.columnDef.meta as { className?: string })
                       ?.className ?? "";
                   return (
-                    <td key={cell.id} className={cn("px-4 py-2", metaClass)}>
+                    <TableCell
+                      key={cell.id}
+                      className={cn("px-4 py-2", metaClass)}
+                    >
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext()
                       )}
-                    </td>
+                    </TableCell>
                   );
                 })}
-              </tr>
+              </TableRow>
             ))
           )}
         </TableBody>
