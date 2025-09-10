@@ -57,7 +57,7 @@ export const COLUMNS_BUNDLE: ColumnDef<StationItemType>[] = [
   {
     accessorKey: "history",
     header: "History",
-    cell: () => <StatusHistoryButton />,
+    cell: ({ row }) => <StatusHistoryButton itemId={row.original.id} />,
   },
   {
     accessorKey: "action",
