@@ -20,7 +20,7 @@ import { useItemStatusHistory } from "@/hooks/item/use-item-status-history";
 import type { ColumnDef } from "@tanstack/react-table";
 import type { ItemStatusHistoryT } from "@/types/station";
 
-export default function StatusHistoryButton({ itemId }: { itemId?: number }) {
+export default function StatusHistoryButton({ itemId }: { itemId: number }) {
   const [open, setOpen] = useState(false);
   const { data: statusHistory } = useItemStatusHistory(String(itemId), {
     enabled: open && Boolean(itemId),
