@@ -6,6 +6,7 @@ import timezone from "dayjs/plugin/timezone";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
+dayjs.tz.setDefault("Asia/Bangkok");
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -14,10 +15,10 @@ export function cn(...inputs: ClassValue[]) {
 export function formatDetectedRange(from?: string | Date, to?: string | Date) {
   return {
     detected_from: from
-      ? `${dayjs.utc(from).format("YYYY-MM-DD")}T00:00:00.000000+00:00`
+      ? dayjs(from).startOf("day").format("YYYY-MM-DDTHH:mm:ss.SSS[+00:00]")
       : undefined,
     detected_to: to
-      ? `${dayjs.utc(to).format("YYYY-MM-DD")}T23:59:59.999999+00:00`
+      ? dayjs(to).endOf("day").format("YYYY-MM-DDTHH:mm:ss.SSS[+00:00]")
       : undefined,
   };
 }
