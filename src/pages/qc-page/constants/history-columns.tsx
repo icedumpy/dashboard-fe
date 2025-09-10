@@ -4,6 +4,7 @@ import dayjs from "dayjs";
 import StatusBadge from "@/components/status-badge";
 import ReviewedBy from "../components/reviewed-by";
 import ActionButton from "../components/action-button";
+import StatusHistoryButton from "@/components/status-history-button";
 
 import { DATE_TIME_FORMAT } from "@/contants/format";
 
@@ -73,13 +74,18 @@ export const COLUMNS: ColumnDef<ReviewT>[] = [
       dayjs(info.getValue<string>()).format(DATE_TIME_FORMAT),
   },
   {
+    accessorKey: "history",
+    header: "History",
+    cell: ({ row }) => <StatusHistoryButton itemId={row.original.item.id} />,
+  },
+  {
     accessorKey: "id",
     header: "Action",
     meta: { className: "text-center" },
     cell: (info) => (
       <ActionButton
-        item_id={String(info.row?.original?.item?.id)}
-        review_id={String(info.row?.original?.id)}
+        itemId={String(info.row?.original?.item?.id)}
+        reviewId={String(info.row?.original?.id)}
       />
     ),
   },

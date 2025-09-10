@@ -1,4 +1,4 @@
-import { STATION } from "@/contants/station";
+import { STATION, STATION_STATUS } from "@/contants/station";
 
 import type { PaginationType } from "./pagination";
 import type { ImageT } from "./image";
@@ -7,7 +7,7 @@ export type StationType = (typeof STATION)[keyof typeof STATION];
 
 export interface StationItemType {
   id: number;
-  station: string;
+  station: (typeof STATION)[keyof typeof STATION];
   line_id: number;
   product_code?: string;
   roll_number?: string;
@@ -15,13 +15,7 @@ export interface StationItemType {
   job_order_number?: string;
   roll_width?: number;
   detected_at: string;
-  status_code:
-    | "DEFECT"
-    | "REJECTED"
-    | "NORMAL"
-    | "RECHECK"
-    | "QC_PASS"
-    | "SCRAP";
+  status_code: (typeof STATION_STATUS)[keyof typeof STATION_STATUS];
   ai_note: string;
   scrap_requires_qc: boolean;
   scrap_confirmed_by?: number;
@@ -82,4 +76,21 @@ export interface ReviewedByUserT {
   username: string;
   display_name: string;
   role: string;
+}
+
+export interface ItemStatusHistoryT {
+  id: number;
+  event_type: string;
+  actor: ActorT;
+  from_status_id: unknown;
+  from_status_code: (typeof STATION_STATUS)[keyof typeof STATION_STATUS];
+  to_status_id: number;
+  to_status_code?: (typeof STATION_STATUS)[keyof typeof STATION_STATUS];
+  created_at: string;
+}
+
+export interface ActorT {
+  id: number;
+  username: string;
+  display_name: string;
 }

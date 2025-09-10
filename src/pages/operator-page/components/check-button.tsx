@@ -19,6 +19,7 @@ import ConfirmEditChecklist from "./confirm-edit-check-list";
 import ImageDefect from "./image-defect";
 import ImageRepair from "./image-repair";
 import ProductDetail from "./production-details";
+import UpdateStatusButton from "@/components/update-status-button";
 
 import { ITEM_ENDPOINT } from "@/contants/api";
 import { STATION_STATUS } from "@/contants/station";
@@ -35,6 +36,7 @@ export default function CheckButton({
   status,
   is_pending_review,
   item_data,
+  stationType,
 }: CheckButtonProps) {
   const [open, setOpen] = useState(false);
   const [mode, setMode] = useState<"VIEW" | "EDIT">("VIEW");
@@ -47,7 +49,6 @@ export default function CheckButton({
 
   const { data } = useItemDetailAPI(String(id), {
     enabled: open,
-    staleTime: Infinity,
   });
 
   const imageUpload = useImageUpload();
@@ -98,6 +99,12 @@ export default function CheckButton({
     STATION_STATUS.NORMAL,
     STATION_STATUS.SCRAP,
   ].includes(String(item_data?.status_code));
+
+  const showUpdateStatusButton = [
+    STATION_STATUS.DEFECT,
+    STATION_STATUS.NORMAL,
+    STATION_STATUS.SCRAP,
+  ].includes(String(data?.data?.status_code));
 
   return (
     <>
@@ -156,6 +163,12 @@ export default function CheckButton({
           </div>
           <DialogFooter>
             {canEdit && <Button onClick={() => setMode("EDIT")}>แก้ไข</Button>}
+            {showUpdateStatusButton && (
+              <UpdateStatusButton
+                itemId={String(id)}
+                stationType={stationType}
+              />
+            )}
             <DialogClose asChild>
               <Button variant="outline">ปิด</Button>
             </DialogClose>

@@ -5,9 +5,10 @@ import StatusBadge from "@/components/status-badge";
 import CheckButton from "../components/check-button";
 import ClassifyScrapButton from "../components/classify-scrap-button";
 import ConfirmButton from "../components/confirm-button";
+import StatusHistoryButton from "@/components/status-history-button";
 
 import { DATE_TIME_FORMAT } from "@/contants/format";
-import { STATION_STATUS } from "@/contants/station";
+import { STATION, STATION_STATUS } from "@/contants/station";
 
 import type { StationItemType } from "@/types/station";
 
@@ -54,6 +55,11 @@ export const COLUMNS_ROLL: ColumnDef<StationItemType>[] = [
     ),
   },
   {
+    accessorKey: "history",
+    header: "History",
+    cell: ({ row }) => <StatusHistoryButton itemId={row.original.id} />,
+  },
+  {
     accessorKey: "action",
     header: "Action",
     cell: ({ row }) => {
@@ -71,12 +77,14 @@ export const COLUMNS_ROLL: ColumnDef<StationItemType>[] = [
               status={status}
               is_pending_review={is_pending_review}
               item_data={row.original}
+              stationType={STATION.ROLL}
             />
           )}
           <ConfirmButton
             status={status}
             id={id}
             is_pending_review={is_pending_review}
+            stationType={STATION.ROLL}
           />
           {isClassifyScrap && <ClassifyScrapButton id={id} status={status} />}
         </div>

@@ -4,7 +4,6 @@ export const REFRESH_TOKEN = "refresh_token";
 export const ROLES = {
   OPERATOR: "OPERATOR",
   SUPERADMIN: "SUPERADMIN",
-  QC: "QC",
   INSPECTOR: "INSPECTOR",
   VIEWER: "VIEWER",
 } as const;
