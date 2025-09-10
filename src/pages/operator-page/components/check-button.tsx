@@ -100,6 +100,12 @@ export default function CheckButton({
     STATION_STATUS.SCRAP,
   ].includes(String(item_data?.status_code));
 
+  const showUpdateStatusButton = [
+    STATION_STATUS.DEFECT,
+    STATION_STATUS.NORMAL,
+    STATION_STATUS.SCRAP,
+  ].includes(String(data?.data?.status_code));
+
   return (
     <>
       {/* Edit */}
@@ -157,7 +163,12 @@ export default function CheckButton({
           </div>
           <DialogFooter>
             {canEdit && <Button onClick={() => setMode("EDIT")}>แก้ไข</Button>}
-            <UpdateStatusButton itemId={String(id)} stationType={stationType} />
+            {showUpdateStatusButton && (
+              <UpdateStatusButton
+                itemId={String(id)}
+                stationType={stationType}
+              />
+            )}
             <DialogClose asChild>
               <Button variant="outline">ปิด</Button>
             </DialogClose>
