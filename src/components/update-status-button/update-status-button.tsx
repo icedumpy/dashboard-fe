@@ -300,11 +300,7 @@ export default function UpdateStatusButton({
         </div>
         <DialogFooter>
           <Button
-            disabled={
-              !form.formState.isValid ||
-              !form.formState.isDirty ||
-              itemUpdateStatus.isPending
-            }
+            disabled={!form.formState.isValid || itemUpdateStatus.isPending}
             onClick={form.handleSubmit(handleSubmit)}
           >
             ยืนยัน
