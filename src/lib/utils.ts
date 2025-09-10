@@ -14,11 +14,7 @@ export function cn(...inputs: ClassValue[]) {
 
 export function formatDetectedRange(from?: string | Date, to?: string | Date) {
   return {
-    detected_from: from
-      ? dayjs(from).startOf("day").format("YYYY-MM-DDTHH:mm:ss.SSS[+00:00]")
-      : undefined,
-    detected_to: to
-      ? dayjs(to).endOf("day").format("YYYY-MM-DDTHH:mm:ss.SSS[+00:00]")
-      : undefined,
+    detected_from: from ? dayjs(from).startOf("day").toISOString() : undefined,
+    detected_to: to ? dayjs(to).endOf("day").toISOString() : undefined,
   };
 }
