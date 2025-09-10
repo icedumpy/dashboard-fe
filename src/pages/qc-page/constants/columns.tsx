@@ -63,7 +63,7 @@ export const COLUMNS: ColumnDef<ReviewT>[] = [
   {
     accessorKey: "history",
     header: "History",
-    cell: ({ row }) => <StatusHistoryButton itemId={row.original.id} />,
+    cell: ({ row }) => <StatusHistoryButton itemId={row?.original?.item?.id} />,
   },
   {
     accessorKey: "id",
