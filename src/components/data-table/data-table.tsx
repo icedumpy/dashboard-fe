@@ -41,6 +41,19 @@ export function DataTable<T extends object>({
       sorting,
       pagination: { pageIndex, pageSize },
     },
+    getRowId: (row, index) => {
+      // Example 1: Use a unique 'id' property if it exists on your data objects
+      if (
+        "id" in row &&
+        (typeof row.id === "string" || typeof row.id === "number")
+      ) {
+        return String(row.id);
+      }
+      // Example 2: Fallback to a stable index-based ID if 'id' is not present
+      // or if you need a different unique identifier.
+      // This ensures a stable ID even if the data order changes slightly.
+      return `row-${index}`;
+    },
     onSortingChange: setSorting,
     onPaginationChange: (updater) => {
       const next =

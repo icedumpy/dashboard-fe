@@ -5,7 +5,7 @@ import type { PaginationType } from "@/types/pagination";
 export type DataTableProps<T extends object> = {
   isLoading?: boolean;
   data: T[];
-  columns: ColumnDef<T, unknown>[];
+  columns: ColumnDef<T>[];
   pageSize?: number;
   pagination?: DataTablePaginationProps;
 };
