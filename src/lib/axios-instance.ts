@@ -1,11 +1,11 @@
 import axios from "axios";
 import qs from "qs";
 
+import { API_V1 } from "@/contants/api";
+import { ACCESS_TOKEN, REFRESH_TOKEN } from "@/contants/auth";
+import clearAuthSession from "@/utils/clear-auth-session";
 import getCookie from "@/utils/get-cookie";
 import setCookie from "@/utils/set-cookie";
-import clearAuthSession from "@/utils/clear-auth-session";
-import { ACCESS_TOKEN, REFRESH_TOKEN } from "@/contants/auth";
-import { API_V1 } from "@/contants/api";
 
 const axiosInstance = axios.create({
   baseURL: import.meta.env.VITE_API_URL + API_V1,
@@ -40,10 +40,10 @@ axiosInstance.interceptors.response.use(
         const refreshToken = getCookie(REFRESH_TOKEN);
         const res = await axios.post(
           `${import.meta.env.VITE_API_URL + API_V1}/auth/refresh`,
-          { refresh_Token: refreshToken },
+          { refresh_token: refreshToken },
           { withCredentials: true }
         );
-        const newAccessToken = res.data?.data?.accessToken;
+        const newAccessToken = res.data?.access_token;
         if (newAccessToken) {
           setCookie(ACCESS_TOKEN, newAccessToken);
           originalRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
