@@ -13,11 +13,7 @@ export function cn(...inputs: ClassValue[]) {
 
 export function formatDetectedRange(from?: string | Date, to?: string | Date) {
   return {
-    detected_from: from
-      ? `${dayjs(from).format("YYYY-MM-DD")}T00:00:00.000000+00:00`
-      : undefined,
-    detected_to: to
-      ? `${dayjs(to).format("YYYY-MM-DD")}T23:59:59.999999+00:00`
-      : undefined,
+    detected_from: from ? dayjs(from).startOf("day").toISOString() : undefined,
+    detected_to: to ? dayjs(to).endOf("day").toISOString() : undefined,
   };
 }
