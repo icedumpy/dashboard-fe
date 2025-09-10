@@ -5,6 +5,7 @@ import { STATION_STATUS } from "@/contants/station";
 export const filtersSchema = z.object({
   product_code: z.string().optional(),
   number: z.string().optional(),
+  roll_id: z.string().optional(),
   job_order_number: z.string().optional(),
   roll_width_min: z.string().optional(),
   roll_width_max: z.string().optional(),

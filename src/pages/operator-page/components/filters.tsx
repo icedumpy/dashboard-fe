@@ -57,6 +57,18 @@ export default function Filters() {
           />
           <FormField
             control={form.control}
+            name="roll_id"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Roll Id</FormLabel>
+                <FormControl>
+                  <Input {...field} placeholder="ค้นหา Roll Id" />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
             name="number"
             render={({ field }) => (
               <FormItem>
