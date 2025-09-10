@@ -10,4 +10,5 @@ export const useItemAPI = (params: FilterType) =>
   useQuery({
     queryKey: [ITEM_ENDPOINT, sanitizeQueryParams(params)],
     queryFn: () => ItemService.getItems(sanitizeQueryParams(params)),
+    refetchInterval: 60 * 1000, // 1 minute
   });

@@ -25,4 +25,5 @@ export const useReviewAPI = (params: ReviewParams) =>
   useQuery<ReviewQueryResponse>({
     queryKey: [REVIEW_ENDPOINT, sanitizeQueryParams(params)],
     queryFn: () => ReviewService.getReviews(sanitizeQueryParams(params)),
+    refetchInterval: 60 * 1000,
   });
