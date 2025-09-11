@@ -154,11 +154,11 @@ export default function UpdateStatusButton({
   return (
     <Dialog open={open} onOpenChange={toggleOpen}>
       <DialogTrigger asChild>
-        <Button variant="update">แก้ไขสถานะ</Button>
+        <Button>แก้ไขสถานะ</Button>
       </DialogTrigger>
       <DialogContent aria-describedby={undefined}>
         <DialogHeader>
-          <DialogTitle>แก้ไขสถานะ </DialogTitle>
+          <DialogTitle>แก้ไขสถานะ</DialogTitle>
         </DialogHeader>
         <div>
           <Form {...form}>
