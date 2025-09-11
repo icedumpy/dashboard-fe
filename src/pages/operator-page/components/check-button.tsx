@@ -162,7 +162,11 @@ export default function CheckButton({
             </div>
           </div>
           <DialogFooter>
-            {canEdit && <Button onClick={() => setMode("EDIT")}>แก้ไข</Button>}
+            {canEdit && (
+              <Button onClick={() => setMode("EDIT")} variant="update">
+                ส่งเรื่องแก้ไข
+              </Button>
+            )}
             {showUpdateStatusButton && (
               <UpdateStatusButton
                 itemId={String(id)}
