@@ -22,7 +22,11 @@ import ProductDetail from "./production-details";
 import UpdateStatusButton from "@/components/update-status-button";
 
 import { ITEM_ENDPOINT } from "@/contants/api";
-import { STATION_STATUS } from "@/contants/station";
+import {
+  shouldShowUpdateStatusButton,
+  isHiddenRepairImages,
+  canRequestChanges,
+} from "@/utils/item-status";
 import { useAuth } from "@/hooks/auth/use-auth-v2";
 import { useItemDetailAPI } from "@/hooks/item/use-item-detail";
 import { useItemFixRequest } from "@/hooks/item/use-item-fix-request";
@@ -34,8 +38,8 @@ import type { CheckButtonProps } from "../types";
 export default function CheckButton({
   id,
   status,
-  is_pending_review,
-  item_data,
+  isPendingReview = false,
+  itemData,
   stationType,
 }: CheckButtonProps) {
   const [open, setOpen] = useState(false);
@@ -46,20 +50,23 @@ export default function CheckButton({
   });
 
   const queryClient = useQueryClient();
-
   const { data } = useItemDetailAPI(String(id), {
     enabled: open,
   });
-
   const imageUpload = useImageUpload();
   const itemFixRequest = useItemFixRequest();
 
-  const isEditable = ![
-    STATION_STATUS.NORMAL,
-    STATION_STATUS.QC_PASSED,
-  ].includes(status);
-  const isCrossLine = Number(user?.line?.id) !== Number(line);
-  const canEdit = isEditable && !isCrossLine && !is_pending_review;
+  const canUpdateStatus = shouldShowUpdateStatusButton(
+    data?.data?.status_code,
+    user
+  );
+  const hiddenRepairImages = isHiddenRepairImages(itemData?.status_code);
+  const canRequestChangesValue = canRequestChanges(
+    status,
+    Number(user?.line?.id),
+    line,
+    isPendingReview
+  );
 
   const toggleOpen = useCallback(() => {
     setOpen(!open);
@@ -69,7 +76,7 @@ export default function CheckButton({
   const onConfirmEdit = useCallback(() => {
     itemFixRequest.mutate(
       {
-        item_data: String(id),
+        itemId: String(id),
         image_ids:
           (imageUpload.data?.data as ImageT[]).map((img) => Number(img.id)) ||
           [],
@@ -95,17 +102,6 @@ export default function CheckButton({
     );
   }, [id, imageUpload, itemFixRequest, queryClient]);
 
-  const hiddenRepairImages = ![
-    STATION_STATUS.NORMAL,
-    STATION_STATUS.SCRAP,
-  ].includes(String(item_data?.status_code));
-
-  const showUpdateStatusButton = [
-    STATION_STATUS.DEFECT,
-    STATION_STATUS.NORMAL,
-    STATION_STATUS.SCRAP,
-  ].includes(String(data?.data?.status_code));
-
   return (
     <>
       {/* Edit */}
@@ -127,7 +123,7 @@ export default function CheckButton({
             <DialogTitle asChild>
               <div>
                 <h3 className="text-xl font-bold">
-                  ตรวจสอบ {item_data?.station.toUpperCase()}
+                  ตรวจสอบ {itemData?.station.toUpperCase()}
                 </h3>
                 <p className="text-sm font-normal text-muted-foreground">
                   {data?.data?.product_code} - Role {data?.data.roll_number}
@@ -162,12 +158,12 @@ export default function CheckButton({
             </div>
           </div>
           <DialogFooter>
-            {canEdit && (
+            {canRequestChangesValue && (
               <Button onClick={() => setMode("EDIT")} variant="update">
                 ส่งเรื่องแก้ไข
               </Button>
             )}
-            {showUpdateStatusButton && (
+            {canUpdateStatus && (
               <UpdateStatusButton
                 itemId={String(id)}
                 stationType={stationType}

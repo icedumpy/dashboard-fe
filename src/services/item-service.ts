@@ -34,12 +34,12 @@ export const ItemService = {
     return response?.data;
   },
   itemFixRequest: async (params: {
-    item_data: string;
+    itemId: string;
     image_ids: number[];
     kinds: string;
   }) => {
     const response = await axiosInstance.post(
-      ITEM_FIX_REQUEST_ENDPOINT.replace("{item_data}", params.item_data),
+      ITEM_FIX_REQUEST_ENDPOINT.replace("{itemId}", params.itemId),
       {
         image_ids: params.image_ids,
         kinds: params.kinds,

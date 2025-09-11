@@ -5,10 +5,10 @@ import { filtersSchema } from "./schema";
 import { STATION } from "@/contants/station";
 
 export interface CheckButtonProps {
-  is_pending_review?: boolean;
+  isPendingReview: boolean;
   id: StationItemType["id"];
   status: StationItemType["status_code"];
-  item_data?: StationItemType;
+  itemData?: StationItemType;
   stationType: (typeof STATION)[keyof typeof STATION];
 }
 

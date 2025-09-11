@@ -66,7 +66,7 @@ export const COLUMNS_BUNDLE: ColumnDef<StationItemType>[] = [
       const id = row.original.id;
       const status = row.original
         ?.status_code as StationItemType["status_code"];
-      const is_pending_review = row.original?.is_pending_review;
+      const isPendingReview = row.original?.is_pending_review;
 
       const isClassifyScrap = status === STATION_STATUS.RECHECK;
       return (
@@ -75,7 +75,7 @@ export const COLUMNS_BUNDLE: ColumnDef<StationItemType>[] = [
             <CheckButton
               id={id}
               status={status}
-              is_pending_review={is_pending_review}
+              isPendingReview={isPendingReview}
               item_data={row.original}
               stationType={STATION.BUNDLE}
             />
@@ -83,7 +83,7 @@ export const COLUMNS_BUNDLE: ColumnDef<StationItemType>[] = [
           <ConfirmButton
             status={status}
             id={id}
-            is_pending_review={is_pending_review}
+            isPendingReview={isPendingReview}
             stationType={STATION.BUNDLE}
           />
           {isClassifyScrap && <ClassifyScrapButton id={id} status={status} />}
