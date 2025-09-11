@@ -11,6 +11,9 @@ export const OptionService = {
     const options = (response?.data?.data as ProductionLineT[]).map((item) => ({
       value: String(item.id),
       label: item.name,
+      meta: {
+        code: item.code,
+      },
     }));
 
     return options as OptionT[];

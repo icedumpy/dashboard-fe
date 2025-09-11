@@ -4,7 +4,7 @@ import dayjs from "dayjs";
 import StatusBadge from "@/components/status-badge";
 import ActionButton from "../components/action-button";
 import StatusHistoryButton from "@/components/status-history-button";
-import ProductionLineName from "../components/production-line-name";
+import ProductionLineCode from "../components/production-line-code";
 
 import { DATE_TIME_FORMAT } from "@/contants/format";
 
@@ -15,7 +15,7 @@ export const WAITING_COLUMNS: ColumnDef<ReviewT>[] = [
     accessorKey: "line_id",
     header: "Production Line",
     meta: { className: "text-center" },
-    cell: (info) => <ProductionLineName id={info.row.original.item.line_id} />,
+    cell: (info) => <ProductionLineCode id={info.row.original.item.line_id} />,
   },
   {
     accessorKey: "station",
