@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/select";
 
 import { useProductionLineOptions } from "@/hooks/option/use-production-line-option";
-import { COLUMNS } from "../constants/history-columns";
+import { HISTORY_COLUMNS } from "../constants/history-columns";
 import { useAuth } from "@/hooks/auth/use-auth-v2";
 import { useDefectOptionAPI } from "@/hooks/option/use-defect-option";
 import { useReviewAPI } from "@/hooks/review/use-review";
@@ -102,7 +102,7 @@ export default function ReviewHistoryTable() {
         </div>
       </div>
       <DataTable
-        columns={COLUMNS}
+        columns={HISTORY_COLUMNS}
         data={data?.data ?? []}
         pagination={{
           ...data?.pagination,

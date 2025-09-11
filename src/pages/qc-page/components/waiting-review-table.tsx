@@ -15,7 +15,7 @@ import { useAuth } from "@/hooks/auth/use-auth-v2";
 import { useDefectOptionAPI } from "@/hooks/option/use-defect-option";
 import { useProductionLineOptions } from "@/hooks/option/use-production-line-option";
 import { useReviewAPI } from "@/hooks/review/use-review";
-import { COLUMNS } from "../constants/columns";
+import { WAITING_COLUMNS } from "../constants/waiting-columns";
 
 export default function WaitingReviewTable() {
   const { user } = useAuth();
@@ -74,7 +74,7 @@ export default function WaitingReviewTable() {
         </div>
       </div>
       <DataTable
-        columns={COLUMNS}
+        columns={WAITING_COLUMNS}
         data={data?.data ?? []}
         pagination={{
           ...data?.pagination,
