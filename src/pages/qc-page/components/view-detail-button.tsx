@@ -17,19 +17,19 @@ import ProductDetail from "@/pages/operator-page/components/production-details";
 import UpdateStatusButton from "@/components/update-status-button";
 
 import { useItemDetailAPI } from "@/hooks/item/use-item-detail";
-import { STATION_STATUS } from "@/contants/station";
+import { shouldShowUpdateStatusButton } from "@/utils/item-status";
+import { useAuth } from "@/hooks/auth/use-auth-v2";
 
 export default function ViewDetailButton({ itemId }: { itemId: string }) {
+  const { user } = useAuth();
   const [open, setOpen] = useState(false);
   const { data } = useItemDetailAPI(itemId, {
     enabled: open && Boolean(itemId),
   });
 
-  const showUpdateStatusButton = [
-    STATION_STATUS.DEFECT,
-    STATION_STATUS.NORMAL,
-    STATION_STATUS.SCRAP,
-  ].includes(String(data?.data?.status_code));
+  const canUpdateStatus =
+    shouldShowUpdateStatusButton(data?.data?.status_code, user) &&
+    data?.data.station;
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -77,10 +77,10 @@ export default function ViewDetailButton({ itemId }: { itemId: string }) {
           </div>
         </div>
         <DialogFooter>
-          {showUpdateStatusButton && data?.data.station && (
+          {canUpdateStatus && (
             <UpdateStatusButton
               itemId={itemId}
-              stationType={data.data.station}
+              stationType={data?.data.station}
             />
           )}
           <DialogClose asChild>
