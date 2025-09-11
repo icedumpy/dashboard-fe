@@ -4,17 +4,18 @@ import dayjs from "dayjs";
 import StatusBadge from "@/components/status-badge";
 import ActionButton from "../components/action-button";
 import StatusHistoryButton from "@/components/status-history-button";
+import ProductionLineName from "../components/production-line-name";
 
 import { DATE_TIME_FORMAT } from "@/contants/format";
 
 import type { ReviewT } from "@/types/review";
 
-export const COLUMNS: ColumnDef<ReviewT>[] = [
+export const WAITING_COLUMNS: ColumnDef<ReviewT>[] = [
   {
     accessorKey: "line_id",
     header: "Production Line",
     meta: { className: "text-center" },
-    cell: (info) => info.row.original.item.line_id,
+    cell: (info) => <ProductionLineName id={info.row.original.item.line_id} />,
   },
   {
     accessorKey: "station",
