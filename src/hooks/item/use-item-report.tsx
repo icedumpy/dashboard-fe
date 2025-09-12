@@ -9,6 +9,7 @@ export interface DownloadReportParams {
   detected_to?: string;
   job_order_number?: string;
   line_id: string;
+  roll_id?: string;
   number?: string;
   product_code?: string;
   roll_width_max?: number;
