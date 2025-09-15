@@ -1,4 +1,8 @@
 import * as React from "react";
+import dayjs from "dayjs";
+import { Matcher } from "react-day-picker";
+import { CalendarIcon, XIcon } from "lucide-react";
+
 import {
   Popover,
   PopoverContent,
@@ -6,14 +10,16 @@ import {
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { Button } from "@/components/ui/button";
-import { CalendarIcon, XIcon } from "lucide-react";
+
 import { DATE_FORMAT } from "@/contants/format";
-import dayjs from "dayjs";
 interface InputDateProps {
   value?: Date;
   onChange?: (date: Date | undefined) => void;
   placeholder?: string;
   disabled?: boolean;
+  calendarProps: {
+    disabled?: Matcher | Matcher[];
+  };
   format?: string;
 }
 
@@ -23,8 +29,15 @@ export function InputDate({
   placeholder = "Pick a date",
   disabled = false,
   format = DATE_FORMAT,
+  calendarProps,
 }: InputDateProps) {
   const [open, setOpen] = React.useState(false);
+
+  const calendarMonth = Array.isArray(calendarProps?.disabled)
+    ? undefined
+    : typeof calendarProps?.disabled === "object"
+    ? (calendarProps.disabled as { before?: Date; after?: Date })
+    : undefined;
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -71,10 +84,11 @@ export function InputDate({
           mode="single"
           selected={value}
           captionLayout="dropdown"
+          disabled={calendarProps?.disabled}
+          startMonth={calendarMonth?.before}
+          endMonth={calendarMonth?.after}
           onSelect={(date) => {
-            if (onChange) {
-              onChange(date);
-            }
+            onChange?.(date);
             setOpen(false);
           }}
         />
