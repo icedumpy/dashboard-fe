@@ -87,6 +87,7 @@ export interface ItemStatusHistoryT {
   to_status_id: number;
   to_status_code?: (typeof STATION_STATUS)[keyof typeof STATION_STATUS];
   created_at: string;
+  defects?: string[];
 }
 
 export interface ActorT {

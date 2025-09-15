@@ -13,16 +13,27 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { MultiSelect } from "@/components/ui/multi-select";
+import { InputDate } from "@/components/ui/input-date";
 
 import { useStationStatusOptions } from "@/hooks/option/use-station-status-option";
 import { filtersSchema } from "../schema";
-import { InputDate } from "@/components/ui/input-date";
+import { useAuth } from "@/hooks/auth/use-auth-v2";
+import { ROLES } from "@/contants/auth";
 
 export default function Filters() {
+  const { user } = useAuth();
   const form = useFormContext<z.infer<typeof filtersSchema>>();
   const values = form.watch();
   const filledCount = Object.values(values).filter((v) => v && v !== "").length;
   const statusOptions = useStationStatusOptions();
+
+  const isOperator = user?.role === ROLES.OPERATOR;
+  const calendarDisabled = isOperator
+    ? {
+        before: dayjs().subtract(30, "day").toDate(),
+        after: dayjs().toDate(),
+      }
+    : undefined;
 
   return (
     <div className="p-4 py-6 space-y-3 bg-white border rounded">
@@ -176,6 +187,7 @@ export default function Filters() {
                     }
                     onChange={field.onChange}
                     placeholder="วันที่เริ่มต้น"
+                    calendarProps={{ disabled: calendarDisabled }}
                   />
                 </FormControl>
               </FormItem>
@@ -194,6 +206,7 @@ export default function Filters() {
                     }
                     onChange={field.onChange}
                     placeholder="วันที่สิ้นสุด"
+                    calendarProps={{ disabled: calendarDisabled }}
                   />
                 </FormControl>
               </FormItem>

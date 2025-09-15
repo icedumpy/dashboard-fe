@@ -76,7 +76,7 @@ export const COLUMNS_BUNDLE: ColumnDef<StationItemType>[] = [
               id={id}
               status={status}
               isPendingReview={isPendingReview}
-              item_data={row.original}
+              itemData={row.original}
               stationType={STATION.BUNDLE}
             />
           )}

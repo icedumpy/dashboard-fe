@@ -37,7 +37,12 @@ export default function StatusHistoryButton({ itemId }: { itemId: number }) {
       accessorKey: "to_status_code",
       header: "หลังจากนั้น",
       meta: { className: "text-start" },
-      cell: ({ row }) => <StatusBadge status={row.original.to_status_code} />,
+      cell: ({ row }) => (
+        <StatusBadge
+          status={row.original.to_status_code}
+          note={row.original.defects?.join(", ")}
+        />
+      ),
     },
     {
       accessorKey: "actor",
@@ -62,9 +67,7 @@ export default function StatusHistoryButton({ itemId }: { itemId: number }) {
       </DialogTrigger>
       <DialogContent aria-describedby={undefined} className="md:min-w-2xl">
         <DialogHeader>
-          <DialogTitle>
-            ประวัติการแก้ไขสถานะ {itemId ? `#${itemId}` : ""}
-          </DialogTitle>
+          <DialogTitle>ประวัติการแก้ไขสถานะ</DialogTitle>
         </DialogHeader>
         <div>
           <DataTable columns={columns} data={statusHistory ?? []} />
