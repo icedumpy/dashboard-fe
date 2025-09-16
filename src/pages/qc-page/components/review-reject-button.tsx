@@ -36,8 +36,8 @@ export default function ReviewRejectButton({
       {
         requestId: requestId,
         params: {
-          decision: REVIEW_STATE.APPROVED,
-          note: "Approved",
+          decision: REVIEW_STATE.REJECTED,
+          note: REVIEW_STATE.REJECTED,
         },
       },
       {

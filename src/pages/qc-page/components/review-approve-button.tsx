@@ -15,30 +15,30 @@ import {
 
 import useDismissDialog from "@/hooks/use-dismiss-dialog";
 import { useItemDetailAPI } from "@/hooks/item/use-item-detail";
-import { useChangeStatus } from "@/hooks/change-status/use-create-change-status";
 import { CHANGE_STATUS_ENDPOINT } from "@/contants/api";
+import { useDecideStatus } from "@/hooks/change-status/use-decide-status";
+import { REVIEW_STATE } from "@/contants/review";
 
 export default function ReviewApproveButton({
   itemId,
-  toStatusId,
-  defectTypeIds,
+  requestId,
 }: {
   itemId: number;
-  toStatusId: number;
-  defectTypeIds: number[];
+  requestId: number;
 }) {
   const queryClient = useQueryClient();
   const dismissDialog = useDismissDialog();
   const { data: item } = useItemDetailAPI(String(itemId));
-  const changeStatus = useChangeStatus();
+  const decideStatus = useDecideStatus();
 
   const handleApprove = () => {
-    changeStatus.mutate(
+    decideStatus.mutate(
       {
-        item_id: itemId,
-        to_status_id: toStatusId,
-        defect_type_ids: defectTypeIds,
-        reason: "",
+        requestId: requestId,
+        params: {
+          decision: REVIEW_STATE.APPROVED,
+          note: REVIEW_STATE.APPROVED,
+        },
       },
       {
         onSuccess() {
@@ -83,7 +83,7 @@ export default function ReviewApproveButton({
           <DialogClose>
             <Button variant="outline">ยกเลิก</Button>
           </DialogClose>
-          <Button onClick={handleApprove} disabled={changeStatus.isPending}>
+          <Button onClick={handleApprove} disabled={decideStatus.isPending}>
             ยืนยัน
           </Button>
         </DialogFooter>

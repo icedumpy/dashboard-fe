@@ -82,18 +82,12 @@ export const REVIEW_COLUMNS: ColumnDef<ChangeStatusT>[] = [
     header: "Action",
     cell: ({ row }) => {
       const itemId = row?.original.item_id;
-      const defectTypeIds = row?.original.defect_type_ids;
-      const toStatusId = row?.original.to_status_id;
       const requestId = row?.original.id;
 
       return (
         <div className="space-x-2">
           <ViewDetailButton itemId={String(itemId)} />
-          <ReviewApproveButton
-            itemId={itemId}
-            toStatusId={toStatusId}
-            defectTypeIds={defectTypeIds}
-          />
+          <ReviewApproveButton itemId={itemId} requestId={requestId} />
           <ReviewRejectButton itemId={itemId} requestId={requestId} />
         </div>
       );
