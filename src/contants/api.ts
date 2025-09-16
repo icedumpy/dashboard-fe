@@ -26,3 +26,7 @@ export const DEFECT_TYPE_ENDPOINT = "/defect_type";
 // Review
 export const REVIEW_ENDPOINT = "/review";
 export const REVIEW_DECISION_ENDPOINT = "/review/{review_id}/decision";
+
+// Change status
+export const CHANGE_STATUS_ENDPOINT = "/change_status";
+export const DECIDE_STATUS_ENDPOINT = "/change_status/{request_id}/decision";

@@ -1,7 +1,8 @@
 import { Badge } from "@/components/ui/badge";
-import { STATION_STATUS } from "@/contants/station";
 
 import { cn } from "@/lib/utils";
+
+import type { StatusT } from "@/types/status";
 
 const STATUS_VARIANTS = {
   DEFECT: "text-orange-800 bg-orange-100 border-orange-200",
@@ -15,7 +16,7 @@ const STATUS_VARIANTS = {
 export type StatusType = keyof typeof STATUS_VARIANTS;
 
 interface StatusBadgeProps {
-  status?: (typeof STATION_STATUS)[keyof typeof STATION_STATUS];
+  status?: StatusT;
   note?: string;
 }
 
