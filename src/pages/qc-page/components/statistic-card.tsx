@@ -4,6 +4,7 @@ import { parseAsInteger, useQueryState } from "nuqs";
 import { useAuth } from "@/hooks/auth/use-auth-v2";
 import { useReviewAPI } from "@/hooks/review/use-review";
 import { TABS, TABS_KEYS } from "../constants/tabs";
+import { useGetChangeStatus } from "@/hooks/change-status/use-get-change-status";
 
 export default function StatisticCard() {
   const { user } = useAuth();
@@ -24,6 +25,10 @@ export default function StatisticCard() {
     defect_type_id: defect,
   });
 
+  const { data: changeStatusData } = useGetChangeStatus({
+    line_id: line,
+  });
+
   return (
     <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 md:grid-cols-3 min-w-3xs">
       {tabs === TABS_KEYS.STATUS_REVIEW ? (
@@ -31,7 +36,9 @@ export default function StatisticCard() {
           <div className="w-full p-4 bg-[#FEF6EC] border border-[#FFE1BC] text-[#951800] rounded-md min-w-3xs">
             <div className="flex items-center justify-center text-center">
               <div className="space-y-2">
-                <p className="text-3xl font-bold">9999</p>
+                <p className="text-3xl font-bold">
+                  {changeStatusData?.summary.roll ?? 0}
+                </p>
                 <p className="text-sm">จำนวน Roll ถูกแก้ไขสถานะ</p>
               </div>
             </div>
@@ -39,7 +46,9 @@ export default function StatisticCard() {
           <div className="w-full p-4 bg-[#FAF6FF] border border-[#CE9FFEC4] text-[#473757] rounded-md min-w-3xs">
             <div className="flex items-center justify-center text-center">
               <div className="space-y-2">
-                <p className="text-3xl font-bold">9999</p>
+                <p className="text-3xl font-bold">
+                  {changeStatusData?.summary.bundle ?? 0}
+                </p>
                 <p className="text-sm">จำนวน Bundle ถูกแก้ไขสถานะ</p>
               </div>
             </div>
@@ -47,7 +56,9 @@ export default function StatisticCard() {
           <div className="w-full p-4 bg-[#FEF2F2] border border-[#95180069] text-[#940003] rounded-md min-w-3xs">
             <div className="flex items-center justify-center text-center">
               <div className="space-y-2">
-                <p className="text-3xl font-bold">9999</p>
+                <p className="text-3xl font-bold">
+                  {changeStatusData?.summary.total ?? 0}
+                </p>
                 <p className="text-sm">จำนวนชิ้นงานถูกแก้สถานะกลับ</p>
               </div>
             </div>

@@ -1,68 +1,140 @@
 import ViewDetailButton from "../components/view-detail-button";
 import StatusBadge from "@/components/status-badge";
-import ReviewApproveButton from "../components/review-approve-button";
-import ReviewRejectButton from "../components/review-reject-button";
+import { STATUS_LIST } from "@/contants/status";
 
 import type { ColumnDef } from "@tanstack/react-table";
-import type { ReviewT } from "@/types/review";
 import type { StatusT } from "@/types/status";
+import type { ChangeStatusT } from "@/types/change-status";
+import ReviewApproveButton from "../components/review-approve-button";
+import ReviewRejectButton from "../components/review-reject-button";
+import { useItemDetailAPI } from "@/hooks/item/use-item-detail";
+import { STATION } from "@/contants/station";
+import { useProductionLineOptions } from "@/hooks/option/use-production-line-option";
 
-export const REVIEW_COLUMNS: ColumnDef<ReviewT>[] = [
-  { accessorKey: "line_id", header: "Production Line" },
-  { accessorKey: "station", header: "Station" },
+export const REVIEW_COLUMNS: ColumnDef<ChangeStatusT>[] = [
+  {
+    accessorKey: "line_id",
+    header: "Production Line",
+    cell: ({ row }) => {
+      const itemId = row.original.item_id;
+      return <LineId itemId={itemId} />;
+    },
+  },
+  {
+    accessorKey: "station",
+    header: "Station",
+    cell: ({ row }) => {
+      const itemId = row.original.item_id;
+      return <Station itemId={itemId} />;
+    },
+  },
   {
     accessorKey: "product_code",
     header: "Product Code",
     meta: { className: "text-center" },
-    cell: (info) => info.row.original.item?.product_code,
+    cell: ({ row }) => {
+      const itemId = row.original.item_id;
+      return <ItemProductCode itemId={itemId} />;
+    },
   },
   {
     accessorKey: "roll_number",
     header: "Roll/Bundle Number",
     meta: { className: "text-center" },
-    cell: (info) => info.row.original.item?.number,
+    cell: ({ row }) => {
+      const itemId = row.original.item_id;
+      return <ItemNumber itemId={itemId} />;
+    },
   },
   {
     accessorKey: "job_order_number",
     header: "Job Order Number",
     meta: { className: "text-center" },
-    cell: (info) => info.row.original.item?.job_order_number,
+    cell: ({ row }) => {
+      const itemId = row.original.item_id;
+      return <JobOrderNumber itemId={itemId} />;
+    },
   },
   {
-    accessorKey: "status_from",
+    accessorKey: "from_status_id",
     header: "Status Before",
-    cell: (info) => <StatusBadge status={info.getValue() as StatusT} />,
+    cell: (info) => {
+      const id = info.getValue() as StatusT;
+      const status = STATUS_LIST.find((s) => s.id === +id)?.code as StatusT;
+      return <StatusBadge status={status} />;
+    },
   },
   {
-    accessorKey: "status_to",
+    accessorKey: "to_status_id",
     header: "Status After",
-    cell: (info) => <StatusBadge status={info.getValue() as StatusT} />,
+    cell: (info) => {
+      const id = info.getValue() as StatusT;
+      const status = STATUS_LIST.find((s) => s.id === +id)?.code as StatusT;
+      return <StatusBadge status={status} />;
+    },
   },
   {
     accessorKey: "action",
     header: "Action",
     cell: ({ row }) => {
-      const itemId = row?.original?.item?.id;
-      const productCode = row?.original?.item?.product_code;
-      const station = row?.original?.item?.station;
-      const number = row?.original?.item?.number;
+      const itemId = row?.original.item_id;
+      const defectTypeIds = row?.original.defect_type_ids;
+      const toStatusId = row?.original.to_status_id;
+      const requestId = row?.original.id;
+
       return (
         <div className="space-x-2">
           <ViewDetailButton itemId={String(itemId)} />
           <ReviewApproveButton
-            itemId={String(itemId)}
-            station={station}
-            productCode={productCode}
-            number={number}
+            itemId={itemId}
+            toStatusId={toStatusId}
+            defectTypeIds={defectTypeIds}
           />
-          <ReviewRejectButton
-            itemId={String(itemId)}
-            station={station}
-            productCode={productCode}
-            number={number}
-          />
+
+          <ReviewRejectButton itemId={itemId} requestId={requestId} />
         </div>
       );
     },
   },
 ];
+
+// eslint-disable-next-line react-refresh/only-export-components
+const LineId = ({ itemId }: { itemId: number }) => {
+  const { data } = useItemDetailAPI(String(itemId));
+  const { data: productionLineData } = useProductionLineOptions();
+  const code = productionLineData?.find(
+    (line) => line.value === String(data?.data?.line_id)
+  )?.meta?.code;
+  return <p>{code}</p>;
+};
+
+// eslint-disable-next-line react-refresh/only-export-components
+const Station = ({ itemId }: { itemId: number }) => {
+  const { data } = useItemDetailAPI(String(itemId));
+  return <p>{data?.data?.station}</p>;
+};
+
+// eslint-disable-next-line react-refresh/only-export-components
+const ItemProductCode = ({ itemId }: { itemId: number }) => {
+  const { data } = useItemDetailAPI(String(itemId));
+  return <p>{data?.data?.product_code}</p>;
+};
+
+// eslint-disable-next-line react-refresh/only-export-components
+const ItemNumber = ({ itemId }: { itemId: number }) => {
+  const { data } = useItemDetailAPI(String(itemId));
+  const station = data?.data.station;
+  return (
+    <p>
+      {station === STATION.ROLL
+        ? data?.data?.roll_number
+        : data?.data?.bundle_number}
+    </p>
+  );
+};
+
+// eslint-disable-next-line react-refresh/only-export-components
+const JobOrderNumber = ({ itemId }: { itemId: number }) => {
+  const { data } = useItemDetailAPI(String(itemId));
+  return <p>{data?.data?.job_order_number}</p>;
+};

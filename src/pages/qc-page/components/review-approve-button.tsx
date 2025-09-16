@@ -1,3 +1,4 @@
+import { useQueryClient } from "@tanstack/react-query";
 import { CheckIcon } from "lucide-react";
 import { toast } from "sonner";
 
@@ -13,23 +14,48 @@ import {
 } from "@/components/ui/dialog";
 
 import useDismissDialog from "@/hooks/use-dismiss-dialog";
+import { useItemDetailAPI } from "@/hooks/item/use-item-detail";
+import { useChangeStatus } from "@/hooks/change-status/use-create-change-status";
+import { CHANGE_STATUS_ENDPOINT } from "@/contants/api";
 
 export default function ReviewApproveButton({
   itemId,
-  productCode,
-  number,
-  station,
+  toStatusId,
+  defectTypeIds,
 }: {
-  itemId: string;
-  productCode: string;
-  number: string;
-  station: string;
+  itemId: number;
+  toStatusId: number;
+  defectTypeIds: number[];
 }) {
+  const queryClient = useQueryClient();
   const dismissDialog = useDismissDialog();
+  const { data: item } = useItemDetailAPI(String(itemId));
+  const changeStatus = useChangeStatus();
+
   const handleApprove = () => {
-    // TODO: integrate API
-    toast.success("อนุมัติการเปลี่ยนสถานะเรียบร้อย");
-    dismissDialog.dismiss();
+    changeStatus.mutate(
+      {
+        item_id: itemId,
+        to_status_id: toStatusId,
+        defect_type_ids: defectTypeIds,
+        reason: "",
+      },
+      {
+        onSuccess() {
+          toast.success("อนุมัติการเปลี่ยนสถานะเรียบร้อย");
+          queryClient.invalidateQueries({
+            queryKey: [CHANGE_STATUS_ENDPOINT],
+            exact: false,
+          });
+          dismissDialog.dismiss();
+        },
+        onError(error) {
+          toast.error("อนุมัติการเปลี่ยนสถานะไม่สำเร็จ", {
+            description: error.message,
+          });
+        },
+      }
+    );
   };
 
   return (
@@ -49,14 +75,17 @@ export default function ReviewApproveButton({
             <span>ยืนยันการเปลี่ยนสถานะ สำหรับ:</span>
           </p>
           <p>
-            {productCode} - {station} {number}
+            {item?.data.product_code} - {item?.data.station}{" "}
+            {item?.data.roll_number}
           </p>
         </div>
         <DialogFooter>
           <DialogClose>
             <Button variant="outline">ยกเลิก</Button>
           </DialogClose>
-          <Button onClick={handleApprove}>ยืนยัน</Button>
+          <Button onClick={handleApprove} disabled={changeStatus.isPending}>
+            ยืนยัน
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

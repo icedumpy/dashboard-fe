@@ -12,9 +12,9 @@ import {
 import { REVIEW_COLUMNS } from "../constants/review-columns";
 import { useAuth } from "@/hooks/auth/use-auth-v2";
 import { useProductionLineOptions } from "@/hooks/option/use-production-line-option";
-import { ALL_OPTION } from "@/contants/option";
-import { useDefectOptionAPI } from "@/hooks/option/use-defect-option";
-import { STATION_STATUS } from "@/contants/station";
+// import { ALL_OPTION } from "@/contants/option";
+// import { useDefectOptionAPI } from "@/hooks/option/use-defect-option";
+import { useGetChangeStatus } from "@/hooks/change-status/use-get-change-status";
 
 export default function ReviewTable() {
   const { user } = useAuth();
@@ -22,51 +22,15 @@ export default function ReviewTable() {
   const [line, setLine] = useQueryState("line", {
     defaultValue: user?.line?.id ? String(user.line?.id) : "",
   });
-  const [defect, setDefect] = useQueryState("defect", {
-    defaultValue: "all",
+  // const [defect, setDefect] = useQueryState("defect", {
+  //   defaultValue: "all",
+  // });
+  const { data: changeStatus } = useGetChangeStatus({
+    line_id: line,
   });
 
-  const MOCK: any[] = [
-    {
-      id: 1,
-      line_id: 1,
-      station: "ROLL",
-      roll_number: "R001",
-      job_order_number: "JO001",
-      status_from: STATION_STATUS.DEFECT,
-      status_to: STATION_STATUS.NORMAL,
-      item: {
-        id: 1,
-        line_id: 1,
-        station: "ROLL",
-        product_code: "15W16E6SA",
-        number: "R001",
-        job_order_number: "JO001",
-        status_code: STATION_STATUS.DEFECT,
-      },
-    },
-    {
-      id: 2,
-      line_id: 2,
-      station: "ROLL",
-      roll_number: "R001",
-      job_order_number: "JO001",
-      status_from: STATION_STATUS.DEFECT,
-      status_to: STATION_STATUS.NORMAL,
-      item: {
-        id: 3,
-        line_id: 3,
-        station: "BUNDLE",
-        product_code: "15W16E6SA",
-        number: "R001",
-        job_order_number: "JO001",
-        status_code: STATION_STATUS.NORMAL,
-      },
-    },
-  ];
-
   const { data: lineOptions } = useProductionLineOptions();
-  const { data: defectOptions } = useDefectOptionAPI();
+  // const { data: defectOptions } = useDefectOptionAPI();
   return (
     <div className="p-4 space-y-3 bg-white border rounded-md">
       <div className="flex justify-between gap-2">
@@ -90,7 +54,7 @@ export default function ReviewTable() {
               ))}
             </SelectContent>
           </Select>
-          <Select value={defect} onValueChange={setDefect}>
+          {/* <Select value={defect} onValueChange={setDefect}>
             <SelectTrigger>
               <SelectValue className="w-2xs" placeholder="เลือกประเภทความผิด" />
             </SelectTrigger>
@@ -101,10 +65,19 @@ export default function ReviewTable() {
                 </SelectItem>
               ))}
             </SelectContent>
-          </Select>
+          </Select> */}
         </div>
       </div>
-      <DataTable columns={REVIEW_COLUMNS} data={MOCK} />
+      <DataTable
+        columns={REVIEW_COLUMNS}
+        data={changeStatus?.data ?? []}
+        pagination={{
+          ...changeStatus?.pagination,
+          onPageChange(page) {
+            setPage(page);
+          },
+        }}
+      />
     </div>
   );
 }
