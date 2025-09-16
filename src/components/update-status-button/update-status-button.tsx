@@ -29,7 +29,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { STATUS_OPTIONS } from "./constants";
 import { updateStatusSchema } from "./schema";
 import { useItemDetailAPI } from "@/hooks/item/use-item-detail";
-import { useItemStatusUpdate } from "@/hooks/item/use-item-status-update";
+import { useChangeStatus } from "@/hooks/change-status/use-create-change-status";
 import { ITEM_ENDPOINT } from "@/contants/api";
 import { useDefectOptionAPI } from "@/hooks/option/use-defect-option";
 import { STATION, STATION_STATUS } from "@/contants/station";
@@ -51,7 +51,7 @@ export default function UpdateStatusButton({
   });
 
   const isItemStatusDefect = data?.data.status_code === STATION_STATUS.DEFECT;
-  const itemUpdateStatus = useItemStatusUpdate();
+  const changeStatus = useChangeStatus();
 
   const form = useForm<UpdateStatusT>({
     defaultValues: {
@@ -81,11 +81,12 @@ export default function UpdateStatusButton({
   }, [data?.data, data?.defects, defectOptions, form]);
 
   const handleSubmit = (values: UpdateStatusT) => {
-    itemUpdateStatus.mutate(
+    changeStatus.mutate(
       {
-        itemId: String(itemId),
-        status: values.status,
-        defect_type_ids: values.defect_type_ids,
+        item_id: Number(itemId),
+        to_status_id: Number(values.status),
+        defect_type_ids: values?.defect_type_ids,
+        reason: "",
       },
       {
         onSuccess() {
@@ -136,7 +137,7 @@ export default function UpdateStatusButton({
         return STATUS_OPTIONS;
       default:
         return STATUS_OPTIONS.filter(
-          (option) => option.value === STATION_STATUS.DEFECT
+          (option) => option.label === STATION_STATUS.DEFECT
         );
     }
   }, [isItemStatusDefect]);
@@ -300,7 +301,7 @@ export default function UpdateStatusButton({
         </div>
         <DialogFooter>
           <Button
-            disabled={!form.formState.isValid || itemUpdateStatus.isPending}
+            disabled={!form.formState.isValid || changeStatus.isPending}
             onClick={form.handleSubmit(handleSubmit)}
           >
             ยืนยัน

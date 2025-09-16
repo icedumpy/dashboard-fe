@@ -6,8 +6,8 @@ export interface ChangeStatusParams {
   item_id: number;
   to_status_id: number;
   reason: string;
+  defect_type_ids?: number[];
   meta?: unknown;
-  defect_type_ids: number[];
 }
 
 export const useChangeStatus = () =>

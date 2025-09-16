@@ -1,15 +1,13 @@
 import { z } from "zod";
 
-import { STATION_STATUS } from "@/contants/station";
-
 export const updateStatusSchema = z
   .object({
-    status: z.enum(STATION_STATUS, { error: "กรุณาเลือกสถานะ" }),
+    status: z.string(),
     defect_type_ids: z.array(z.number()).optional(),
   })
   .refine(
     (data) => {
-      if (data.status === STATION_STATUS.DEFECT) {
+      if (data.status === "1") {
         return (
           Array.isArray(data.defect_type_ids) && data.defect_type_ids.length > 0
         );
