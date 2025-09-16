@@ -73,8 +73,12 @@ export default function UpdateStatusButton({
         .map(Number)
         .filter(Boolean);
 
+      const statusId = STATUS_OPTIONS.find(
+        (option) => option.label === data.data.status_code
+      )?.value;
+
       form.reset({
-        status: data.data.status_code,
+        status: statusId,
         defect_type_ids: isEmpty(defectIds) ? undefined : defectIds,
       });
     }
@@ -201,7 +205,7 @@ export default function UpdateStatusButton({
                     <FormMessage />
 
                     {/* ✅ sub-field defect_type_ids */}
-                    {form.watch("status") === STATION_STATUS.DEFECT && (
+                    {form.watch("status") === "1" && (
                       <>
                         {stationType === STATION.ROLL ? (
                           <FormItem className="pl-4">
