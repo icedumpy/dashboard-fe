@@ -1,15 +1,16 @@
-import ViewDetailButton from "../components/view-detail-button";
 import StatusBadge from "@/components/status-badge";
+import ViewDetailButton from "../components/view-detail-button";
+import ReviewApproveButton from "../components/review-approve-button";
+import ReviewRejectButton from "../components/review-reject-button";
+
+import { useItemDetailAPI } from "@/hooks/item/use-item-detail";
+import { useProductionLineOptions } from "@/hooks/option/use-production-line-option";
+import { STATION } from "@/contants/station";
 import { STATUS_LIST } from "@/contants/status";
 
 import type { ColumnDef } from "@tanstack/react-table";
 import type { StatusT } from "@/types/status";
 import type { ChangeStatusT } from "@/types/change-status";
-import ReviewApproveButton from "../components/review-approve-button";
-import ReviewRejectButton from "../components/review-reject-button";
-import { useItemDetailAPI } from "@/hooks/item/use-item-detail";
-import { STATION } from "@/contants/station";
-import { useProductionLineOptions } from "@/hooks/option/use-production-line-option";
 
 export const REVIEW_COLUMNS: ColumnDef<ChangeStatusT>[] = [
   {
@@ -61,6 +62,7 @@ export const REVIEW_COLUMNS: ColumnDef<ChangeStatusT>[] = [
     cell: (info) => {
       const id = info.getValue() as StatusT;
       const status = STATUS_LIST.find((s) => s.id === +id)?.code as StatusT;
+
       return <StatusBadge status={status} />;
     },
   },
