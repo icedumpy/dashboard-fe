@@ -11,6 +11,7 @@ import { STATUS_LIST } from "@/contants/status";
 import type { ColumnDef } from "@tanstack/react-table";
 import type { StatusT } from "@/types/status";
 import type { ChangeStatusT } from "@/types/change-status";
+import { useDefectOptionAPI } from "@/hooks/option/use-defect-option";
 
 export const REVIEW_COLUMNS: ColumnDef<ChangeStatusT>[] = [
   {
@@ -62,7 +63,8 @@ export const REVIEW_COLUMNS: ColumnDef<ChangeStatusT>[] = [
     cell: (info) => {
       const id = info.getValue() as StatusT;
       const status = STATUS_LIST.find((s) => s.id === +id)?.code as StatusT;
-      return <StatusBadge status={status} />;
+      const defectTypes = info.row.original.defect_type_ids;
+      return <ReviewStatus status={status} defectTypes={defectTypes} />;
     },
   },
   {
@@ -71,7 +73,8 @@ export const REVIEW_COLUMNS: ColumnDef<ChangeStatusT>[] = [
     cell: (info) => {
       const id = info.getValue() as StatusT;
       const status = STATUS_LIST.find((s) => s.id === +id)?.code as StatusT;
-      return <StatusBadge status={status} />;
+      const defectTypes = info.row.original.defect_type_ids;
+      return <ReviewStatus status={status} defectTypes={defectTypes} />;
     },
   },
   {
@@ -137,4 +140,19 @@ const ItemNumber = ({ itemId }: { itemId: number }) => {
 const JobOrderNumber = ({ itemId }: { itemId: number }) => {
   const { data } = useItemDetailAPI(String(itemId));
   return <p>{data?.data?.job_order_number}</p>;
+};
+
+// eslint-disable-next-line react-refresh/only-export-components
+const ReviewStatus = ({
+  status,
+  defectTypes,
+}: {
+  status: StatusT;
+  defectTypes: number[];
+}) => {
+  const { data } = useDefectOptionAPI();
+  const defectLabels = data
+    ?.filter((defect) => defectTypes.includes(+defect.value))
+    .map((defect) => defect.label);
+  return <StatusBadge status={status} note={defectLabels?.join(", ")} />;
 };
