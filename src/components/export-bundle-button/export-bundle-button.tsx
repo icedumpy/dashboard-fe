@@ -69,7 +69,7 @@ export default function ExportBundleButton({
             <FileIcon className="size-4" />
           </div>
           <p>
-            ยืนยันการดาวน์โหลดรายงานสำหรับ Roll Station - Line {getLineCode}
+            ยืนยันการดาวน์โหลดรายงานสำหรับ Bundle Station - Line {getLineCode}
           </p>
         </div>
         <DialogFooter>
