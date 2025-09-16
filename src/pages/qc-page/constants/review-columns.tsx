@@ -62,7 +62,6 @@ export const REVIEW_COLUMNS: ColumnDef<ChangeStatusT>[] = [
     cell: (info) => {
       const id = info.getValue() as StatusT;
       const status = STATUS_LIST.find((s) => s.id === +id)?.code as StatusT;
-
       return <StatusBadge status={status} />;
     },
   },
@@ -92,7 +91,6 @@ export const REVIEW_COLUMNS: ColumnDef<ChangeStatusT>[] = [
             toStatusId={toStatusId}
             defectTypeIds={defectTypeIds}
           />
-
           <ReviewRejectButton itemId={itemId} requestId={requestId} />
         </div>
       );
