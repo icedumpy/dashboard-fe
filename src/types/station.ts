@@ -28,6 +28,7 @@ export interface StationItemType {
   is_pending_review: boolean;
   images: number;
   defects: string[];
+  is_changing_status_pending?: boolean;
 }
 
 export interface StationResponse {

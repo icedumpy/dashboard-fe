@@ -10,6 +10,7 @@ export interface CheckButtonProps {
   status: StationItemType["status_code"];
   itemData?: StationItemType;
   stationType: (typeof STATION)[keyof typeof STATION];
+  isChangingStatusPending?: boolean;
 }
 
 export type FilterType = z.infer<typeof filtersSchema>;

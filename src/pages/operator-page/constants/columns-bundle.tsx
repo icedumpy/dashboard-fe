@@ -67,8 +67,9 @@ export const COLUMNS_BUNDLE: ColumnDef<StationItemType>[] = [
       const status = row.original
         ?.status_code as StationItemType["status_code"];
       const isPendingReview = row.original?.is_pending_review;
-
       const isClassifyScrap = status === STATION_STATUS.RECHECK;
+      const isChangingStatusPending = row.original?.is_changing_status_pending;
+
       return (
         <div className="flex items-center gap-2">
           {id && (
@@ -78,6 +79,7 @@ export const COLUMNS_BUNDLE: ColumnDef<StationItemType>[] = [
               isPendingReview={isPendingReview}
               itemData={row.original}
               stationType={STATION.BUNDLE}
+              isChangingStatusPending={isChangingStatusPending}
             />
           )}
           <ConfirmButton

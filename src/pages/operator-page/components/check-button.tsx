@@ -41,6 +41,7 @@ export default function CheckButton({
   isPendingReview = false,
   itemData,
   stationType,
+  isChangingStatusPending,
 }: CheckButtonProps) {
   const [open, setOpen] = useState(false);
   const [mode, setMode] = useState<"VIEW" | "EDIT">("VIEW");
@@ -159,7 +160,11 @@ export default function CheckButton({
           </div>
           <DialogFooter>
             {canRequestChangesValue && (
-              <Button onClick={() => setMode("EDIT")} variant="update">
+              <Button
+                onClick={() => setMode("EDIT")}
+                variant="update"
+                disabled={isChangingStatusPending}
+              >
                 ส่งเรื่องแก้ไข
               </Button>
             )}
