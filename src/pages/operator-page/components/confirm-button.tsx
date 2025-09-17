@@ -120,8 +120,10 @@ export default function ConfirmButton({
           )}
         </div>
         <DialogFooter>
-          <DialogClose>
-            <Button variant="outline">ยกเลิก</Button>
+          <DialogClose asChild>
+            <Button variant="outline" type="button">
+              ยกเลิก
+            </Button>
           </DialogClose>
           <Button
             className="bg-amber-600 hover:bg-amber-600/90"

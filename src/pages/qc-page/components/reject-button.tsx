@@ -89,8 +89,10 @@ export default function RejectButton({
           </Form>
         </div>
         <DialogFooter>
-          <DialogClose>
-            <Button variant="outline">ยกเลิก</Button>
+          <DialogClose asChild>
+            <Button variant="outline" type="button">
+              ยกเลิก
+            </Button>
           </DialogClose>
           <Button
             disabled={isLoading || !form.formState.isValid}

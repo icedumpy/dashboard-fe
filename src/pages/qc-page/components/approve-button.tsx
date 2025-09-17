@@ -88,8 +88,10 @@ export default function ApproveButton({
           </Form>
         </div>
         <DialogFooter>
-          <DialogClose>
-            <Button variant="outline">ยกเลิก</Button>
+          <DialogClose asChild>
+            <Button variant="outline" type="button">
+              ยกเลิก
+            </Button>
           </DialogClose>
           <Button disabled={isLoading} onClick={form.handleSubmit(onSubmit)}>
             ยืนยัน

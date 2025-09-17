@@ -176,7 +176,9 @@ export default function CheckButton({
               />
             )}
             <DialogClose asChild>
-              <Button variant="outline">ปิด</Button>
+              <Button variant="outline" type="button">
+                ปิด
+              </Button>
             </DialogClose>
           </DialogFooter>
         </DialogContent>
@@ -214,8 +216,10 @@ export default function CheckButton({
             </div>
           </div>
           <DialogFooter>
-            <DialogClose>
-              <Button variant="outline">ยกเลิก</Button>
+            <DialogClose asChild>
+              <Button variant="outline" type="button">
+                ยกเลิก
+              </Button>
             </DialogClose>
             <Button
               className="bg-amber-600 hover:bg-amber-600/90"

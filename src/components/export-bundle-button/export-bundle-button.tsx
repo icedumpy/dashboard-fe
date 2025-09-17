@@ -74,7 +74,9 @@ export default function ExportBundleButton({
         </div>
         <DialogFooter>
           <DialogClose asChild>
-            <Button variant="outline">ยกเลิก</Button>
+            <Button variant="outline" type="button">
+              ยกเลิก
+            </Button>
           </DialogClose>
           <Button onClick={handleExport}>ดาวน์โหลด</Button>
         </DialogFooter>

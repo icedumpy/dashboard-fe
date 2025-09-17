@@ -60,7 +60,7 @@ export default function StatusHistoryButton({ itemId }: { itemId: number }) {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger>
+      <DialogTrigger asChild>
         <Button size="xs" variant="outline">
           ประวัติการแก้ไข
         </Button>
@@ -73,8 +73,10 @@ export default function StatusHistoryButton({ itemId }: { itemId: number }) {
           <DataTable columns={columns} data={statusHistory ?? []} />
         </div>
         <DialogFooter>
-          <DialogClose>
-            <Button>ปิด</Button>
+          <DialogClose asChild>
+            <Button type="button" variant="outline">
+              ปิด
+            </Button>
           </DialogClose>
         </DialogFooter>
       </DialogContent>

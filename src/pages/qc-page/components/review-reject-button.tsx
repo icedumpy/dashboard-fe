@@ -60,7 +60,7 @@ export default function ReviewRejectButton({
 
   return (
     <Dialog>
-      <DialogTrigger>
+      <DialogTrigger asChild>
         <Button
           size="sm"
           variant="secondary"
@@ -84,8 +84,10 @@ export default function ReviewRejectButton({
           </p>
         </div>
         <DialogFooter>
-          <DialogClose>
-            <Button variant="outline">ยกเลิก</Button>
+          <DialogClose asChild>
+            <Button variant="outline" type="button">
+              ยกเลิก
+            </Button>
           </DialogClose>
           <Button onClick={handleReject} disabled={decideStatus.isPending}>
             ยืนยัน
