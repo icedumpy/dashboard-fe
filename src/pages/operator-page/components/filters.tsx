@@ -17,7 +17,7 @@ import { InputDate } from "@/components/ui/input-date";
 
 import { useStationStatusOptions } from "@/hooks/option/use-station-status-option";
 import { filtersSchema } from "../schema";
-import { useAuth } from "@/hooks/auth/use-auth-v2";
+import { useAuth } from "@/hooks/auth/use-auth";
 import { ROLES } from "@/contants/auth";
 
 export default function Filters() {

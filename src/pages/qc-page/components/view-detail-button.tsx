@@ -18,7 +18,7 @@ import UpdateStatusButton from "@/components/update-status-button";
 
 import { useItemDetailAPI } from "@/hooks/item/use-item-detail";
 import { shouldShowUpdateStatusButton } from "@/utils/item-status";
-import { useAuth } from "@/hooks/auth/use-auth-v2";
+import { useAuth } from "@/hooks/auth/use-auth";
 
 export default function ViewDetailButton({ itemId }: { itemId: string }) {
   const { user } = useAuth();

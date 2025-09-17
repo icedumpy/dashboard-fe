@@ -20,7 +20,7 @@ import { ITEM_ENDPOINT } from "@/contants/api";
 import { useImageUpload } from "@/hooks/upload/use-image-upload";
 import { useItemDetailAPI } from "@/hooks/item/use-item-detail";
 import { useItemFixRequest } from "@/hooks/item/use-item-fix-request";
-import { useAuth } from "@/hooks/auth/use-auth-v2";
+import { useAuth } from "@/hooks/auth/use-auth";
 import { ROLES } from "@/contants/auth";
 
 import type { ImageT } from "@/types/image";

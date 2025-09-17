@@ -23,7 +23,7 @@ import StatisticRoll from "./components/statistic-roll";
 
 import { DATE_TIME_FORMAT } from "@/contants/format";
 import { STATION } from "@/contants/station";
-import { useAuth } from "@/hooks/auth/use-auth-v2";
+import { useAuth } from "@/hooks/auth/use-auth";
 import { useItemAPI } from "@/hooks/item/use-item";
 import { useProductionLineOptions } from "@/hooks/option/use-production-line-option";
 import { COLUMNS_ROLL } from "./constants/columns-roll";

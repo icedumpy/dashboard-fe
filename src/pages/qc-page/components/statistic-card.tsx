@@ -1,7 +1,7 @@
 import { CheckIcon, LineChartIcon, XIcon } from "lucide-react";
 import { parseAsInteger, useQueryState } from "nuqs";
 
-import { useAuth } from "@/hooks/auth/use-auth-v2";
+import { useAuth } from "@/hooks/auth/use-auth";
 import { useReviewAPI } from "@/hooks/review/use-review";
 import { TABS, TABS_KEYS } from "../constants/tabs";
 import { useGetChangeStatus } from "@/hooks/change-status/use-get-change-status";
