@@ -84,7 +84,9 @@ export default function ViewDetailButton({ itemId }: { itemId: string }) {
             />
           )}
           <DialogClose asChild>
-            <Button variant="outline">ปิด</Button>
+            <Button variant="outline" type="button">
+              ปิด
+            </Button>
           </DialogClose>
         </DialogFooter>
       </DialogContent>

@@ -60,7 +60,7 @@ export default function ReviewApproveButton({
 
   return (
     <Dialog>
-      <DialogTrigger>
+      <DialogTrigger asChild>
         <Button size="sm" variant="secondary" className="text-green-600 size-8">
           <CheckIcon />
         </Button>
@@ -80,8 +80,10 @@ export default function ReviewApproveButton({
           </p>
         </div>
         <DialogFooter>
-          <DialogClose>
-            <Button variant="outline">ยกเลิก</Button>
+          <DialogClose asChild>
+            <Button variant="outline" type="button">
+              ยกเลิก
+            </Button>
           </DialogClose>
           <Button onClick={handleApprove} disabled={decideStatus.isPending}>
             ยืนยัน

@@ -73,7 +73,9 @@ export default function ExportRollButton({
         </div>
         <DialogFooter>
           <DialogClose asChild>
-            <Button variant="outline">ยกเลิก</Button>
+            <Button variant="outline" type="button">
+              ยกเลิก
+            </Button>
           </DialogClose>
           <Button onClick={handleExport} disabled={itemReport.isPending}>
             ดาวน์โหลด
