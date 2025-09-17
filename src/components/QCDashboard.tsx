@@ -144,7 +144,8 @@ export const QCDashboard: React.FC = () => {
     <Layout title="QC Dashboard">
       <div className="space-y-6">
         {/* Header Tabs */}
-        <div className="p-1 rounded-lg bg-gradient-to-r from-blue-500 to-blue-600">
+        {/* <div className="p-1 rounded-lg bg-gradient-to-r from-blue-500 to-blue-600"> */}
+        <div className="p-1 rounded-lg bg-blue-600">
           <div className="flex space-x-1">
             {[
               { key: "pending", label: "รอการตรวจสอบ" },

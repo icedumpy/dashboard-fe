@@ -157,7 +157,8 @@ export const InspectModal: React.FC<InspectModalProps> = ({
       <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
         <div className="bg-white rounded-lg max-w-6xl w-full mx-4 max-h-[95vh] overflow-y-auto">
           {/* Header */}
-          <div className="flex justify-between items-center p-6 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-blue-100">
+          {/* <div className="flex justify-between items-center p-6 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-blue-100"> */}
+          <div className="flex justify-between items-center p-6 border-b border-gray-200 bg-blue-100">
             <div>
               <h2 className="text-2xl font-bold text-gray-900">ตรวจสอบ Defect</h2>
               <p className="text-sm text-gray-600 mt-1">
@@ -349,7 +350,8 @@ export const InspectModal: React.FC<InspectModalProps> = ({
                 รายละเอียดการผลิต
               </h3>
               
-              <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg p-6 border border-blue-200">
+              {/* <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg p-6 border border-blue-200"> */}
+              <div className="bg-indigo-50 rounded-lg p-6 border border-blue-200">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {/* Basic Production Info */}
                   <div className="space-y-4">

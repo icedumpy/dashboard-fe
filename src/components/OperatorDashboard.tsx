@@ -978,7 +978,8 @@ export const OperatorDashboard: React.FC = () => {
             className="overflow-hidden bg-white border border-gray-200 rounded-lg shadow-md"
           >
             {/* Production Line Header */}
-            <div className="p-4 text-white bg-gradient-to-r from-blue-600 to-blue-700">
+            {/* <div className="p-4 text-white bg-gradient-to-r from-blue-600 to-blue-700"> */}
+            <div className="p-4 text-white bg-blue-700">
               <div className="flex items-center justify-between">
                 <div>
                   <h2 className="text-xl font-bold">

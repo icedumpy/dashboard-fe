@@ -142,7 +142,8 @@ export default function OperatorPage() {
             }}
           />
           <div className="bg-white border rounded">
-            <div className="flex items-center justify-between p-4 text-white rounded-t bg-gradient-to-r from-primary to-blue-700">
+            {/* <div className="flex items-center justify-between p-4 text-white rounded-t bg-gradient-to-r from-primary to-blue-700"> */}
+            <div className="flex items-center justify-between p-4 text-white rounded-t bg-blue-700">
               <div>
                 <h2 className="text-lg font-bold">{getLineName}</h2>
                 {!isEmpty(user?.shift) && (
