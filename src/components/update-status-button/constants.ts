@@ -1,16 +1,16 @@
-import { STATION_STATUS } from "@/contants/station";
+import { STATUS } from "@/contants/status";
 
 export const STATUS_OPTIONS = [
   {
-    label: STATION_STATUS.NORMAL,
+    label: STATUS.NORMAL,
     value: "5",
   },
   {
-    label: STATION_STATUS.SCRAP,
+    label: STATUS.SCRAP,
     value: "3",
   },
   {
-    label: STATION_STATUS.DEFECT,
+    label: STATUS.DEFECT,
     value: "1",
   },
 ];

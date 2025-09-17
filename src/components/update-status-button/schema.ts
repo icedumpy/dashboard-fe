@@ -1,13 +1,15 @@
 import { z } from "zod";
 
+import { STATUS_OPTIONS } from "./constants";
+
 export const updateStatusSchema = z
   .object({
-    status: z.string(),
+    statusId: z.string(),
     defect_type_ids: z.array(z.number()).optional(),
   })
   .refine(
     (data) => {
-      if (data.status === "1") {
+      if (data.statusId === STATUS_OPTIONS[2].value) {
         return (
           Array.isArray(data.defect_type_ids) && data.defect_type_ids.length > 0
         );

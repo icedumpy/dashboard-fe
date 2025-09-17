@@ -1,6 +1,6 @@
 import z from "zod";
 
-import { STATION_STATUS } from "@/contants/station";
+import { STATUS } from "@/contants/status";
 
 export const filtersSchema = z.object({
   product_code: z.string().optional(),
@@ -9,7 +9,7 @@ export const filtersSchema = z.object({
   job_order_number: z.string().optional(),
   roll_width_min: z.string().optional(),
   roll_width_max: z.string().optional(),
-  status: z.array(z.enum(STATION_STATUS)).optional(),
+  status: z.array(z.enum(STATUS)).optional(),
   station: z.string().optional(),
   time_range: z.string().optional(),
   detected_to: z.string().optional(),

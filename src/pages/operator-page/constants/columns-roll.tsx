@@ -8,7 +8,8 @@ import ConfirmButton from "../components/confirm-button";
 import StatusHistoryButton from "@/components/status-history-button";
 
 import { DATE_TIME_FORMAT } from "@/contants/format";
-import { STATION, STATION_STATUS } from "@/contants/station";
+import { STATION } from "@/contants/station";
+import { STATUS } from "@/contants/status";
 
 import type { StationItemType } from "@/types/station";
 
@@ -67,7 +68,7 @@ export const COLUMNS_ROLL: ColumnDef<StationItemType>[] = [
       const status = row.original
         ?.status_code as StationItemType["status_code"];
       const isPendingReview = row.original?.is_pending_review;
-      const isClassifyScrap = status === STATION_STATUS.RECHECK;
+      const isClassifyScrap = status === STATUS.RECHECK;
       const isChangingStatusPending = row.original?.is_changing_status_pending;
       return (
         <div className="flex items-center gap-2">

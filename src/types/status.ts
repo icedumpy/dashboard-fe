@@ -1,3 +1,3 @@
-import { STATION_STATUS } from "@/contants/station";
+import { STATUS } from "@/contants/status";
 
-export type StatusT = (typeof STATION_STATUS)[keyof typeof STATION_STATUS];
+export type StatusT = (typeof STATUS)[keyof typeof STATUS];

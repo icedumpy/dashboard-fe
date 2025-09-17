@@ -1,7 +1,8 @@
-import { STATION, STATION_STATUS } from "@/contants/station";
+import { STATION } from "@/contants/station";
 
 import type { PaginationType } from "./pagination";
 import type { ImageT } from "./image";
+import type { StatusT } from "./status";
 
 export type StationType = (typeof STATION)[keyof typeof STATION];
 
@@ -15,7 +16,7 @@ export interface StationItemType {
   job_order_number?: string;
   roll_width?: number;
   detected_at: string;
-  status_code: (typeof STATION_STATUS)[keyof typeof STATION_STATUS];
+  status_code: StatusT;
   ai_note: string;
   scrap_requires_qc: boolean;
   scrap_confirmed_by?: number;
@@ -84,9 +85,9 @@ export interface ItemStatusHistoryT {
   event_type: string;
   actor: ActorT;
   from_status_id: unknown;
-  from_status_code: (typeof STATION_STATUS)[keyof typeof STATION_STATUS];
+  from_status_code: StatusT;
   to_status_id: number;
-  to_status_code?: (typeof STATION_STATUS)[keyof typeof STATION_STATUS];
+  to_status_code?: StatusT;
   created_at: string;
   defects?: string[];
 }

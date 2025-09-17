@@ -32,7 +32,8 @@ import { useItemDetailAPI } from "@/hooks/item/use-item-detail";
 import { useChangeStatus } from "@/hooks/change-status/use-create-change-status";
 import { ITEM_ENDPOINT } from "@/contants/api";
 import { useDefectOptionAPI } from "@/hooks/option/use-defect-option";
-import { STATION, STATION_STATUS } from "@/contants/station";
+import { STATION } from "@/contants/station";
+import { STATUS } from "@/contants/status";
 
 import type { UpdateStatusT } from "./types";
 
@@ -52,12 +53,12 @@ export default function UpdateStatusButton({
     enabled: !!itemId && open,
   });
 
-  const isItemStatusDefect = data?.data.status_code === STATION_STATUS.DEFECT;
+  const isItemStatusDefect = data?.data.status_code === STATUS.DEFECT;
   const changeStatus = useChangeStatus();
 
   const form = useForm<UpdateStatusT>({
     defaultValues: {
-      status: undefined,
+      statusId: undefined,
       defect_type_ids: undefined,
     },
     resolver: zodResolver(updateStatusSchema),
@@ -80,7 +81,7 @@ export default function UpdateStatusButton({
       )?.value;
 
       form.reset({
-        status: statusId,
+        statusId: statusId,
         defect_type_ids: isEmpty(defectIds) ? undefined : defectIds,
       });
     }
@@ -90,7 +91,7 @@ export default function UpdateStatusButton({
     changeStatus.mutate(
       {
         item_id: Number(itemId),
-        to_status_id: Number(values.status),
+        to_status_id: Number(values.statusId),
         defect_type_ids: values?.defect_type_ids,
         reason: "",
       },
@@ -143,7 +144,7 @@ export default function UpdateStatusButton({
         return STATUS_OPTIONS;
       default:
         return STATUS_OPTIONS.filter(
-          (option) => option.label === STATION_STATUS.DEFECT
+          (option) => option.label === STATUS.DEFECT
         );
     }
   }, [isItemStatusDefect]);
@@ -171,7 +172,7 @@ export default function UpdateStatusButton({
           <Form {...form}>
             <form className="space-y-2">
               <FormField
-                name="status"
+                name="statusId"
                 control={form.control}
                 render={({ field }) => (
                   <FormItem className="space-y-3">
@@ -180,7 +181,7 @@ export default function UpdateStatusButton({
                       <RadioGroup
                         onValueChange={(value) => {
                           field.onChange(value);
-                          if (value !== STATION_STATUS.DEFECT) {
+                          if (value !== STATUS.DEFECT) {
                             form.setValue("defect_type_ids", []);
                           }
                         }}
@@ -206,8 +207,7 @@ export default function UpdateStatusButton({
                     </FormControl>
                     <FormMessage />
 
-                    {/* ✅ sub-field defect_type_ids */}
-                    {form.watch("status") === "1" && (
+                    {form.watch("statusId") === STATUS_OPTIONS[2].value && (
                       <>
                         {stationType === STATION.ROLL ? (
                           <FormItem className="pl-4">
