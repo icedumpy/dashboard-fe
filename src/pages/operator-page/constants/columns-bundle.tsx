@@ -87,6 +87,7 @@ export const COLUMNS_BUNDLE: ColumnDef<StationItemType>[] = [
             status={status}
             itemId={id}
             isPendingReview={isPendingReview}
+            isChangingStatusPending={isChangingStatusPending}
             stationType={STATION.BUNDLE}
           />
           {isClassifyScrap && <ClassifyScrapButton id={id} status={status} />}

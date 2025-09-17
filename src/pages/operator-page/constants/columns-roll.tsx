@@ -86,6 +86,7 @@ export const COLUMNS_ROLL: ColumnDef<StationItemType>[] = [
             status={status}
             itemId={id}
             isPendingReview={isPendingReview}
+            isChangingStatusPending={isChangingStatusPending}
             stationType={STATION.ROLL}
           />
           {isClassifyScrap && <ClassifyScrapButton id={id} status={status} />}
