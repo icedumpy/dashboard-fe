@@ -6,7 +6,7 @@ import { STATION } from "@/contants/station";
 
 export interface CheckButtonProps {
   isPendingReview: boolean;
-  id: StationItemType["id"];
+  itemId: StationItemType["id"];
   status: StationItemType["status_code"];
   itemData?: StationItemType;
   stationType: (typeof STATION)[keyof typeof STATION];

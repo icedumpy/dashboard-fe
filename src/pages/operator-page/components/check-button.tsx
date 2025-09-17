@@ -36,7 +36,7 @@ import type { ImageT } from "@/types/image";
 import type { CheckButtonProps } from "../types";
 
 export default function CheckButton({
-  id,
+  itemId,
   status,
   isPendingReview = false,
   itemData,
@@ -51,7 +51,7 @@ export default function CheckButton({
   });
 
   const queryClient = useQueryClient();
-  const { data } = useItemDetailAPI(String(id), {
+  const { data } = useItemDetailAPI(String(itemId), {
     enabled: open,
   });
   const imageUpload = useImageUpload();
@@ -77,7 +77,7 @@ export default function CheckButton({
   const onConfirmEdit = useCallback(() => {
     itemFixRequest.mutate(
       {
-        itemId: String(id),
+        itemId: String(itemId),
         image_ids:
           (imageUpload.data?.data as ImageT[]).map((img) => Number(img.id)) ||
           [],
@@ -101,7 +101,7 @@ export default function CheckButton({
         },
       }
     );
-  }, [id, imageUpload, itemFixRequest, queryClient]);
+  }, [itemId, imageUpload, itemFixRequest, queryClient]);
 
   return (
     <>
@@ -170,7 +170,7 @@ export default function CheckButton({
             )}
             {canUpdateStatus && (
               <UpdateStatusButton
-                itemId={String(id)}
+                itemId={String(itemId)}
                 stationType={stationType}
                 disabled={isChangingStatusPending}
               />
@@ -199,7 +199,7 @@ export default function CheckButton({
                   const files = e.target.files;
                   const payload = {
                     files: files as unknown as FileList,
-                    item_id: String(id),
+                    item_id: String(itemId),
                   };
 
                   imageUpload.mutate(payload, {

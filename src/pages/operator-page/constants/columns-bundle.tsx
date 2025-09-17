@@ -74,7 +74,7 @@ export const COLUMNS_BUNDLE: ColumnDef<StationItemType>[] = [
         <div className="flex items-center gap-2">
           {id && (
             <CheckButton
-              id={id}
+              itemId={id}
               status={status}
               isPendingReview={isPendingReview}
               itemData={row.original}
@@ -84,7 +84,7 @@ export const COLUMNS_BUNDLE: ColumnDef<StationItemType>[] = [
           )}
           <ConfirmButton
             status={status}
-            id={id}
+            itemId={id}
             isPendingReview={isPendingReview}
             stationType={STATION.BUNDLE}
           />
