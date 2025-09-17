@@ -39,9 +39,11 @@ import type { UpdateStatusT } from "./types";
 export default function UpdateStatusButton({
   itemId,
   stationType,
+  disabled,
 }: {
   itemId: string;
   stationType: (typeof STATION)[keyof typeof STATION];
+  disabled?: boolean;
 }) {
   const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
@@ -159,7 +161,7 @@ export default function UpdateStatusButton({
   return (
     <Dialog open={open} onOpenChange={toggleOpen}>
       <DialogTrigger asChild>
-        <Button>แก้ไขสถานะ</Button>
+        <Button disabled={disabled}>แก้ไขสถานะ</Button>
       </DialogTrigger>
       <DialogContent aria-describedby={undefined}>
         <DialogHeader>

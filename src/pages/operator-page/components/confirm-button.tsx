@@ -30,7 +30,7 @@ import type { CheckButtonProps } from "../types";
 export default function ConfirmButton({
   id,
   status,
-  is_pending_review,
+  isPendingReview,
 }: CheckButtonProps) {
   const [open, setOpen] = useState(false);
   const { user } = useAuth();
@@ -46,7 +46,7 @@ export default function ConfirmButton({
   const onConfirmEdit = useCallback(() => {
     itemFixRequest.mutate(
       {
-        item_data: String(id),
+        itemId: String(id),
         image_ids:
           (imageUpload.data?.data as ImageT[]).map((img) => Number(img.id)) ||
           [],
@@ -83,9 +83,9 @@ export default function ConfirmButton({
         <Button
           size="sm"
           className="text-xs rounded bg-amber-600 hover:bg-amber-600/90 h-fit py-0.5"
-          disabled={is_pending_review}
+          disabled={isPendingReview}
         >
-          {is_pending_review ? "รอการตรวจสอบ" : "ส่งเรื่องแก้ไข"}
+          {isPendingReview ? "รอการตรวจสอบ" : "ส่งเรื่องแก้ไข"}
         </Button>
       </DialogTrigger>
       <DialogContent>
