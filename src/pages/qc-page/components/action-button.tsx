@@ -56,7 +56,7 @@ export default function ActionButton({
   return (
     <div className="flex gap-2">
       <ViewDetailButton itemId={itemId} />
-      {tabs === TABS[0].value && (
+      {tabs === TABS[1].value && (
         <>
           <ApproveButton
             itemId={itemId}
