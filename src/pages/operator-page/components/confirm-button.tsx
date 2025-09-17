@@ -17,7 +17,6 @@ import ConfirmDetail from "./confirm-detail";
 import ConfirmEditChecklist from "./confirm-edit-check-list";
 
 import { ITEM_ENDPOINT } from "@/contants/api";
-import { STATION_STATUS } from "@/contants/station";
 import { useImageUpload } from "@/hooks/upload/use-image-upload";
 import { useItemDetailAPI } from "@/hooks/item/use-item-detail";
 import { useItemFixRequest } from "@/hooks/item/use-item-fix-request";
@@ -26,6 +25,7 @@ import { ROLES } from "@/contants/auth";
 
 import type { ImageT } from "@/types/image";
 import type { CheckButtonProps } from "../types";
+import { STATUS } from "@/contants/status";
 
 export default function ConfirmButton({
   id,
@@ -72,7 +72,7 @@ export default function ConfirmButton({
     );
   }, [id, imageUpload, itemFixRequest, queryClient]);
 
-  const ALLOWED_STATUSES = [STATION_STATUS.DEFECT, STATION_STATUS.REJECTED];
+  const ALLOWED_STATUSES = [STATUS.DEFECT, STATUS.REJECTED];
 
   if (!ALLOWED_STATUSES.includes(status) || user?.role === ROLES.VIEWER)
     return null;
@@ -95,7 +95,7 @@ export default function ConfirmButton({
         <div className="space-y-4">
           <ConfirmDetail data={data?.data} />
           <ConfirmEditChecklist />
-          {data?.data.status_code != STATION_STATUS.SCRAP && (
+          {data?.data.status_code != STATUS.SCRAP && (
             <div className="p-4 space-y-2 border rounded-md">
               <p>อัปโหลดรูปหลังการแก้ไข (จำเป็น) *</p>
               <FileUpload
