@@ -10,10 +10,13 @@ import {
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { Button } from "@/components/ui/button";
+import { Input } from "./input";
 
-import { DATE_FORMAT } from "@/contants/format";
+import { DATE_FORMAT, TIME_FORMAT } from "@/contants/format";
+
 interface InputDateProps {
   value?: Date;
+  time?: boolean;
   onChange?: (date: Date | undefined) => void;
   placeholder?: string;
   disabled?: boolean;
@@ -21,17 +24,25 @@ interface InputDateProps {
     disabled?: Matcher | Matcher[];
   };
   format?: string;
+  dayBoundary?: "start" | "end";
 }
 
 export function InputDate({
   value,
+  time,
   onChange,
   placeholder = "Pick a date",
   disabled = false,
   format = DATE_FORMAT,
   calendarProps,
+  dayBoundary = "start",
 }: InputDateProps) {
   const [open, setOpen] = React.useState(false);
+  const [_value, _setValue] = React.useState<Date | undefined>(value);
+
+  React.useEffect(() => {
+    _setValue(value);
+  }, [value]);
 
   const calendarMonth = Array.isArray(calendarProps?.disabled)
     ? undefined
@@ -80,18 +91,74 @@ export function InputDate({
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0 overflow-hidden" align="start">
         <Calendar
-          defaultMonth={value}
+          defaultMonth={_value}
           mode="single"
-          selected={value}
+          selected={_value}
           captionLayout="dropdown"
           disabled={calendarProps?.disabled}
           startMonth={calendarMonth?.before}
-          endMonth={calendarMonth?.after}
-          onSelect={(date) => {
-            onChange?.(date);
-            setOpen(false);
+          endMonth={
+            calendarMonth?.after
+              ? dayjs(calendarMonth.after).add(1, "M").toDate()
+              : undefined
+          }
+          onSelect={(value) => {
+            const date = dayBoundary
+              ? dayBoundary === "start"
+                ? dayjs(value).startOf("day").toDate()
+                : dayjs(value).endOf("day").toDate()
+              : value;
+
+            _setValue(date);
           }}
         />
+        {time && (
+          <div className="p-2 border-t">
+            <Input
+              type="time"
+              id="time-picker"
+              step="1"
+              onChange={(e) => {
+                if (_value) {
+                  const [hours, minutes, seconds] = e.target.value
+                    .split(":")
+                    .map(Number);
+                  const newDate = dayjs(_value)
+                    .hour(hours)
+                    .minute(minutes)
+                    .second(seconds)
+                    .toDate();
+                  _setValue(newDate);
+                }
+              }}
+              defaultValue={
+                _value ? dayjs(_value).format(TIME_FORMAT) : undefined
+              }
+              className="bg-background appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
+            />
+          </div>
+        )}
+        <div className="flex justify-end gap-2 p-2 border-t">
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => {
+              onChange?.(value);
+              setOpen(false);
+            }}
+          >
+            Cancel
+          </Button>
+          <Button
+            size="sm"
+            onClick={() => {
+              onChange?.(_value);
+              setOpen(false);
+            }}
+          >
+            Ok
+          </Button>
+        </div>
       </PopoverContent>
     </Popover>
   );
