@@ -1,7 +1,7 @@
-import { Factory } from 'lucide-react';
-import React from 'react';
+import { Factory } from "lucide-react";
+import React from "react";
 
-import LoginCard from './login-form';
+import LoginCard from "./login-form";
 
 export const LoginPage: React.FC = () => {
   return (
@@ -11,7 +11,9 @@ export const LoginPage: React.FC = () => {
           <div className="inline-flex items-center justify-center w-16 h-16 mb-4 bg-blue-600 rounded-full">
             <Factory className="w-8 h-8 text-white" />
           </div>
-          <h1 className="text-2xl font-bold text-gray-900">Manufacturing QC</h1>
+          <h1 className="text-2xl font-bold text-gray-900">
+            BIC (Best Inspection Control)
+          </h1>
           <p className="mt-2 text-gray-600">เข้าสู่ระบบเพื่อเข้าถึงแดชบอร์ด</p>
         </div>
         <LoginCard />
