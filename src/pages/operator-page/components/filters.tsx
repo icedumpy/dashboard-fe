@@ -19,6 +19,7 @@ import { useStationStatusOptions } from "@/hooks/option/use-station-status-optio
 import { filtersSchema } from "../schema";
 import { useAuth } from "@/hooks/auth/use-auth-v2";
 import { ROLES } from "@/contants/auth";
+import { DATE_TIME_FORMAT } from "@/contants/format";
 
 export default function Filters() {
   const { user } = useAuth();
@@ -182,6 +183,8 @@ export default function Filters() {
                 <FormLabel>วันที่เริ่มต้น</FormLabel>
                 <FormControl>
                   <InputDate
+                    time
+                    format={DATE_TIME_FORMAT}
                     value={
                       field.value ? dayjs(field.value).toDate() : undefined
                     }
@@ -201,6 +204,9 @@ export default function Filters() {
                 <FormLabel>วันที่สิ้นสุด</FormLabel>
                 <FormControl>
                   <InputDate
+                    dayBoundary="end"
+                    time
+                    format={DATE_TIME_FORMAT}
                     value={
                       field.value ? dayjs(field.value).toDate() : undefined
                     }
