@@ -25,10 +25,17 @@ export const ItemService = {
     const response = await axiosInstance.get(`${ITEM_ENDPOINT}/${id}`);
     return response.data as StationDetailResponse;
   },
-  itemReport: async (params: unknown) => {
-    const response = await axiosInstance.post(ITEM_REPORT_ENDPOINT, params, {
-      responseType: "blob",
-    });
+  itemReport: async (params: FilterType) => {
+    const response = await axiosInstance.post(
+      ITEM_REPORT_ENDPOINT,
+      {
+        ...params,
+        ...formatDetectedRange(params.detected_from, params.detected_to),
+      },
+      {
+        responseType: "blob",
+      }
+    );
     return response?.data;
   },
   itemFixRequest: async (params: {
