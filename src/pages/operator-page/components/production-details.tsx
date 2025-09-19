@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { isEmpty } from "radash";
 import { toast } from "sonner";
 import dayjs from "dayjs";
 
@@ -19,8 +18,8 @@ import {
 import { useLineAPI } from "@/hooks/line/use-line";
 import { DATE_TIME_FORMAT } from "@/contants/format";
 import { useDefectOptionAPI } from "@/hooks/option/use-defect-option";
-import { REVIEW_STATE_OPTION } from "@/contants/review";
 import { updateItemDetailsSchema } from "../schema";
+import { getCurrentState, getDefectNames, getLineCode } from "@/helpers/item";
 
 import type { StationDetailResponse } from "@/types/station";
 import type { UpdateItemDetail } from "../types";
@@ -52,62 +51,23 @@ export default function ProductDetail({
   });
 
   useEffect(() => {
-    if (data) {
-      form.reset({
-        roll_id: data?.roll_id || undefined,
-        job_order_number: data?.job_order_number || undefined,
-        roll_width: String(data?.roll_width) || undefined,
-        product_code: data?.product_code || undefined,
-        roll_number: data?.roll_number || undefined,
-      });
-    }
+    form.reset({
+      ...data,
+      roll_width: String(data?.roll_width) || undefined,
+    });
   }, [data, form]);
 
-  const lineCode = useMemo(() => {
-    return (
-      line?.data?.find((item) => Number(item.id) === Number(data?.line_id))
-        ?.code ?? "-"
-    );
-  }, [line, data?.line_id]);
+  const lineCode = getLineCode(line?.data, Number(data?.line_id));
+  const defectNames = getDefectNames(defects, defectOptions);
+  const currentState = getCurrentState(reviews);
 
-  const defectNames = useMemo(() => {
-    if (!defects || !defectOptions) return "-";
-    return defects
-      .map(
-        (defect) =>
-          defectOptions.find(
-            (item) => item?.meta?.code === defect.defect_type_code
-          )?.label ?? "-"
-      )
-      .join(", ");
-  }, [defects, defectOptions]);
-
-  const currentState = useMemo(() => {
-    if (isEmpty(reviews)) return "-";
-    const sorted =
-      reviews
-        ?.sort(
-          (a, b) =>
-            new Date(a.submitted_at).getTime() -
-            new Date(b.submitted_at).getTime()
-        )
-        .map((review) => review.state) ?? [];
-
-    const latestState = sorted[sorted.length - 1];
-    const mappedLabel = REVIEW_STATE_OPTION.find(
-      (option) => option.value === latestState
-    )?.label;
-
-    return mappedLabel ?? "-";
-  }, [reviews]);
-
-  const fields = [
-    "roll_id",
-    "job_order_number",
-    "roll_width",
-    "product_code",
-    "roll_number",
-  ];
+  const editableFields = useMemo(
+    () =>
+      Object.keys(updateItemDetailsSchema.shape) as Array<
+        keyof UpdateItemDetail
+      >,
+    []
+  );
 
   const dataList = useMemo(
     () => [
@@ -166,7 +126,9 @@ export default function ProductDetail({
     // TODO: API update details
     console.log(values);
     setMode("VIEW");
-    toast.success("บันทึกสำเร็จ");
+    toast.success("แก้ไขรายละเอียดสำเร็จ");
+
+    // TODO: Invalidate and refetch data
   };
 
   return (
@@ -174,14 +136,15 @@ export default function ProductDetail({
       <div className="flex items-baseline justify-between">
         <blockquote className="prose">รายละเอียดการผลิต</blockquote>
         <div className="space-x-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setMode(mode === "VIEW" ? "EDIT" : "VIEW")}
-          >
-            แก้ไขรายละเอียด
-          </Button>
-          {mode === "EDIT" && (
+          {mode === "VIEW" ? (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setMode(mode === "VIEW" ? "EDIT" : "VIEW")}
+            >
+              แก้ไขรายละเอียด
+            </Button>
+          ) : (
             <Button size="sm" onClick={form.handleSubmit(handleSubmit)}>
               บันทึก
             </Button>
@@ -198,7 +161,10 @@ export default function ProductDetail({
                 <FormItem>
                   <FormLabel>{item.label}</FormLabel>
                   <FormControl>
-                    {mode === "EDIT" && fields.includes(item.name) ? (
+                    {mode === "EDIT" &&
+                    editableFields.includes(
+                      item.name as keyof UpdateItemDetail
+                    ) ? (
                       <Input
                         type="text"
                         value={field.value}
