@@ -4,7 +4,6 @@ import dayjs from "dayjs";
 import StatusBadge from "@/components/status-badge";
 import CheckButton from "../components/check-button";
 import ClassifyScrapButton from "../components/classify-scrap-button";
-import ConfirmButton from "../components/confirm-button";
 import StatusHistoryButton from "@/components/status-history-button";
 
 import { DATE_TIME_FORMAT } from "@/contants/format";
@@ -82,13 +81,6 @@ export const COLUMNS_ROLL: ColumnDef<StationItemType>[] = [
               isChangingStatusPending={isChangingStatusPending}
             />
           )}
-          <ConfirmButton
-            status={status}
-            itemId={id}
-            isPendingReview={isPendingReview}
-            isChangingStatusPending={isChangingStatusPending}
-            stationType={STATION.ROLL}
-          />
           {isClassifyScrap && <ClassifyScrapButton id={id} status={status} />}
         </div>
       );
