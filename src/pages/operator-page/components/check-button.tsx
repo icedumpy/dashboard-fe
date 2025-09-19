@@ -163,7 +163,7 @@ export default function CheckButton({
               <Button
                 onClick={() => setMode("EDIT")}
                 variant="update"
-                disabled={isPendingReview}
+                disabled={isPendingReview || isChangingStatusPending}
               >
                 ส่งเรื่องแก้ไข
               </Button>

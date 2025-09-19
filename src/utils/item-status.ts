@@ -9,7 +9,9 @@ export function canRequestChanges(
   currentLineId: string | number,
   isPendingReview: boolean
 ) {
-  const isEditable = ![STATUS.NORMAL, STATUS.QC_PASSED].includes(status);
+  const isEditable = [STATUS.DEFECT, STATUS.RECHECK, STATUS.REJECTED].includes(
+    status
+  );
   const isCrossLine = String(userLineId) !== String(currentLineId);
   return isEditable && !isCrossLine && !isPendingReview;
 }

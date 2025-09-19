@@ -6,7 +6,6 @@ import {
   ITEM_STATUS_HISTORY_ENDPOINT,
 } from "@/contants/api";
 import axiosInstance from "@/lib/axios-instance";
-import { formatDetectedRange } from "@/lib/utils";
 
 import type { FilterType } from "@/pages/operator-page/types";
 import type { StationDetailResponse, StationResponse } from "@/types/station";
@@ -14,10 +13,7 @@ import type { StationDetailResponse, StationResponse } from "@/types/station";
 export const ItemService = {
   getItems: async (params: FilterType) => {
     const response = await axiosInstance.get(ITEM_ENDPOINT, {
-      params: {
-        ...params,
-        ...formatDetectedRange(params.detected_from, params.detected_to),
-      },
+      params,
     });
     return response.data as StationResponse;
   },
@@ -25,7 +21,7 @@ export const ItemService = {
     const response = await axiosInstance.get(`${ITEM_ENDPOINT}/${id}`);
     return response.data as StationDetailResponse;
   },
-  itemReport: async (params: unknown) => {
+  itemReport: async (params: FilterType) => {
     const response = await axiosInstance.post(ITEM_REPORT_ENDPOINT, params, {
       responseType: "blob",
     });

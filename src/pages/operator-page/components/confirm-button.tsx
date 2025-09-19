@@ -22,15 +22,16 @@ import { useItemDetailAPI } from "@/hooks/item/use-item-detail";
 import { useItemFixRequest } from "@/hooks/item/use-item-fix-request";
 import { useAuth } from "@/hooks/auth/use-auth";
 import { ROLES } from "@/contants/auth";
+import { STATUS } from "@/contants/status";
 
 import type { ImageT } from "@/types/image";
 import type { CheckButtonProps } from "../types";
-import { STATUS } from "@/contants/status";
 
 export default function ConfirmButton({
   itemId,
   status,
   isPendingReview,
+  isChangingStatusPending,
 }: CheckButtonProps) {
   const [open, setOpen] = useState(false);
   const { user } = useAuth();
@@ -83,7 +84,7 @@ export default function ConfirmButton({
         <Button
           size="sm"
           className="text-xs rounded bg-amber-600 hover:bg-amber-600/90 h-fit py-0.5"
-          disabled={isPendingReview}
+          disabled={isPendingReview || isChangingStatusPending}
         >
           {isPendingReview ? "รอการตรวจสอบ" : "ส่งเรื่องแก้ไข"}
         </Button>
