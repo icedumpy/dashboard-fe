@@ -5,7 +5,7 @@ import TabsCard from "./components/tabs-card";
 import WaitingReviewTable from "./components/waiting-review-table";
 import ReviewHistoryTable from "./components/review-history-table";
 import ReviewTable from "./components/review-table";
-import RealTimeDashboard from "../operator-page/components/real-time-dashboard";
+import RealTimeDashboard from "./components/real-time-dashboard";
 import { Layout } from "@/components/Layout";
 
 import { TABS, TABS_KEYS } from "./constants/tabs";
