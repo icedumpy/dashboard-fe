@@ -23,9 +23,12 @@ import { updateItemDetailsSchema } from "../schema";
 import { getCurrentState, getDefectNames, getLineCode } from "@/helpers/item";
 import { ITEM_ENDPOINT } from "@/contants/api";
 import { useItemUpdate } from "@/hooks/item/use-item-update";
+import { ROLES } from "@/contants/auth";
+import { useAuth } from "@/hooks/auth/use-auth-v2";
 
 import type { StationDetailResponse } from "@/types/station";
 import type { UpdateItemDetail } from "../types";
+import type { RoleType } from "@/types/auth";
 
 interface ProductDetailProps {
   data?: StationDetailResponse["data"];
@@ -38,11 +41,16 @@ export default function ProductDetail({
   defects,
   reviews,
 }: ProductDetailProps) {
+  const { user } = useAuth();
   const queryClient = useQueryClient();
   const { data: line } = useLineAPI();
   const { data: defectOptions } = useDefectOptionAPI();
   const [mode, setMode] = useState<"VIEW" | "EDIT">("VIEW");
   const itemUpdate = useItemUpdate();
+
+  const canEditItemDetail =
+    !!user?.role &&
+    ([ROLES.INSPECTOR, ROLES.OPERATOR] as RoleType[]).includes(user.role);
 
   const form = useForm({
     defaultValues: {
@@ -160,25 +168,27 @@ export default function ProductDetail({
     <>
       <div className="flex items-baseline justify-between">
         <blockquote className="prose">รายละเอียดการผลิต</blockquote>
-        <div className="space-x-2">
-          {mode === "VIEW" ? (
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setMode(mode === "VIEW" ? "EDIT" : "VIEW")}
-            >
-              แก้ไขรายละเอียด
-            </Button>
-          ) : (
-            <Button
-              size="sm"
-              onClick={form.handleSubmit(handleSubmit)}
-              disabled={itemUpdate.isPending}
-            >
-              บันทึก
-            </Button>
-          )}
-        </div>
+        {canEditItemDetail && (
+          <div className="space-x-2">
+            {mode === "VIEW" ? (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setMode(mode === "VIEW" ? "EDIT" : "VIEW")}
+              >
+                แก้ไขรายละเอียด
+              </Button>
+            ) : (
+              <Button
+                size="sm"
+                onClick={form.handleSubmit(handleSubmit)}
+                disabled={itemUpdate.isPending}
+              >
+                บันทึก
+              </Button>
+            )}
+          </div>
+        )}
       </div>
       <Form {...form}>
         <form className="grid w-full grid-cols-1 gap-2 p-4 border rounded md:grid-cols-2 lg:grid-cols-3">
