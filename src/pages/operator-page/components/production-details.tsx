@@ -1,11 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useQueryClient } from "@tanstack/react-query";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import dayjs from "dayjs";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useForm } from "react-hook-form";
 import {
   Form,
   FormControl,
@@ -20,6 +21,8 @@ import { DATE_TIME_FORMAT } from "@/contants/format";
 import { useDefectOptionAPI } from "@/hooks/option/use-defect-option";
 import { updateItemDetailsSchema } from "../schema";
 import { getCurrentState, getDefectNames, getLineCode } from "@/helpers/item";
+import { ITEM_ENDPOINT } from "@/contants/api";
+import { useItemUpdate } from "@/hooks/item/use-item-update";
 
 import type { StationDetailResponse } from "@/types/station";
 import type { UpdateItemDetail } from "../types";
@@ -35,9 +38,11 @@ export default function ProductDetail({
   defects,
   reviews,
 }: ProductDetailProps) {
+  const queryClient = useQueryClient();
   const { data: line } = useLineAPI();
   const { data: defectOptions } = useDefectOptionAPI();
   const [mode, setMode] = useState<"VIEW" | "EDIT">("VIEW");
+  const itemUpdate = useItemUpdate();
 
   const form = useForm({
     defaultValues: {
@@ -46,6 +51,7 @@ export default function ProductDetail({
       roll_width: undefined,
       product_code: undefined,
       roll_number: undefined,
+      bundle_number: undefined,
     },
     resolver: zodResolver(updateItemDetailsSchema),
   });
@@ -53,7 +59,8 @@ export default function ProductDetail({
   useEffect(() => {
     form.reset({
       ...data,
-      roll_width: String(data?.roll_width) || undefined,
+      roll_number: data?.roll_number || undefined,
+      bundle_number: data?.bundle_number || undefined,
     });
   }, [data, form]);
 
@@ -123,12 +130,30 @@ export default function ProductDetail({
   );
 
   const handleSubmit = (values: UpdateItemDetail) => {
-    // TODO: API update details
-    console.log(values);
-    setMode("VIEW");
-    toast.success("แก้ไขรายละเอียดสำเร็จ");
-
-    // TODO: Invalidate and refetch data
+    itemUpdate.mutate(
+      {
+        itemId: String(data?.id),
+        ...values,
+      },
+      {
+        onSuccess() {
+          toast.success("แก้ไขรายละเอียดสำเร็จ");
+          queryClient.invalidateQueries({
+            queryKey: [ITEM_ENDPOINT, String(data?.id)],
+          });
+          queryClient.invalidateQueries({
+            queryKey: [ITEM_ENDPOINT],
+            exact: false,
+          });
+          setMode("VIEW");
+        },
+        onError(error) {
+          toast.error("แก้ไขรายละเอียดไม่สำเร็จ", {
+            description: error.message,
+          });
+        },
+      }
+    );
   };
 
   return (
@@ -145,7 +170,11 @@ export default function ProductDetail({
               แก้ไขรายละเอียด
             </Button>
           ) : (
-            <Button size="sm" onClick={form.handleSubmit(handleSubmit)}>
+            <Button
+              size="sm"
+              onClick={form.handleSubmit(handleSubmit)}
+              disabled={itemUpdate.isPending}
+            >
               บันทึก
             </Button>
           )}
