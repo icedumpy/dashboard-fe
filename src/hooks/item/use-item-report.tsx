@@ -13,8 +13,8 @@ export interface DownloadReportParams {
   roll_id?: string;
   number?: string;
   product_code?: string;
-  roll_width_max?: number;
-  roll_width_min?: number;
+  roll_width_max?: string;
+  roll_width_min?: string;
   station: StatusT;
   status?: StatusT[];
 }

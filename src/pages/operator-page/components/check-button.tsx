@@ -47,7 +47,7 @@ export default function CheckButton({
   const [open, setOpen] = useState(false);
   const [mode, setMode] = useState<"VIEW" | "EDIT">("VIEW");
   const { user } = useAuth();
-  const [line] = useQueryState("line", {
+  const [line] = useQueryState("line_id", {
     defaultValue: String(user?.line?.id),
   });
 

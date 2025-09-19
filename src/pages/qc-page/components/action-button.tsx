@@ -11,7 +11,7 @@ import useDismissDialog from "@/hooks/use-dismiss-dialog";
 import { REVIEW_ENDPOINT } from "@/contants/api";
 import { REVIEW_STATE } from "@/contants/review";
 import { useReviewDecisionAPI } from "@/hooks/review/use-review-decision";
-import { TABS } from "../constants/tabs";
+import { TABS, TABS_KEYS } from "../constants/tabs";
 
 export default function ActionButton({
   itemId,
@@ -56,7 +56,7 @@ export default function ActionButton({
   return (
     <div className="flex gap-2">
       <ViewDetailButton itemId={itemId} />
-      {tabs === TABS[1].value && (
+      {tabs === TABS_KEYS.WAITING_FOR_REVIEW && (
         <>
           <ApproveButton
             itemId={itemId}
