@@ -38,7 +38,7 @@ export function InputDate({
   dayBoundary = "start",
 }: InputDateProps) {
   const [open, setOpen] = React.useState(false);
-  const [_value, _setValue] = React.useState<Date | undefined>(value);
+  const [_value, _setValue] = React.useState<Date | undefined>();
 
   React.useEffect(() => {
     _setValue(value);
@@ -49,6 +49,11 @@ export function InputDate({
     : typeof calendarProps?.disabled === "object"
     ? (calendarProps.disabled as { before?: Date; after?: Date })
     : undefined;
+
+  const handleSubmit = React.useCallback(() => {
+    onChange?.(_value);
+    setOpen(false);
+  }, [onChange, _value]);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -149,13 +154,7 @@ export function InputDate({
           >
             Cancel
           </Button>
-          <Button
-            size="sm"
-            onClick={() => {
-              onChange?.(_value);
-              setOpen(false);
-            }}
-          >
+          <Button size="sm" onClick={handleSubmit}>
             Ok
           </Button>
         </div>
