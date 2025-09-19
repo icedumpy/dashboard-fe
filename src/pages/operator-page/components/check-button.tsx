@@ -8,6 +8,7 @@ import {
   Dialog,
   DialogClose,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -121,20 +122,14 @@ export default function CheckButton({
           className="overflow-auto sm:max-w-4xl"
         >
           <DialogHeader>
-            <DialogTitle asChild>
-              <div>
-                <h3 className="text-xl font-bold">
-                  ตรวจสอบ {itemData?.station.toUpperCase()}
-                </h3>
-                <p className="text-sm font-normal text-muted-foreground">
-                  {data?.data?.product_code} - Role {data?.data.roll_number}
-                </p>
-              </div>
-            </DialogTitle>
+            <DialogTitle>ตรวจสอบ {itemData?.station.toUpperCase()}</DialogTitle>
+            <DialogDescription>
+              {data?.data?.product_code} - Role {data?.data.roll_number}
+            </DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
             <div className="space-y-2">
-              <blockquote className="font-bold">รูปปที่ระบบตรวจพบ</blockquote>
+              <blockquote className="font-bold">รูปที่ระบบตรวจพบ</blockquote>
               <div className="flex flex-col gap-2 md:flex-row">
                 <div
                   className={

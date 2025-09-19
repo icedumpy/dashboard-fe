@@ -1,13 +1,29 @@
-import dayjs from "dayjs";
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { isEmpty } from "radash";
+import { toast } from "sonner";
+import dayjs from "dayjs";
+
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { useForm } from "react-hook-form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 
 import { useLineAPI } from "@/hooks/line/use-line";
 import { DATE_TIME_FORMAT } from "@/contants/format";
 import { useDefectOptionAPI } from "@/hooks/option/use-defect-option";
 import { REVIEW_STATE_OPTION } from "@/contants/review";
+import { updateItemDetailsSchema } from "../schema";
 
 import type { StationDetailResponse } from "@/types/station";
+import type { UpdateItemDetail } from "../types";
 
 interface ProductDetailProps {
   data?: StationDetailResponse["data"];
@@ -22,6 +38,30 @@ export default function ProductDetail({
 }: ProductDetailProps) {
   const { data: line } = useLineAPI();
   const { data: defectOptions } = useDefectOptionAPI();
+  const [mode, setMode] = useState<"VIEW" | "EDIT">("VIEW");
+
+  const form = useForm({
+    defaultValues: {
+      roll_id: undefined,
+      job_order_number: undefined,
+      roll_width: undefined,
+      product_code: undefined,
+      roll_number: undefined,
+    },
+    resolver: zodResolver(updateItemDetailsSchema),
+  });
+
+  useEffect(() => {
+    if (data) {
+      form.reset({
+        roll_id: data?.roll_id || undefined,
+        job_order_number: data?.job_order_number || undefined,
+        roll_width: String(data?.roll_width) || undefined,
+        product_code: data?.product_code || undefined,
+        roll_number: data?.roll_number || undefined,
+      });
+    }
+  }, [data, form]);
 
   const lineCode = useMemo(() => {
     return (
@@ -61,26 +101,57 @@ export default function ProductDetail({
     return mappedLabel ?? "-";
   }, [reviews]);
 
-  const details = useMemo(
+  const fields = [
+    "roll_id",
+    "job_order_number",
+    "roll_width",
+    "product_code",
+    "roll_number",
+  ];
+
+  const dataList = useMemo(
     () => [
-      { label: "Production Line:", value: lineCode },
-      { label: "Job Order Number:", value: data?.job_order_number ?? "-" },
-      { label: "ประเภท Defect:", value: defectNames || "-" },
-      { label: "สถานี:", value: data?.station ?? "-" },
-      { label: "Roll Width:", value: data?.roll_width ?? "-" },
-      { label: "สถานะปัจจุบัน:", value: currentState },
-      { label: "Product Code:", value: data?.product_code ?? "-" },
+      { label: "Production Line:", name: "line_code", value: lineCode },
+      {
+        label: "Job Order Number:",
+        name: "job_order_number",
+        value: data?.job_order_number ?? "-",
+      },
+      {
+        label: "ประเภท Defect:",
+        name: "defect_type",
+        value: defectNames || "-",
+      },
+      { label: "Roll ID:", name: "roll_id", value: data?.roll_id ?? "-" },
+      { label: "สถานี:", name: "station", value: data?.station ?? "-" },
+      {
+        label: "Roll Width:",
+        name: "roll_width",
+        value: data?.roll_width ?? "-",
+      },
+      { label: "สถานะปัจจุบัน:", name: "current_state", value: currentState },
+      {
+        label: "Product Code:",
+        name: "product_code",
+        value: data?.product_code ?? "-",
+      },
       {
         label: "ตรวจพบเมื่อ:",
+        name: "detected_at",
         value: data?.detected_at
           ? dayjs(data.detected_at).format(DATE_TIME_FORMAT)
           : "-",
       },
-      { label: "Roll Number:", value: data?.roll_number ?? "-" },
+      {
+        label: "Roll Number:",
+        name: "roll_number",
+        value: data?.roll_number ?? "-",
+      },
     ],
     [
       lineCode,
       data?.job_order_number,
+      data?.roll_id,
       data?.station,
       data?.roll_width,
       data?.product_code,
@@ -91,17 +162,59 @@ export default function ProductDetail({
     ]
   );
 
+  const handleSubmit = (values: UpdateItemDetail) => {
+    // TODO: API update details
+    console.log(values);
+    setMode("VIEW");
+    toast.success("บันทึกสำเร็จ");
+  };
+
   return (
     <>
-      <blockquote className="prose">รายละเอียดการผลิต</blockquote>
-      <div className="grid w-full grid-cols-1 gap-2 p-4 border rounded md:grid-cols-2 lg:grid-cols-3">
-        {details.map((item) => (
-          <div key={item.label} className="flex flex-col">
-            <span className="text-sm text-muted-foreground">{item.label}</span>
-            <span className="font-bold">{item.value}</span>
-          </div>
-        ))}
+      <div className="flex items-baseline justify-between">
+        <blockquote className="prose">รายละเอียดการผลิต</blockquote>
+        <div className="space-x-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setMode(mode === "VIEW" ? "EDIT" : "VIEW")}
+          >
+            แก้ไขรายละเอียด
+          </Button>
+          {mode === "EDIT" && (
+            <Button size="sm" onClick={form.handleSubmit(handleSubmit)}>
+              บันทึก
+            </Button>
+          )}
+        </div>
       </div>
+      <Form {...form}>
+        <form className="grid w-full grid-cols-1 gap-2 p-4 border rounded md:grid-cols-2 lg:grid-cols-3">
+          {dataList.map((item) => (
+            <FormField
+              key={item.label}
+              name={item.name || ""}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{item.label}</FormLabel>
+                  <FormControl>
+                    {mode === "EDIT" && fields.includes(item.name) ? (
+                      <Input
+                        type="text"
+                        value={field.value}
+                        onChange={field.onChange}
+                      />
+                    ) : (
+                      <span className="py-1.5 font-bold">{item.value}</span>
+                    )}
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          ))}
+        </form>
+      </Form>
     </>
   );
 }

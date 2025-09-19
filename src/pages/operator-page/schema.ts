@@ -40,3 +40,13 @@ export const classifyScrapSchema = z
       });
     }
   });
+
+export const updateItemDetailsSchema = z.object({
+  roll_id: z.string({ error: "กรุณากรอก Roll ID" }).nonempty(),
+  job_order_number: z
+    .string({ error: "กรุณากรอก Job Order Number" })
+    .nonempty(),
+  roll_width: z.string({ error: "กรุณากรอก Roll Width" }).nonempty(),
+  product_code: z.string({ error: "กรุณากรอก Product Code" }).nonempty(),
+  roll_number: z.string({ error: "กรุณากรอก Roll Number" }).nonempty(),
+});
