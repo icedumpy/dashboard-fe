@@ -207,7 +207,17 @@ export default function ProductDetail({
                       <Input
                         type="text"
                         value={field.value}
-                        onChange={field.onChange}
+                        onChange={(value) => {
+                          if (item.name === "roll_width") {
+                            const numericValue = value.target.value.replace(
+                              /\D/g,
+                              ""
+                            );
+                            field.onChange(+numericValue);
+                            return;
+                          }
+                          field.onChange(value);
+                        }}
                       />
                     ) : (
                       <span className="py-1.5 font-bold">{item.value}</span>
