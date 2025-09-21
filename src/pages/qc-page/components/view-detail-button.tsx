@@ -15,12 +15,20 @@ import ImageDefect from "@/pages/operator-page/components/image-defect";
 import ImageRepair from "@/pages/operator-page/components/image-repair";
 import ProductDetail from "@/pages/operator-page/components/production-details";
 import UpdateStatusButton from "@/components/update-status-button";
+import ReviewDecisionButton from "@/components/review-decision-button";
 
 import { useItemDetailAPI } from "@/hooks/item/use-item-detail";
 import { shouldShowUpdateStatusButton } from "@/utils/item-status";
 import { useAuth } from "@/hooks/auth/use-auth-v2";
+import { REVIEW_STATE } from "@/contants/review";
 
-export default function ViewDetailButton({ itemId }: { itemId: string }) {
+export default function ViewDetailButton({
+  itemId,
+  reviewId,
+}: {
+  itemId: string;
+  reviewId: string;
+}) {
   const { user } = useAuth();
   const [open, setOpen] = useState(false);
   const { data } = useItemDetailAPI(itemId, {
@@ -77,6 +85,16 @@ export default function ViewDetailButton({ itemId }: { itemId: string }) {
           </div>
         </div>
         <DialogFooter>
+          <ReviewDecisionButton
+            itemId={itemId}
+            reviewId={reviewId}
+            decision={REVIEW_STATE.APPROVED}
+          />
+          <ReviewDecisionButton
+            itemId={itemId}
+            reviewId={reviewId}
+            decision={REVIEW_STATE.REJECTED}
+          />
           {canUpdateStatus && (
             <UpdateStatusButton
               itemId={itemId}

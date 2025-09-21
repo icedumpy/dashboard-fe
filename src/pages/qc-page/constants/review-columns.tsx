@@ -7,11 +7,11 @@ import { useItemDetailAPI } from "@/hooks/item/use-item-detail";
 import { useProductionLineOptions } from "@/hooks/option/use-production-line-option";
 import { STATION } from "@/contants/station";
 import { STATUS_LIST } from "@/contants/status";
+import { useDefectOptionAPI } from "@/hooks/option/use-defect-option";
 
 import type { ColumnDef } from "@tanstack/react-table";
 import type { StatusT } from "@/types/status";
 import type { ChangeStatusT } from "@/types/change-status";
-import { useDefectOptionAPI } from "@/hooks/option/use-defect-option";
 
 export const REVIEW_COLUMNS: ColumnDef<ChangeStatusT>[] = [
   {
@@ -86,7 +86,10 @@ export const REVIEW_COLUMNS: ColumnDef<ChangeStatusT>[] = [
 
       return (
         <div className="space-x-2">
-          <ViewDetailButton itemId={String(itemId)} />
+          <ViewDetailButton
+            itemId={String(itemId)}
+            reviewId={String(requestId)}
+          />
           <ReviewApproveButton itemId={itemId} requestId={requestId} />
           <ReviewRejectButton itemId={itemId} requestId={requestId} />
         </div>
