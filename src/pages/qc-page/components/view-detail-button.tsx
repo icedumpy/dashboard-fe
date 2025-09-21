@@ -19,7 +19,7 @@ import ReviewDecisionButton from "@/components/review-decision-button";
 
 import { useItemDetailAPI } from "@/hooks/item/use-item-detail";
 import { shouldShowUpdateStatusButton } from "@/utils/item-status";
-import { useAuth } from "@/hooks/auth/use-auth-v2";
+import { useAuth } from "@/hooks/auth/use-auth";
 import { REVIEW_STATE } from "@/contants/review";
 
 export default function ViewDetailButton({

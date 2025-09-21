@@ -28,7 +28,7 @@ import {
   isHiddenRepairImages,
   canRequestChanges,
 } from "@/utils/item-status";
-import { useAuth } from "@/hooks/auth/use-auth-v2";
+import { useAuth } from "@/hooks/auth/use-auth";
 import { useItemDetailAPI } from "@/hooks/item/use-item-detail";
 import { useItemFixRequest } from "@/hooks/item/use-item-fix-request";
 import { useImageUpload } from "@/hooks/upload/use-image-upload";

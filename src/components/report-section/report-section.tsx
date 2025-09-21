@@ -2,7 +2,7 @@ import ExportRollButton from "../export-roll-button";
 import ExportBundleButton from "../export-bundle-button";
 
 import { ROLES } from "@/contants/auth";
-import { useAuth } from "@/hooks/auth/use-auth-v2";
+import { useAuth } from "@/hooks/auth/use-auth";
 
 import type { DownloadReportParams } from "@/hooks/item/use-item-report";
 
