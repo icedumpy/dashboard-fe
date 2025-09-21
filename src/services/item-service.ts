@@ -5,6 +5,7 @@ import {
   ITEM_SCRAP_ENDPOINT,
   ITEM_STATUS_HISTORY_ENDPOINT,
 } from "@/contants/api";
+import { ItemUpdateParams } from "@/hooks/item/use-item-update";
 import axiosInstance from "@/lib/axios-instance";
 
 import type { FilterType } from "@/pages/operator-page/types";
@@ -50,6 +51,20 @@ export const ItemService = {
   itemStatusHistory: async (itemId?: string) => {
     const response = await axiosInstance.get(
       ITEM_STATUS_HISTORY_ENDPOINT.replace("{item_id}", String(itemId))
+    );
+    return response.data;
+  },
+  itemUpdate: async (params: ItemUpdateParams) => {
+    const response = await axiosInstance.patch(
+      `${ITEM_ENDPOINT}/${params.itemId}`,
+      {
+        product_code: params.product_code,
+        roll_number: params.roll_number,
+        bundle_number: params.bundle_number,
+        job_order_number: params.job_order_number,
+        roll_width: params.roll_width,
+        roll_id: params.roll_id,
+      }
     );
     return response.data;
   },

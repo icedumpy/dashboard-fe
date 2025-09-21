@@ -24,4 +24,4 @@ export interface ShiftType {
   end_time: string;
 }
 
-export type RoleType = keyof typeof ROLES;
+export type RoleType = (typeof ROLES)[keyof typeof ROLES];

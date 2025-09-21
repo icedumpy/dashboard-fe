@@ -28,7 +28,7 @@ export default function ExportRollButton({
   filters: DownloadReportParams;
 }) {
   const { data } = useLineAPI();
-  const [line] = useQueryState("line", {
+  const [line] = useQueryState("line_id", {
     defaultValue: String(data?.data[0].id),
   });
 

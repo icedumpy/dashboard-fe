@@ -1,13 +1,34 @@
+import { useEffect, useMemo, useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useQueryClient } from "@tanstack/react-query";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import dayjs from "dayjs";
-import { useMemo } from "react";
-import { isEmpty } from "radash";
+
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 
 import { useLineAPI } from "@/hooks/line/use-line";
 import { DATE_TIME_FORMAT } from "@/contants/format";
 import { useDefectOptionAPI } from "@/hooks/option/use-defect-option";
-import { REVIEW_STATE_OPTION } from "@/contants/review";
+import { updateItemDetailsSchema } from "../schema";
+import { getCurrentState, getDefectNames, getLineCode } from "@/helpers/item";
+import { ITEM_ENDPOINT } from "@/contants/api";
+import { useItemUpdate } from "@/hooks/item/use-item-update";
+import { ROLES } from "@/contants/auth";
+import { useAuth } from "@/hooks/auth/use-auth-v2";
 
 import type { StationDetailResponse } from "@/types/station";
+import type { UpdateItemDetail } from "../types";
+import type { RoleType } from "@/types/auth";
 
 interface ProductDetailProps {
   data?: StationDetailResponse["data"];
@@ -20,67 +41,92 @@ export default function ProductDetail({
   defects,
   reviews,
 }: ProductDetailProps) {
+  const { user } = useAuth();
+  const queryClient = useQueryClient();
   const { data: line } = useLineAPI();
   const { data: defectOptions } = useDefectOptionAPI();
+  const [mode, setMode] = useState<"VIEW" | "EDIT">("VIEW");
+  const itemUpdate = useItemUpdate();
 
-  const lineCode = useMemo(() => {
-    return (
-      line?.data?.find((item) => Number(item.id) === Number(data?.line_id))
-        ?.code ?? "-"
-    );
-  }, [line, data?.line_id]);
+  const canEditItemDetail =
+    !!user?.role &&
+    ([ROLES.INSPECTOR, ROLES.OPERATOR] as RoleType[]).includes(user.role);
 
-  const defectNames = useMemo(() => {
-    if (!defects || !defectOptions) return "-";
-    return defects
-      .map(
-        (defect) =>
-          defectOptions.find(
-            (item) => item?.meta?.code === defect.defect_type_code
-          )?.label ?? "-"
-      )
-      .join(", ");
-  }, [defects, defectOptions]);
+  const form = useForm({
+    defaultValues: {
+      roll_id: undefined,
+      job_order_number: undefined,
+      roll_width: undefined,
+      product_code: undefined,
+      roll_number: undefined,
+      bundle_number: undefined,
+    },
+    resolver: zodResolver(updateItemDetailsSchema),
+  });
 
-  const currentState = useMemo(() => {
-    if (isEmpty(reviews)) return "-";
-    const sorted =
-      reviews
-        ?.sort(
-          (a, b) =>
-            new Date(a.submitted_at).getTime() -
-            new Date(b.submitted_at).getTime()
-        )
-        .map((review) => review.state) ?? [];
+  useEffect(() => {
+    form.reset({
+      ...data,
+      roll_number: data?.roll_number || undefined,
+      bundle_number: data?.bundle_number || undefined,
+    });
+  }, [data, form]);
 
-    const latestState = sorted[sorted.length - 1];
-    const mappedLabel = REVIEW_STATE_OPTION.find(
-      (option) => option.value === latestState
-    )?.label;
+  const lineCode = getLineCode(line?.data, Number(data?.line_id));
+  const defectNames = getDefectNames(defects, defectOptions);
+  const currentState = getCurrentState(reviews);
 
-    return mappedLabel ?? "-";
-  }, [reviews]);
+  const editableFields = useMemo(
+    () =>
+      Object.keys(updateItemDetailsSchema.shape) as Array<
+        keyof UpdateItemDetail
+      >,
+    []
+  );
 
-  const details = useMemo(
+  const dataList = useMemo(
     () => [
-      { label: "Production Line:", value: lineCode },
-      { label: "Job Order Number:", value: data?.job_order_number ?? "-" },
-      { label: "ประเภท Defect:", value: defectNames || "-" },
-      { label: "สถานี:", value: data?.station ?? "-" },
-      { label: "Roll Width:", value: data?.roll_width ?? "-" },
-      { label: "สถานะปัจจุบัน:", value: currentState },
-      { label: "Product Code:", value: data?.product_code ?? "-" },
+      { label: "Production Line:", name: "line_code", value: lineCode },
+      {
+        label: "Job Order Number:",
+        name: "job_order_number",
+        value: data?.job_order_number ?? "-",
+      },
+      {
+        label: "ประเภท Defect:",
+        name: "defect_type",
+        value: defectNames || "-",
+      },
+      { label: "Roll ID:", name: "roll_id", value: data?.roll_id ?? "-" },
+      { label: "สถานี:", name: "station", value: data?.station ?? "-" },
+      {
+        label: "Roll Width:",
+        name: "roll_width",
+        value: data?.roll_width ?? "-",
+      },
+      { label: "สถานะปัจจุบัน:", name: "current_state", value: currentState },
+      {
+        label: "Product Code:",
+        name: "product_code",
+        value: data?.product_code ?? "-",
+      },
       {
         label: "ตรวจพบเมื่อ:",
+        name: "detected_at",
         value: data?.detected_at
           ? dayjs(data.detected_at).format(DATE_TIME_FORMAT)
           : "-",
       },
-      { label: "Roll Number:", value: data?.roll_number ?? "-" },
+      {
+        label: "Roll Number:",
+        name: "roll_number",
+        value: data?.roll_number ?? "-",
+      },
     ],
     [
       lineCode,
       data?.job_order_number,
+      data?.roll_id,
       data?.station,
       data?.roll_width,
       data?.product_code,
@@ -91,17 +137,99 @@ export default function ProductDetail({
     ]
   );
 
+  const handleSubmit = (values: UpdateItemDetail) => {
+    itemUpdate.mutate(
+      {
+        itemId: String(data?.id),
+        ...values,
+      },
+      {
+        onSuccess() {
+          toast.success("แก้ไขรายละเอียดสำเร็จ");
+          queryClient.invalidateQueries({
+            queryKey: [ITEM_ENDPOINT, String(data?.id)],
+          });
+          queryClient.invalidateQueries({
+            queryKey: [ITEM_ENDPOINT],
+            exact: false,
+          });
+          setMode("VIEW");
+        },
+        onError(error) {
+          toast.error("แก้ไขรายละเอียดไม่สำเร็จ", {
+            description: error.message,
+          });
+        },
+      }
+    );
+  };
+
   return (
     <>
-      <blockquote className="prose">รายละเอียดการผลิต</blockquote>
-      <div className="grid w-full grid-cols-1 gap-2 p-4 border rounded md:grid-cols-2 lg:grid-cols-3">
-        {details.map((item) => (
-          <div key={item.label} className="flex flex-col">
-            <span className="text-sm text-muted-foreground">{item.label}</span>
-            <span className="font-bold">{item.value}</span>
+      <div className="flex items-baseline justify-between">
+        <blockquote className="prose">รายละเอียดการผลิต</blockquote>
+        {canEditItemDetail && (
+          <div className="space-x-2">
+            {mode === "VIEW" ? (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setMode(mode === "VIEW" ? "EDIT" : "VIEW")}
+              >
+                แก้ไขรายละเอียด
+              </Button>
+            ) : (
+              <Button
+                size="sm"
+                onClick={form.handleSubmit(handleSubmit)}
+                disabled={itemUpdate.isPending}
+              >
+                บันทึก
+              </Button>
+            )}
           </div>
-        ))}
+        )}
       </div>
+      <Form {...form}>
+        <form className="grid w-full grid-cols-1 gap-2 p-4 border rounded md:grid-cols-2 lg:grid-cols-3">
+          {dataList.map((item) => (
+            <FormField
+              key={item.label}
+              name={item.name || ""}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{item.label}</FormLabel>
+                  <FormControl>
+                    {mode === "EDIT" &&
+                    editableFields.includes(
+                      item.name as keyof UpdateItemDetail
+                    ) ? (
+                      <Input
+                        type="text"
+                        value={field.value}
+                        onChange={(value) => {
+                          if (item.name === "roll_width") {
+                            const numericValue = value.target.value.replace(
+                              /\D/g,
+                              ""
+                            );
+                            field.onChange(+numericValue);
+                            return;
+                          }
+                          field.onChange(value);
+                        }}
+                      />
+                    ) : (
+                      <span className="py-1.5 font-bold">{item.value}</span>
+                    )}
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          ))}
+        </form>
+      </Form>
     </>
   );
 }

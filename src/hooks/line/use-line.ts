@@ -5,7 +5,7 @@ import { LineService } from "@/services/line-service";
 
 import type { ProductionLineT } from "@/types/line";
 
-interface LineResponse {
+export interface LineResponse {
   data: ProductionLineT[];
 }
 

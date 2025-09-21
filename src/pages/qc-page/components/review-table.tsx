@@ -19,7 +19,7 @@ import { useGetChangeStatus } from "@/hooks/change-status/use-get-change-status"
 export default function ReviewTable() {
   const { user } = useAuth();
   const [, setPage] = useQueryState("page", parseAsInteger.withDefault(1));
-  const [line, setLine] = useQueryState("line", {
+  const [line, setLine] = useQueryState("line_id", {
     defaultValue: user?.line?.id ? String(user.line?.id) : "",
   });
   // const [defect, setDefect] = useQueryState("defect", {
