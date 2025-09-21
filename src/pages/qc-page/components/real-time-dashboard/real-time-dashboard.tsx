@@ -1,18 +1,10 @@
 import dayjs from "dayjs";
 import { isArray, isEmpty } from "radash";
-import { useMemo, useState } from "react";
-import { FilterIcon } from "lucide-react";
+import { useMemo } from "react";
 import { useQueryState } from "nuqs";
 
 import OperatorFilter from "@/pages/operator-page/components/filters";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
+
 import RollTable from "@/pages/operator-page/components/roll-table";
 import BundleTable from "@/pages/operator-page/components/bunble-table";
 
@@ -20,16 +12,13 @@ import { DATE_TIME_FORMAT } from "@/contants/format";
 import { useAuth } from "@/hooks/auth/use-auth-v2";
 import { useProductionLineOptions } from "@/hooks/option/use-production-line-option";
 import { useLineAPI } from "@/hooks/line/use-line";
-import { ROLES } from "@/contants/auth";
 
 export default function RealTimeDashboard() {
   const { user } = useAuth();
-  const [toggleFilter, setToggleFilter] = useState(false);
   const { data: lines } = useLineAPI();
   const { data: productionLineOptions } = useProductionLineOptions();
-  const disabledLine = [ROLES.OPERATOR as string].includes(String(user?.role));
 
-  const [line, setLine] = useQueryState("line_id", {
+  const [line] = useQueryState("line_id", {
     defaultValue: user?.line?.id
       ? String(user?.line?.id)
       : isArray(productionLineOptions)
@@ -45,32 +34,7 @@ export default function RealTimeDashboard() {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center gap-2">
-        <p>Production Line:</p>
-        <Select
-          value={line || productionLineOptions?.[0]?.value}
-          onValueChange={setLine}
-          disabled={disabledLine}
-        >
-          <SelectTrigger className="bg-white">
-            <SelectValue placeholder="Select a line" />
-          </SelectTrigger>
-          <SelectContent>
-            {productionLineOptions?.map((line) => (
-              <SelectItem key={line.value} value={line.value}>
-                {line.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-        <Button
-          variant={toggleFilter ? "default" : "outline"}
-          onClick={() => setToggleFilter(!toggleFilter)}
-        >
-          <FilterIcon /> ตัวกรอง
-        </Button>
-      </div>
-      {toggleFilter && <OperatorFilter />}
+      <OperatorFilter />
       <div className="bg-white border rounded">
         <div className="flex items-center justify-between p-4 text-white bg-blue-700 rounded-t">
           <div>
