@@ -4,6 +4,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import dayjs from "dayjs";
+import { isNumber } from "radash";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -213,7 +214,12 @@ export default function ProductDetail({
                               /\D/g,
                               ""
                             );
-                            field.onChange(+numericValue);
+
+                            field.onChange(
+                              isNumber(+numericValue)
+                                ? +numericValue
+                                : undefined
+                            );
                             return;
                           }
                           field.onChange(value);

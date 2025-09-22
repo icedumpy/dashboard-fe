@@ -217,16 +217,17 @@ export default function Filters() {
               )}
             />
             <div className="flex flex-col gap-2">
-              <div className="flex items-end gap-2">
+              <div className="flex items-end">
                 <FormField
                   control={form.control}
                   name="roll_width_min"
                   render={({ field }) => (
                     <FormItem className="flex-1">
-                      <FormLabel>Roll Width (Min)</FormLabel>
+                      <FormLabel>Roll Width</FormLabel>
                       <Input
                         {...field}
                         placeholder="Min"
+                        className="rounded-tr-none rounded-br-none"
                         onChange={(e) => {
                           const value = e.target.value;
                           if (value && isNaN(Number(value))) {
@@ -243,16 +244,16 @@ export default function Filters() {
                     </FormItem>
                   )}
                 />
-                <span>-</span>
                 <FormField
                   control={form.control}
                   name="roll_width_max"
                   render={({ field }) => (
                     <FormItem className="flex-1">
-                      <FormLabel>Roll Width (Max)</FormLabel>
+                      <FormLabel></FormLabel>
                       <Input
                         {...field}
                         placeholder="Max"
+                        className="border-l-0 rounded-tl-none rounded-bl-none"
                         onChange={(e) => {
                           const value = e.target.value;
                           if (value && isNaN(Number(value))) {
