@@ -60,7 +60,7 @@ export default function ViewDetailButton({
             <div>
               <h3 className="text-xl font-bold">ตรวจสอบ Defect</h3>
               <p className="text-sm font-normal text-muted-foreground">
-                {data?.data?.product_code} - Role {data?.data.roll_number}
+                {data?.data?.product_code} - Roll {data?.data.roll_number}
               </p>
             </div>
           </DialogTitle>

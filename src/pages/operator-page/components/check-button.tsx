@@ -124,7 +124,7 @@ export default function CheckButton({
           <DialogHeader>
             <DialogTitle>ตรวจสอบ {itemData?.station.toUpperCase()}</DialogTitle>
             <DialogDescription>
-              {data?.data?.product_code} - Role {data?.data.roll_number}
+              {data?.data?.product_code} - Roll {data?.data.roll_number}
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
