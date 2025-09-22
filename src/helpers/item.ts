@@ -7,8 +7,8 @@ import type { OptionT } from "@/types/option";
 import type { ReviewT } from "@/types/station";
 
 export const getLineCode = (
-  lineData?: LineResponse["data"],
-  lineId?: number
+  lineId?: number,
+  lineData?: LineResponse["data"]
 ) => {
   return (
     lineData?.find((item) => Number(item.id) === Number(lineId))?.code ?? "-"
