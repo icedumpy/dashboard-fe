@@ -69,7 +69,7 @@ export default function StatusHistoryButton({ itemId }: { itemId: number }) {
         <DialogHeader>
           <DialogTitle>ประวัติการแก้ไขสถานะ</DialogTitle>
         </DialogHeader>
-        <div>
+        <div className="overflow-auto">
           <DataTable columns={columns} data={statusHistory ?? []} />
         </div>
         <DialogFooter>

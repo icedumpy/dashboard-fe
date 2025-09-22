@@ -96,13 +96,13 @@ export default function ViewDetailButton({
           {canReviewDecision && (
             <>
               <ReviewDecisionButton
-                buttonProps={{ className: "aspect-square" }}
+                buttonProps={{ size: "icon" }}
                 itemId={itemId}
                 reviewId={reviewId}
                 decision={REVIEW_STATE.APPROVED}
               />
               <ReviewDecisionButton
-                buttonProps={{ className: "aspect-square" }}
+                buttonProps={{ size: "icon" }}
                 itemId={itemId}
                 reviewId={reviewId}
                 decision={REVIEW_STATE.REJECTED}
