@@ -3,8 +3,6 @@ import { useCallback, useEffect, useState } from "react";
 import { FilterIcon, RotateCcwIcon } from "lucide-react";
 import { useWatch } from "react-hook-form";
 import { useForm } from "react-hook-form";
-import { useQueryState } from "nuqs";
-import { isArray } from "radash";
 import dayjs from "dayjs";
 import z from "zod";
 
@@ -40,16 +38,7 @@ export default function Filters() {
   const { user } = useAuth();
   const { values: filters, setters } = UseOperatorFilters();
   const [toggleFilter, setToggleFilter] = useState(false);
-
   const { data: productionLineOptions } = useProductionLineOptions();
-  const [lineId] = useQueryState("line_id", {
-    defaultValue: user?.line?.id
-      ? String(user?.line?.id)
-      : isArray(productionLineOptions)
-      ? String(productionLineOptions[0].value)
-      : "",
-  });
-
   const disabledLine = [ROLES.OPERATOR as string].includes(String(user?.role));
 
   const form = useForm<z.infer<typeof filtersSchema>>({
@@ -119,7 +108,7 @@ export default function Filters() {
       <div className="flex items-center gap-2">
         <p>Production Line:</p>
         <Select
-          value={lineId || productionLineOptions?.[0]?.value}
+          value={filters?.line_id}
           onValueChange={setters.setLineId}
           disabled={disabledLine}
         >

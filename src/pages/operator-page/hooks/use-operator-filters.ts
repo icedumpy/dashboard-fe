@@ -1,7 +1,18 @@
 import { useQueryState } from "nuqs";
+import { isEmpty } from "radash";
 import { useMemo } from "react";
 
+import { useAuth } from "@/hooks/auth/use-auth";
+import { useProductionLineOptions } from "@/hooks/option/use-production-line-option";
+
 export default function UseOperatorFilters() {
+  const { user } = useAuth();
+  const { data: productionLineOptions } = useProductionLineOptions();
+
+  const defaultLineId = isEmpty(user?.line?.id)
+    ? productionLineOptions?.[0]?.value ?? ""
+    : String(user?.line?.id);
+
   const [product_code, setProductCode] = useQueryState("product_code", {
     defaultValue: "",
   });
@@ -33,7 +44,7 @@ export default function UseOperatorFilters() {
     defaultValue: "",
   });
   const [line_id, setLineId] = useQueryState("line_id", {
-    defaultValue: "",
+    defaultValue: defaultLineId,
   });
 
   const values = useMemo(
@@ -47,7 +58,7 @@ export default function UseOperatorFilters() {
       status,
       detected_to,
       detected_from,
-      line_id,
+      line_id: line_id || defaultLineId,
     }),
     [
       product_code,
@@ -60,6 +71,7 @@ export default function UseOperatorFilters() {
       detected_to,
       detected_from,
       line_id,
+      defaultLineId,
     ]
   );
 

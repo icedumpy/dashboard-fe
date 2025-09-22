@@ -14,6 +14,7 @@ export default function BundleTable() {
     "bundlePage",
     parseAsInteger.withDefault(1)
   );
+
   const { data: bundle } = useItemAPI({
     ...filters,
     page: +bundlePage,
