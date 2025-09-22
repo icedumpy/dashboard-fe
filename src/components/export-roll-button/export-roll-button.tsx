@@ -1,6 +1,6 @@
 import { DownloadIcon, FileIcon } from "lucide-react";
 import { useQueryState } from "nuqs";
-import { useCallback, useMemo } from "react";
+import { useCallback } from "react";
 import dayjs from "dayjs";
 
 import { Button } from "@/components/ui/button";
@@ -21,6 +21,7 @@ import {
 import { STATION } from "@/contants/station";
 import { downloadFile } from "@/utils/download-file";
 import { useLineAPI } from "@/hooks/line/use-line";
+import { getLineCode } from "@/helpers/item";
 
 export default function ExportRollButton({
   filters,
@@ -48,9 +49,7 @@ export default function ExportRollButton({
     );
   }, [itemReport, line, filters]);
 
-  const getLineCode = useMemo(() => {
-    return data?.data.find((item) => item.id === Number(line))?.code;
-  }, [data, line]);
+  const lineCode = getLineCode(Number(filters.line_id), data?.data);
 
   return (
     <Dialog>
@@ -67,9 +66,7 @@ export default function ExportRollButton({
           <div className="grid rounded-full size-10 place-content-center bg-primary/20 text-primary">
             <FileIcon className="size-4" />
           </div>
-          <p>
-            ยืนยันการดาวน์โหลดรายงานสำหรับ Roll Station - Line {getLineCode}
-          </p>
+          <p>ยืนยันการดาวน์โหลดรายงานสำหรับ Roll Station - Line {lineCode}</p>
         </div>
         <DialogFooter>
           <DialogClose asChild>

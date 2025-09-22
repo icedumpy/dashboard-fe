@@ -25,6 +25,7 @@ import { ITEM_ENDPOINT } from "@/contants/api";
 import { useItemUpdate } from "@/hooks/item/use-item-update";
 import { ROLES } from "@/contants/auth";
 import { useAuth } from "@/hooks/auth/use-auth";
+import UseOperatorFilters from "@/pages/operator-page/hooks/use-operator-filters";
 
 import type { StationDetailResponse } from "@/types/station";
 import type { UpdateItemDetail } from "../types";
@@ -43,7 +44,8 @@ export default function ProductDetail({
 }: ProductDetailProps) {
   const { user } = useAuth();
   const queryClient = useQueryClient();
-  const { data: line } = useLineAPI();
+  const { values: filters } = UseOperatorFilters();
+  const { data: lines } = useLineAPI();
   const { data: defectOptions } = useDefectOptionAPI();
   const [mode, setMode] = useState<"VIEW" | "EDIT">("VIEW");
   const itemUpdate = useItemUpdate();
@@ -72,7 +74,7 @@ export default function ProductDetail({
     });
   }, [data, form]);
 
-  const lineCode = getLineCode(line?.data, Number(data?.line_id));
+  const lineCode = getLineCode(Number(filters.line_id), lines?.data);
   const defectNames = getDefectNames(defects, defectOptions);
   const currentState = getCurrentState(reviews);
 
