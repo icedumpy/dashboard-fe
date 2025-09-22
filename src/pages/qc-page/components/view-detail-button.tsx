@@ -44,6 +44,9 @@ export default function ViewDetailButton({
     shouldShowUpdateStatusButton(data?.data?.status_code, user) &&
     data?.data.station;
 
+  const canReviewDecision =
+    tabs === TABS_KEYS.WAITING_FOR_REVIEW || tabs === TABS_KEYS.STATUS_REVIEW;
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
@@ -90,7 +93,7 @@ export default function ViewDetailButton({
           </div>
         </div>
         <DialogFooter>
-          {tabs === TABS_KEYS.WAITING_FOR_REVIEW && (
+          {canReviewDecision && (
             <>
               <ReviewDecisionButton
                 buttonProps={{ className: "aspect-square" }}
