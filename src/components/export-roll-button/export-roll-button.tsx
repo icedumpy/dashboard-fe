@@ -1,5 +1,4 @@
 import { DownloadIcon, FileIcon } from "lucide-react";
-import { useQueryState } from "nuqs";
 import { useCallback } from "react";
 import dayjs from "dayjs";
 
@@ -29,25 +28,21 @@ export default function ExportRollButton({
   filters: DownloadReportParams;
 }) {
   const { data } = useLineAPI();
-  const [line] = useQueryState("line_id", {
-    defaultValue: String(data?.data[0].id),
-  });
-
   const itemReport = useItemReportAPI();
   const handleExport = useCallback(() => {
-    const filename = `roll-station-line-${line}-${dayjs().format(
+    const filename = `roll-station-line-${filters.line_id}-${dayjs().format(
       "YYYY-MM-DD"
     )}.csv`;
 
     itemReport.mutate(
-      { ...filters, line_id: line, station: STATION.ROLL },
+      { ...filters, line_id: filters.line_id, station: STATION.ROLL },
       {
         onSuccess(data) {
           downloadFile(data, filename);
         },
       }
     );
-  }, [itemReport, line, filters]);
+  }, [filters, itemReport]);
 
   const lineCode = getLineCode(Number(filters.line_id), data?.data);
 
