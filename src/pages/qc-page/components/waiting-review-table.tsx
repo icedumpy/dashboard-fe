@@ -11,7 +11,7 @@ import {
 
 import { ALL_OPTION } from "@/contants/option";
 import { REVIEW_STATE } from "@/contants/review";
-import { useAuth } from "@/hooks/auth/use-auth-v2";
+import { useAuth } from "@/hooks/auth/use-auth";
 import { useDefectOptionAPI } from "@/hooks/option/use-defect-option";
 import { useProductionLineOptions } from "@/hooks/option/use-production-line-option";
 import { useReviewAPI } from "@/hooks/review/use-review";
@@ -20,7 +20,7 @@ import { WAITING_COLUMNS } from "../constants/waiting-columns";
 export default function WaitingReviewTable() {
   const { user } = useAuth();
   const [page, setPage] = useQueryState("page", parseAsInteger.withDefault(1));
-  const [line, setLine] = useQueryState("line", {
+  const [line, setLine] = useQueryState("line_id", {
     defaultValue: user?.line?.id ? String(user.line?.id) : "",
   });
   const [defect, setDefect] = useQueryState("defect", {

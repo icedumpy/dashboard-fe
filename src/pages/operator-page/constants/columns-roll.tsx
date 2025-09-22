@@ -4,7 +4,6 @@ import dayjs from "dayjs";
 import StatusBadge from "@/components/status-badge";
 import CheckButton from "../components/check-button";
 import ClassifyScrapButton from "../components/classify-scrap-button";
-import ConfirmButton from "../components/confirm-button";
 import StatusHistoryButton from "@/components/status-history-button";
 
 import { DATE_TIME_FORMAT } from "@/contants/format";
@@ -74,7 +73,7 @@ export const COLUMNS_ROLL: ColumnDef<StationItemType>[] = [
         <div className="flex items-center gap-2">
           {id && (
             <CheckButton
-              id={id}
+              itemId={id}
               status={status}
               isPendingReview={isPendingReview}
               itemData={row.original}
@@ -82,12 +81,6 @@ export const COLUMNS_ROLL: ColumnDef<StationItemType>[] = [
               isChangingStatusPending={isChangingStatusPending}
             />
           )}
-          <ConfirmButton
-            status={status}
-            id={id}
-            isPendingReview={isPendingReview}
-            stationType={STATION.ROLL}
-          />
           {isClassifyScrap && <ClassifyScrapButton id={id} status={status} />}
         </div>
       );

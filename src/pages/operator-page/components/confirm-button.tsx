@@ -20,21 +20,22 @@ import { ITEM_ENDPOINT } from "@/contants/api";
 import { useImageUpload } from "@/hooks/upload/use-image-upload";
 import { useItemDetailAPI } from "@/hooks/item/use-item-detail";
 import { useItemFixRequest } from "@/hooks/item/use-item-fix-request";
-import { useAuth } from "@/hooks/auth/use-auth-v2";
+import { useAuth } from "@/hooks/auth/use-auth";
 import { ROLES } from "@/contants/auth";
+import { STATUS } from "@/contants/status";
 
 import type { ImageT } from "@/types/image";
 import type { CheckButtonProps } from "../types";
-import { STATUS } from "@/contants/status";
 
 export default function ConfirmButton({
-  id,
+  itemId,
   status,
   isPendingReview,
+  isChangingStatusPending,
 }: CheckButtonProps) {
   const [open, setOpen] = useState(false);
   const { user } = useAuth();
-  const { data } = useItemDetailAPI(String(id), {
+  const { data } = useItemDetailAPI(String(itemId), {
     enabled: open,
     staleTime: Infinity,
   });
@@ -46,7 +47,7 @@ export default function ConfirmButton({
   const onConfirmEdit = useCallback(() => {
     itemFixRequest.mutate(
       {
-        itemId: String(id),
+        itemId: String(itemId),
         image_ids:
           (imageUpload.data?.data as ImageT[]).map((img) => Number(img.id)) ||
           [],
@@ -70,7 +71,7 @@ export default function ConfirmButton({
         },
       }
     );
-  }, [id, imageUpload, itemFixRequest, queryClient]);
+  }, [itemId, imageUpload, itemFixRequest, queryClient]);
 
   const ALLOWED_STATUSES = [STATUS.DEFECT, STATUS.REJECTED];
 
@@ -83,7 +84,7 @@ export default function ConfirmButton({
         <Button
           size="sm"
           className="text-xs rounded bg-amber-600 hover:bg-amber-600/90 h-fit py-0.5"
-          disabled={isPendingReview}
+          disabled={isPendingReview || isChangingStatusPending}
         >
           {isPendingReview ? "รอการตรวจสอบ" : "ส่งเรื่องแก้ไข"}
         </Button>
@@ -104,7 +105,7 @@ export default function ConfirmButton({
                   const files = e.target.files;
                   const payload = {
                     files: files as unknown as FileList,
-                    item_id: String(id),
+                    item_id: String(itemId),
                   };
 
                   imageUpload.mutate(payload, {

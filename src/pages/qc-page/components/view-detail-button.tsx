@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useQueryState } from "nuqs";
 import { EyeIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -15,14 +16,26 @@ import ImageDefect from "@/pages/operator-page/components/image-defect";
 import ImageRepair from "@/pages/operator-page/components/image-repair";
 import ProductDetail from "@/pages/operator-page/components/production-details";
 import UpdateStatusButton from "@/components/update-status-button";
+import ReviewDecisionButton from "@/components/review-decision-button";
 
 import { useItemDetailAPI } from "@/hooks/item/use-item-detail";
 import { shouldShowUpdateStatusButton } from "@/utils/item-status";
-import { useAuth } from "@/hooks/auth/use-auth-v2";
+import { useAuth } from "@/hooks/auth/use-auth";
+import { REVIEW_STATE } from "@/contants/review";
+import { TABS, TABS_KEYS } from "../constants/tabs";
 
-export default function ViewDetailButton({ itemId }: { itemId: string }) {
+export default function ViewDetailButton({
+  itemId,
+  reviewId,
+}: {
+  itemId: string;
+  reviewId: string;
+}) {
   const { user } = useAuth();
   const [open, setOpen] = useState(false);
+  const [tabs] = useQueryState("tabs", {
+    defaultValue: TABS[0].value,
+  });
   const { data } = useItemDetailAPI(itemId, {
     enabled: open && Boolean(itemId),
   });
@@ -77,6 +90,20 @@ export default function ViewDetailButton({ itemId }: { itemId: string }) {
           </div>
         </div>
         <DialogFooter>
+          {tabs === TABS_KEYS.WAITING_FOR_REVIEW && (
+            <>
+              <ReviewDecisionButton
+                itemId={itemId}
+                reviewId={reviewId}
+                decision={REVIEW_STATE.APPROVED}
+              />
+              <ReviewDecisionButton
+                itemId={itemId}
+                reviewId={reviewId}
+                decision={REVIEW_STATE.REJECTED}
+              />
+            </>
+          )}
           {canUpdateStatus && (
             <UpdateStatusButton
               itemId={itemId}

@@ -21,7 +21,7 @@ import { useItemDetailAPI } from "@/hooks/item/use-item-detail";
 import { useItemScrapAPI } from "@/hooks/item/use-item-scrap";
 import { ITEM_ENDPOINT } from "@/contants/api";
 import { classifyScrapSchema } from "../schema";
-import { useAuth } from "@/hooks/auth/use-auth-v2";
+import { useAuth } from "@/hooks/auth/use-auth";
 import { ROLES } from "@/contants/auth";
 
 import type { StationItemType } from "@/types/station";

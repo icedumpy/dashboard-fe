@@ -8,6 +8,7 @@ import {
   Dialog,
   DialogClose,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -27,7 +28,7 @@ import {
   isHiddenRepairImages,
   canRequestChanges,
 } from "@/utils/item-status";
-import { useAuth } from "@/hooks/auth/use-auth-v2";
+import { useAuth } from "@/hooks/auth/use-auth";
 import { useItemDetailAPI } from "@/hooks/item/use-item-detail";
 import { useItemFixRequest } from "@/hooks/item/use-item-fix-request";
 import { useImageUpload } from "@/hooks/upload/use-image-upload";
@@ -36,7 +37,7 @@ import type { ImageT } from "@/types/image";
 import type { CheckButtonProps } from "../types";
 
 export default function CheckButton({
-  id,
+  itemId,
   status,
   isPendingReview = false,
   itemData,
@@ -46,12 +47,12 @@ export default function CheckButton({
   const [open, setOpen] = useState(false);
   const [mode, setMode] = useState<"VIEW" | "EDIT">("VIEW");
   const { user } = useAuth();
-  const [line] = useQueryState("line", {
+  const [line] = useQueryState("line_id", {
     defaultValue: String(user?.line?.id),
   });
 
   const queryClient = useQueryClient();
-  const { data } = useItemDetailAPI(String(id), {
+  const { data } = useItemDetailAPI(String(itemId), {
     enabled: open,
   });
   const imageUpload = useImageUpload();
@@ -77,7 +78,7 @@ export default function CheckButton({
   const onConfirmEdit = useCallback(() => {
     itemFixRequest.mutate(
       {
-        itemId: String(id),
+        itemId: String(itemId),
         image_ids:
           (imageUpload.data?.data as ImageT[]).map((img) => Number(img.id)) ||
           [],
@@ -101,7 +102,7 @@ export default function CheckButton({
         },
       }
     );
-  }, [id, imageUpload, itemFixRequest, queryClient]);
+  }, [itemId, imageUpload, itemFixRequest, queryClient]);
 
   return (
     <>
@@ -121,20 +122,13 @@ export default function CheckButton({
           className="overflow-auto sm:max-w-4xl"
         >
           <DialogHeader>
-            <DialogTitle asChild>
-              <div>
-                <h3 className="text-xl font-bold">
-                  ตรวจสอบ {itemData?.station.toUpperCase()}
-                </h3>
-                <p className="text-sm font-normal text-muted-foreground">
-                  {data?.data?.product_code} - Role {data?.data.roll_number}
-                </p>
-              </div>
-            </DialogTitle>
+            <DialogTitle>ตรวจสอบ {itemData?.station.toUpperCase()}</DialogTitle>
+            <DialogDescription>
+              {data?.data?.product_code} - Role {data?.data.roll_number}
+            </DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
             <div className="space-y-2">
-              <blockquote className="font-bold">รูปปที่ระบบตรวจพบ</blockquote>
               <div className="flex flex-col gap-2 md:flex-row">
                 <div
                   className={
@@ -163,14 +157,14 @@ export default function CheckButton({
               <Button
                 onClick={() => setMode("EDIT")}
                 variant="update"
-                disabled={isPendingReview}
+                disabled={isPendingReview || isChangingStatusPending}
               >
                 ส่งเรื่องแก้ไข
               </Button>
             )}
             {canUpdateStatus && (
               <UpdateStatusButton
-                itemId={String(id)}
+                itemId={String(itemId)}
                 stationType={stationType}
                 disabled={isChangingStatusPending}
               />
@@ -201,7 +195,7 @@ export default function CheckButton({
                   const files = e.target.files;
                   const payload = {
                     files: files as unknown as FileList,
-                    item_id: String(id),
+                    item_id: String(itemId),
                   };
 
                   imageUpload.mutate(payload, {

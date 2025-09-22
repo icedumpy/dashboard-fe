@@ -1,6 +1,6 @@
 import React from "react";
 import { Factory, LogOut, User, Bell } from "lucide-react";
-import { useAuth } from "@/hooks/auth/use-auth-v2";
+import { useAuth } from "@/hooks/auth/use-auth";
 import { ROLES } from "@/contants/auth";
 
 interface LayoutProps {

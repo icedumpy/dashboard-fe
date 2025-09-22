@@ -1,7 +1,7 @@
 import { CheckIcon, LineChartIcon, XIcon } from "lucide-react";
 import { parseAsInteger, useQueryState } from "nuqs";
 
-import { useAuth } from "@/hooks/auth/use-auth-v2";
+import { useAuth } from "@/hooks/auth/use-auth";
 import { useReviewAPI } from "@/hooks/review/use-review";
 import { TABS, TABS_KEYS } from "../constants/tabs";
 import { useGetChangeStatus } from "@/hooks/change-status/use-get-change-status";
@@ -9,7 +9,7 @@ import { useGetChangeStatus } from "@/hooks/change-status/use-get-change-status"
 export default function StatisticCard() {
   const { user } = useAuth();
   const [page] = useQueryState("page", parseAsInteger.withDefault(1));
-  const [line] = useQueryState("line", {
+  const [line] = useQueryState("line_id", {
     defaultValue: user?.line?.id ? String(user.line?.id) : "",
   });
   const [defect] = useQueryState("defect", {
