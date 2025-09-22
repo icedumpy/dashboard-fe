@@ -8,7 +8,7 @@ import RollTable from "@/pages/operator-page/components/roll-table";
 import BundleTable from "@/pages/operator-page/components/bunble-table";
 
 import { DATE_TIME_FORMAT } from "@/contants/format";
-import { useAuth } from "@/hooks/auth/use-auth-v2";
+import { useAuth } from "@/hooks/auth/use-auth";
 import { useProductionLineOptions } from "@/hooks/option/use-production-line-option";
 import { useLineAPI } from "@/hooks/line/use-line";
 
