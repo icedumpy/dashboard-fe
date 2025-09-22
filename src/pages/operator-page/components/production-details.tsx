@@ -179,13 +179,22 @@ export default function ProductDetail({
                 แก้ไขรายละเอียด
               </Button>
             ) : (
-              <Button
-                size="sm"
-                onClick={form.handleSubmit(handleSubmit)}
-                disabled={itemUpdate.isPending}
-              >
-                บันทึก
-              </Button>
+              <>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => setMode("VIEW")}
+                >
+                  ยกเลิก
+                </Button>
+                <Button
+                  size="sm"
+                  onClick={form.handleSubmit(handleSubmit)}
+                  disabled={itemUpdate.isPending}
+                >
+                  บันทึก
+                </Button>
+              </>
             )}
           </div>
         )}
