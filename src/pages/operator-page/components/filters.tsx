@@ -91,7 +91,8 @@ export default function Filters() {
     setters.setDetectedTo(
       values.detected_to ? dayjs(values.detected_to)?.toISOString() : ""
     );
-    setters.setLineId(values.line_id || "");
+
+    if (values.line_id) setters.setLineId(values.line_id || "");
   }, [values, setters]);
 
   const handleClear = useCallback(() => {
