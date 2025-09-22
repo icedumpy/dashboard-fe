@@ -30,7 +30,7 @@ import UseOperatorFilters from "../hooks/use-operator-filters";
 
 import { useStationStatusOptions } from "@/hooks/option/use-station-status-option";
 import { filtersSchema } from "../schema";
-import { useAuth } from "@/hooks/auth/use-auth-v2";
+import { useAuth } from "@/hooks/auth/use-auth";
 import { ROLES } from "@/contants/auth";
 import { DATE_TIME_FORMAT } from "@/contants/format";
 import { useProductionLineOptions } from "@/hooks/option/use-production-line-option";
