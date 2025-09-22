@@ -3,6 +3,7 @@ import { useCallback, useEffect, useState } from "react";
 import { FilterIcon, RotateCcwIcon } from "lucide-react";
 import { useWatch } from "react-hook-form";
 import { useForm } from "react-hook-form";
+import { isEmpty } from "radash";
 import dayjs from "dayjs";
 import z from "zod";
 
@@ -58,7 +59,10 @@ export default function Filters() {
   });
 
   const values = useWatch({ control: form.control });
-  const filledCount = Object.values(values).filter((v) => v && v !== "").length;
+  const filledCount = Object.entries(values).filter(
+    ([key, v]) => key !== "line_id" && isEmpty(v) === false
+  ).length;
+
   const statusOptions = useStationStatusOptions();
 
   const isOperator = user?.role === ROLES.OPERATOR;
