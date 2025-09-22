@@ -93,11 +93,13 @@ export default function ViewDetailButton({
           {tabs === TABS_KEYS.WAITING_FOR_REVIEW && (
             <>
               <ReviewDecisionButton
+                buttonProps={{ className: "aspect-square" }}
                 itemId={itemId}
                 reviewId={reviewId}
                 decision={REVIEW_STATE.APPROVED}
               />
               <ReviewDecisionButton
+                buttonProps={{ className: "aspect-square" }}
                 itemId={itemId}
                 reviewId={reviewId}
                 decision={REVIEW_STATE.REJECTED}
