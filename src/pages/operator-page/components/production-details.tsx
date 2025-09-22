@@ -67,6 +67,7 @@ export default function ProductDetail({
   useEffect(() => {
     form.reset({
       ...data,
+      roll_id: data?.roll_id || "",
       roll_number: data?.roll_number || undefined,
       bundle_number: data?.bundle_number || undefined,
     });
@@ -183,7 +184,10 @@ export default function ProductDetail({
                 <Button
                   size="sm"
                   variant="outline"
-                  onClick={() => setMode("VIEW")}
+                  onClick={() => {
+                    setMode("VIEW");
+                    form.clearErrors();
+                  }}
                 >
                   ยกเลิก
                 </Button>
@@ -224,8 +228,10 @@ export default function ProductDetail({
                             field.onChange(
                               numericValue ? Number(numericValue) : ""
                             );
+                            form.trigger(item.name as keyof UpdateItemDetail);
                           } else {
                             field.onChange(e.target.value);
+                            form.trigger(item.name as keyof UpdateItemDetail);
                           }
                         }}
                         min={item.name === "roll_width" ? 0 : undefined}

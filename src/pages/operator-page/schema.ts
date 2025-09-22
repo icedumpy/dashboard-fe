@@ -1,6 +1,7 @@
 import z from "zod";
 
 import { STATUS } from "@/contants/status";
+import { TH_NOT_ALLOWED } from "@/contants/validate";
 
 export const filtersSchema = z.object({
   product_code: z.string().optional(),
@@ -42,12 +43,35 @@ export const classifyScrapSchema = z
   });
 
 export const updateItemDetailsSchema = z.object({
-  roll_id: z.string({ error: "กรุณากรอก Roll ID" }).nonempty(),
   job_order_number: z
-    .string({ error: "กรุณากรอก Job Order Number" })
-    .nonempty(),
-  roll_width: z.number({ error: "กรุณากรอก Roll Width" }).min(0).max(99999999),
-  product_code: z.string({ error: "กรุณากรอก Product Code" }).nonempty(),
-  roll_number: z.string({ error: "กรุณากรอก Roll Number" }).optional(),
-  bundle_number: z.string().optional(),
+    .string()
+    .regex(TH_NOT_ALLOWED, {
+      message: "Job Order Number ไม่สามารถมีอักขระภาษาไทยได้",
+    })
+    .nonempty({ message: "กรุณากรอก Job Order Number" }),
+  roll_number: z
+    .string()
+    .regex(TH_NOT_ALLOWED, {
+      message: "Roll Number ไม่สามารถมีอักขระภาษาไทยได้",
+    })
+    .nonempty({ message: "กรุณากรอก Roll Number" }),
+  roll_width: z
+    .number({ error: "กรุณากรอก Roll Width เป็นตัวเลข" })
+    .min(0, { message: "กรุณากรอก Roll Width ให้มากกว่าหรือเท่ากับ 0" })
+    .max(9999, { message: "กรุณากรอก Roll Width ให้ไม่เกิน 4 หลัก" }),
+  roll_id: z
+    .string()
+    .regex(TH_NOT_ALLOWED, {
+      message: "Roll ID ไม่สามารถมีอักขระภาษาไทยได้",
+    })
+    .nonempty({ message: "กรุณากรอก Roll ID" }),
+  product_code: z
+    .string()
+    .regex(TH_NOT_ALLOWED, {
+      message: "Product Code ไม่สามารถมีอักขระภาษาไทยได้",
+    })
+    .nonempty({ message: "กรุณากรอก Product Code" }),
+  bundle_number: z.string().regex(TH_NOT_ALLOWED, {
+    message: "Bundle Number ไม่สามารถมีอักขระภาษาไทยได้",
+  }),
 });
