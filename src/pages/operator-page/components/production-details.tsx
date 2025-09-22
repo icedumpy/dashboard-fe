@@ -4,7 +4,6 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import dayjs from "dayjs";
-import { isNumber } from "radash";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -206,24 +205,24 @@ export default function ProductDetail({
                       item.name as keyof UpdateItemDetail
                     ) ? (
                       <Input
-                        type="text"
-                        value={field.value}
-                        onChange={(value) => {
+                        value={field.value ?? ""}
+                        onChange={(e) => {
                           if (item.name === "roll_width") {
-                            const numericValue = value.target.value.replace(
+                            const numericValue = e.target.value.replace(
                               /\D/g,
                               ""
                             );
-
                             field.onChange(
-                              isNumber(+numericValue)
-                                ? +numericValue
-                                : undefined
+                              numericValue ? Number(numericValue) : ""
                             );
-                            return;
+                          } else {
+                            field.onChange(e.target.value);
                           }
-                          field.onChange(value);
                         }}
+                        min={item.name === "roll_width" ? 0 : undefined}
+                        inputMode={
+                          item.name === "roll_width" ? "numeric" : undefined
+                        }
                       />
                     ) : (
                       <span className="py-1.5 font-bold">{item.value}</span>
