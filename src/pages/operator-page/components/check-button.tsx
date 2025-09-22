@@ -129,7 +129,6 @@ export default function CheckButton({
           </DialogHeader>
           <div className="space-y-4">
             <div className="space-y-2">
-              <blockquote className="font-bold">รูปที่ระบบตรวจพบ</blockquote>
               <div className="flex flex-col gap-2 md:flex-row">
                 <div
                   className={
