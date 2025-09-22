@@ -24,7 +24,7 @@ import { getCurrentState, getDefectNames, getLineCode } from "@/helpers/item";
 import { ITEM_ENDPOINT } from "@/contants/api";
 import { useItemUpdate } from "@/hooks/item/use-item-update";
 import { ROLES } from "@/contants/auth";
-import { useAuth } from "@/hooks/auth/use-auth-v2";
+import { useAuth } from "@/hooks/auth/use-auth";
 
 import type { StationDetailResponse } from "@/types/station";
 import type { UpdateItemDetail } from "../types";
