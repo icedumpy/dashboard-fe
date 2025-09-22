@@ -7,5 +7,5 @@ export interface ReviewDecisionButtonProps {
   itemId: string;
   reviewId: string;
   decision: typeof REVIEW_STATE.APPROVED | typeof REVIEW_STATE.REJECTED;
-  buttonProps?: VariantProps<typeof buttonVariants>;
+  buttonProps?: VariantProps<typeof buttonVariants> & { className?: string };
 }

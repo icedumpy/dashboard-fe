@@ -24,7 +24,7 @@ export default function ActionButton({
         <>
           <ReviewDecisionButton
             buttonProps={{
-              size: "sm",
+              className: "size-8",
             }}
             itemId={itemId}
             reviewId={reviewId}
@@ -32,7 +32,7 @@ export default function ActionButton({
           />
           <ReviewDecisionButton
             buttonProps={{
-              size: "sm",
+              className: "size-8",
             }}
             itemId={itemId}
             reviewId={reviewId}

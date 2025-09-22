@@ -95,11 +95,8 @@ export default function ReviewDecisionButton({
       <DialogTrigger asChild>
         <Button
           {...buttonProps}
-          className={cn(
-            decision === REVIEW_STATE.APPROVED && "text-green-600",
-            decision === REVIEW_STATE.REJECTED && "text-red-600"
-          )}
-          variant="secondary"
+          className={cn(buttonProps?.className)}
+          variant={decision === REVIEW_STATE.APPROVED ? "approve" : "reject"}
         >
           {decision === REVIEW_STATE.APPROVED ? <CheckIcon /> : <XIcon />}
         </Button>

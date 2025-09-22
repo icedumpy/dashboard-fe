@@ -1,19 +1,20 @@
+import { useQuery, UseQueryOptions } from "@tanstack/react-query";
+
 import { ITEM_STATUS_HISTORY_ENDPOINT } from "@/contants/api";
 import { ItemService } from "@/services/item-service";
-import { ItemStatusHistoryT } from "@/types/station";
-import { useQuery } from "@tanstack/react-query";
-import { UseQueryOptions } from "@tanstack/react-query";
 
-export type ItemStatusHistoryResponse = ItemStatusHistoryT;
+import type { ItemStatusHistoryT } from "@/types/station";
+
+export type ItemStatusHistoryResponse = ItemStatusHistoryT[];
 
 export const useItemStatusHistory = (
   itemId?: string,
   options?: Omit<
-    UseQueryOptions<ItemStatusHistoryResponse[], Error>,
+    UseQueryOptions<ItemStatusHistoryResponse, Error>,
     "queryKey" | "queryFn"
   >
 ) =>
-  useQuery<ItemStatusHistoryResponse[], Error>({
+  useQuery({
     queryKey: [ITEM_STATUS_HISTORY_ENDPOINT, itemId],
     queryFn: () => ItemService.itemStatusHistory(itemId),
     ...options,
