@@ -1,24 +1,16 @@
-import React, { useCallback, useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 
-import removeCookie from "@/utils/remove-cookie";
-import setCookie from "@/utils/set-cookie";
-import { ACCESS_TOKEN, REFRESH_TOKEN } from "@/contants/auth";
 import { useLoginAPI } from "@/hooks/auth/use-login";
 import { useProfileAPI } from "@/hooks/auth/use-profile";
-import { AuthContext } from "@/hooks/auth/use-auth";
+import { ACCESS_TOKEN, REFRESH_TOKEN } from "@/contants/auth";
 import { PROFILE_ENDPOINT } from "@/contants/api";
+import { AuthContext } from "@/contexts/auth-context";
+import setCookie from "@/utils/set-cookie";
+import removeCookie from "@/utils/remove-cookie";
 
 import type { LoginFormType } from "@/pages/login-page/types";
-import type { UserType } from "@/types/auth";
-
-export interface AuthContextType {
-  user: UserType | null;
-  login: (values: LoginFormType) => Promise<void>;
-  logout: () => void;
-  isLoading: boolean;
-  error: string | null;
-}
+import type { AuthContextType } from "@/contexts/auth-context";
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
