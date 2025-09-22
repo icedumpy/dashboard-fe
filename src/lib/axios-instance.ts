@@ -3,6 +3,7 @@ import qs from "qs";
 
 import { API_V1 } from "@/contants/api";
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "@/contants/auth";
+import { ApiError } from "@/utils/api-error";
 import clearAuthSession from "@/utils/clear-auth-session";
 import getCookie from "@/utils/get-cookie";
 import setCookie from "@/utils/set-cookie";
@@ -75,14 +76,7 @@ axiosInstance.interceptors.response.use(
       }
     }
 
-    // 🔹 ดึงข้อความจาก response
-    const message =
-      error.response?.data?.detail ||
-      error.response?.data?.message ||
-      error.message ||
-      "Unexpected error";
-
-    return Promise.reject(new Error(message));
+    return Promise.reject(new ApiError(error));
   }
 );
 
