@@ -63,7 +63,7 @@ export default function Filters() {
       status: undefined,
       detected_from: filters.detected_from || "",
       detected_to: filters.detected_to || "",
-      line_id: filters.detected_to || "",
+      line_id: filters.line_id || "",
     },
     resolver: zodResolver(filtersSchema),
   });
