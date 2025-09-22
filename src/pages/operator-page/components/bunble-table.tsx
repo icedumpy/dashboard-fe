@@ -18,7 +18,7 @@ export default function BundleTable() {
     ...filters,
     page: +bundlePage,
     station: STATION.BUNDLE,
-    status: filters.status ? [filters.status] : [],
+    status: filters.status ? filters.status.split(",") : [],
   });
 
   return (

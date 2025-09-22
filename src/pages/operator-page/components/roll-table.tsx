@@ -18,7 +18,7 @@ export default function RollTable() {
     ...filters,
     page: +rollPage,
     station: STATION.ROLL,
-    status: filters.status ? [filters.status] : [],
+    status: filters.status ? filters.status.split(",") : [],
   });
 
   return (
