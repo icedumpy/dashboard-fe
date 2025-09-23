@@ -24,6 +24,8 @@ export default function BundleTable() {
     ...filters,
     page: +bundlePage,
     station: STATION.BUNDLE,
+    sort_by: sortBy,
+    order_by: orderBy,
     status: filters.status ? filters.status.split(",") : [],
   });
 
