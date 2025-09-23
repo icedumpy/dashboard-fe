@@ -14,36 +14,42 @@ export const WAITING_COLUMNS: ColumnDef<ReviewT>[] = [
   {
     accessorKey: "line_id",
     header: "Production Line",
+    enableSorting: true,
     meta: { className: "text-center" },
     cell: (info) => <ProductionLineCode id={info.row.original.item.line_id} />,
   },
   {
     accessorKey: "station",
     header: "Station",
+    enableSorting: true,
     meta: { className: "text-center" },
     cell: (info) => info.row.original.item.station,
   },
   {
     accessorKey: "product_code",
     header: "Product Code",
+    enableSorting: true,
     meta: { className: "text-center" },
     cell: (info) => info.row.original.item.product_code,
   },
   {
     accessorKey: "roll_number",
     header: "Roll/Bundle Number",
+    enableSorting: true,
     meta: { className: "text-center" },
     cell: (info) => info.row.original.item.number,
   },
   {
     accessorKey: "job_order_number",
     header: "Job Order Number",
+    enableSorting: true,
     meta: { className: "text-center" },
     cell: (info) => info.row.original.item.job_order_number,
   },
   {
     accessorKey: "detected_at",
     header: "Timestamp",
+    enableSorting: true,
     meta: { className: "text-center" },
     cell: (info) =>
       dayjs(info.row.original.submitted_at).format(DATE_TIME_FORMAT),
@@ -51,6 +57,7 @@ export const WAITING_COLUMNS: ColumnDef<ReviewT>[] = [
   {
     accessorKey: "status_code",
     header: "Status",
+    enableSorting: true,
     meta: { className: "text-start" },
     cell: (info) => (
       <StatusBadge

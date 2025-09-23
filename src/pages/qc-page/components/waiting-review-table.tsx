@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { parseAsInteger, useQueryState } from "nuqs";
 
 import DataTable from "@/components/data-table";
@@ -17,6 +18,8 @@ import { useProductionLineOptions } from "@/hooks/option/use-production-line-opt
 import { useReviewAPI } from "@/hooks/review/use-review";
 import { WAITING_COLUMNS } from "../constants/waiting-columns";
 
+import type { OrderBy } from "@/types/order";
+
 export default function WaitingReviewTable() {
   const { user } = useAuth();
   const [page, setPage] = useQueryState("page", parseAsInteger.withDefault(1));
@@ -26,6 +29,8 @@ export default function WaitingReviewTable() {
   const [defect, setDefect] = useQueryState("defect", {
     defaultValue: "all",
   });
+  const [sortBy, setSortBy] = useState<string>("");
+  const [orderBy, setOrderBy] = useState<OrderBy>("");
 
   const { data: lineOptions } = useProductionLineOptions();
   const { data: defectOptions } = useDefectOptionAPI();
@@ -34,6 +39,8 @@ export default function WaitingReviewTable() {
     line_id: line,
     review_state: [REVIEW_STATE.PENDING],
     defect_type_id: defect === "all" ? undefined : defect,
+    sort_by: sortBy,
+    order_by: orderBy,
   });
 
   return (
@@ -76,6 +83,14 @@ export default function WaitingReviewTable() {
       <DataTable
         columns={WAITING_COLUMNS}
         data={data?.data ?? []}
+        sorting={{
+          sortBy,
+          orderBy,
+          onSortChange: ({ sortBy, orderBy }) => {
+            setSortBy(sortBy);
+            setOrderBy(orderBy);
+          },
+        }}
         pagination={{
           ...data?.pagination,
           onPageChange: setPage,

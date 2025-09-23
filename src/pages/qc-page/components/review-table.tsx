@@ -12,9 +12,9 @@ import {
 import { REVIEW_COLUMNS } from "../constants/review-columns";
 import { useAuth } from "@/hooks/auth/use-auth";
 import { useProductionLineOptions } from "@/hooks/option/use-production-line-option";
-// import { ALL_OPTION } from "@/contants/option";
-// import { useDefectOptionAPI } from "@/hooks/option/use-defect-option";
 import { useGetChangeStatus } from "@/hooks/change-status/use-get-change-status";
+import { useState } from "react";
+import { OrderBy } from "@/types/order";
 
 export default function ReviewTable() {
   const { user } = useAuth();
@@ -22,15 +22,16 @@ export default function ReviewTable() {
   const [line, setLine] = useQueryState("line_id", {
     defaultValue: user?.line?.id ? String(user.line?.id) : "",
   });
-  // const [defect, setDefect] = useQueryState("defect", {
-  //   defaultValue: "all",
-  // });
+
+  const [sortBy, setSortBy] = useState<string>("");
+  const [orderBy, setOrderBy] = useState<OrderBy>("");
   const { data: changeStatus } = useGetChangeStatus({
     line_id: line,
+    sort_by: sortBy,
+    order_by: orderBy,
   });
 
   const { data: lineOptions } = useProductionLineOptions();
-  // const { data: defectOptions } = useDefectOptionAPI();
   return (
     <div className="p-4 space-y-3 bg-white border rounded-md">
       <div className="flex justify-between gap-2">
@@ -54,23 +55,19 @@ export default function ReviewTable() {
               ))}
             </SelectContent>
           </Select>
-          {/* <Select value={defect} onValueChange={setDefect}>
-            <SelectTrigger>
-              <SelectValue className="w-2xs" placeholder="เลือกประเภทความผิด" />
-            </SelectTrigger>
-            <SelectContent>
-              {[...ALL_OPTION, ...(defectOptions ?? [])]?.map((option) => (
-                <SelectItem key={option.value} value={option.value}>
-                  {option.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select> */}
         </div>
       </div>
       <DataTable
         columns={REVIEW_COLUMNS}
         data={changeStatus?.data ?? []}
+        sorting={{
+          sortBy,
+          orderBy,
+          onSortChange: ({ sortBy, orderBy }) => {
+            setSortBy(sortBy);
+            setOrderBy(orderBy);
+          },
+        }}
         pagination={{
           ...changeStatus?.pagination,
           onPageChange(page) {

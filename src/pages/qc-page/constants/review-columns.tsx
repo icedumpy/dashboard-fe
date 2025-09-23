@@ -17,6 +17,7 @@ export const REVIEW_COLUMNS: ColumnDef<ChangeStatusT>[] = [
   {
     accessorKey: "line_id",
     header: "Production Line",
+    enableSorting: true,
     cell: ({ row }) => {
       const itemId = row.original.item_id;
       return <LineId itemId={itemId} />;
@@ -25,6 +26,7 @@ export const REVIEW_COLUMNS: ColumnDef<ChangeStatusT>[] = [
   {
     accessorKey: "station",
     header: "Station",
+    enableSorting: true,
     cell: ({ row }) => {
       const itemId = row.original.item_id;
       return <Station itemId={itemId} />;
@@ -33,6 +35,7 @@ export const REVIEW_COLUMNS: ColumnDef<ChangeStatusT>[] = [
   {
     accessorKey: "product_code",
     header: "Product Code",
+    enableSorting: true,
     meta: { className: "text-center" },
     cell: ({ row }) => {
       const itemId = row.original.item_id;
@@ -42,6 +45,7 @@ export const REVIEW_COLUMNS: ColumnDef<ChangeStatusT>[] = [
   {
     accessorKey: "roll_number",
     header: "Roll/Bundle Number",
+    enableSorting: true,
     meta: { className: "text-center" },
     cell: ({ row }) => {
       const itemId = row.original.item_id;
@@ -51,6 +55,7 @@ export const REVIEW_COLUMNS: ColumnDef<ChangeStatusT>[] = [
   {
     accessorKey: "job_order_number",
     header: "Job Order Number",
+    enableSorting: true,
     meta: { className: "text-center" },
     cell: ({ row }) => {
       const itemId = row.original.item_id;
@@ -60,6 +65,7 @@ export const REVIEW_COLUMNS: ColumnDef<ChangeStatusT>[] = [
   {
     accessorKey: "from_status_id",
     header: "Status Before",
+    enableSorting: true,
     cell: (info) => {
       const id = info.getValue() as StatusT;
       const status = STATUS_LIST.find((s) => s.id === +id)?.code as StatusT;
@@ -70,6 +76,7 @@ export const REVIEW_COLUMNS: ColumnDef<ChangeStatusT>[] = [
   {
     accessorKey: "to_status_id",
     header: "Status After",
+    enableSorting: true,
     cell: (info) => {
       const id = info.getValue() as StatusT;
       const status = STATUS_LIST.find((s) => s.id === +id)?.code as StatusT;

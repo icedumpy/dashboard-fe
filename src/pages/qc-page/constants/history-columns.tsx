@@ -15,36 +15,42 @@ export const HISTORY_COLUMNS: ColumnDef<ReviewT>[] = [
   {
     accessorKey: "line_id",
     header: "Production Line",
+    enableSorting: true,
     meta: { className: "text-center" },
     cell: (info) => <ProductionLineCode id={info.row.original.item.line_id} />,
   },
   {
     accessorKey: "station",
     header: "Station",
+    enableSorting: true,
     meta: { className: "text-center" },
     cell: (info) => info.row.original.item.station,
   },
   {
     accessorKey: "product_code",
     header: "Product Code",
+    enableSorting: true,
     meta: { className: "text-center" },
     cell: (info) => info.row.original.item.product_code,
   },
   {
     accessorKey: "number",
     header: "Roll/Bundle Number",
+    enableSorting: true,
     meta: { className: "text-center" },
     cell: (info) => info.row.original.item.number,
   },
   {
     accessorKey: "job_order_number",
     header: "Job Order Number",
+    enableSorting: true,
     meta: { className: "text-center" },
     cell: (info) => info.row.original.item.job_order_number,
   },
   {
     accessorKey: "status",
     header: "Status",
+    enableSorting: true,
     meta: { className: "text-start" },
     cell: (info) => (
       <StatusBadge
@@ -58,17 +64,20 @@ export const HISTORY_COLUMNS: ColumnDef<ReviewT>[] = [
   {
     accessorKey: "decision_note",
     header: "Decision",
+    enableSorting: true,
     meta: { className: "text-center" },
   },
   {
     accessorKey: "reviewed_by",
     header: "Reviewed By",
+    enableSorting: true,
     meta: { className: "text-center" },
     cell: (info) => <ReviewedBy itemId={info.row.original.item.id} />,
   },
   {
     accessorKey: "reviewed_at",
     header: "Reviewed At",
+    enableSorting: true,
     meta: { className: "text-center" },
     cell: (info) =>
       info.getValue<string>() &&

@@ -6,6 +6,7 @@ import { sanitizeQueryParams } from "@/utils/sanitize-query-params";
 
 import type { PaginationType } from "@/types/pagination";
 import type { ReviewStateT, ReviewSummaryT, ReviewT } from "@/types/review";
+import type { OrderBy } from "@/types/order";
 
 interface ReviewQueryResponse {
   data: ReviewT[];
@@ -19,6 +20,8 @@ interface ReviewParams {
   line_id: string;
   review_state?: ReviewStateT[];
   defect_type_id?: string;
+  sort_by?: string;
+  order_by?: OrderBy;
 }
 
 export const useReviewAPI = (params: ReviewParams) =>

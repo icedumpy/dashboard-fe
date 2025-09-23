@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { parseAsInteger, useQueryState } from "nuqs";
 
 import DataTable from "@/components/data-table";
@@ -18,6 +19,7 @@ import { REVIEW_STATE_OPTION, REVIEW_STATE } from "@/constants/review";
 import { ALL_OPTION } from "@/constants/option";
 
 import type { ReviewStateT } from "@/types/review";
+import type { OrderBy } from "@/types/order";
 
 export default function ReviewHistoryTable() {
   const { user } = useAuth();
@@ -31,6 +33,8 @@ export default function ReviewHistoryTable() {
   const [reviewState, setReviewState] = useQueryState("review-state", {
     defaultValue: "all",
   });
+  const [sortBy, setSortBy] = useState<string>("");
+  const [orderBy, setOrderBy] = useState<OrderBy>("");
 
   const { data: lineOptions } = useProductionLineOptions();
   const { data: defectOptions } = useDefectOptionAPI();
@@ -42,6 +46,8 @@ export default function ReviewHistoryTable() {
         ? [REVIEW_STATE.REJECTED, REVIEW_STATE.APPROVED]
         : ([reviewState] as ReviewStateT[]),
     defect_type_id: defect === "all" ? undefined : defect,
+    sort_by: sortBy,
+    order_by: orderBy,
   });
 
   return (
@@ -104,6 +110,14 @@ export default function ReviewHistoryTable() {
       <DataTable
         columns={HISTORY_COLUMNS}
         data={data?.data ?? []}
+        sorting={{
+          sortBy,
+          orderBy,
+          onSortChange: ({ sortBy, orderBy }) => {
+            setSortBy(sortBy);
+            setOrderBy(orderBy);
+          },
+        }}
         pagination={{
           ...data?.pagination,
           onPageChange: setPage,
