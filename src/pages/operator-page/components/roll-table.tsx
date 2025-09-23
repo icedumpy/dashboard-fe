@@ -1,14 +1,14 @@
-import { useState } from "react";
+import dayjs from "dayjs";
+import { useEffect, useState } from "react";
 import { parseAsInteger, useQueryState } from "nuqs";
 
 import DataTable from "@/components/data-table";
 
 import { useItemAPI } from "@/hooks/item/use-item";
 import { COLUMNS_ROLL } from "../constants/columns-roll";
+import { STATION } from "@/constants/station";
 import StatisticRoll from "./statistic-roll";
 import useItemFilters from "../hooks/use-item-filters";
-import { STATION } from "@/constants/station";
-import dayjs from "dayjs";
 
 import type { OrderBy } from "@/types/order";
 
@@ -34,6 +34,10 @@ export default function RollTable() {
       ? dayjs(filters.detected_to).toISOString()
       : undefined,
   });
+
+  useEffect(() => {
+    setRollPage(1);
+  }, [filters, setRollPage]);
 
   return (
     <div className="space-y-2">

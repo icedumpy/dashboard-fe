@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { parseAsInteger, useQueryState } from "nuqs";
 
 import DataTable from "@/components/data-table";
@@ -35,6 +35,10 @@ export default function BundleTable() {
       ? dayjs(filters.detected_to).toISOString()
       : undefined,
   });
+
+  useEffect(() => {
+    setBundlePage(1);
+  }, [filters, setBundlePage]);
 
   return (
     <div className="space-y-2">
