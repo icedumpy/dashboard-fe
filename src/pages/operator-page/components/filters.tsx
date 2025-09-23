@@ -37,7 +37,7 @@ import { cn } from "@/lib/utils";
 
 export default function Filters() {
   const { user } = useAuth();
-  const { filters, setFilters } = useItemFilters();
+  const { filters, setFilters, resetFilters } = useItemFilters();
   const [toggleFilter, setToggleFilter] = useState(false);
   const { data: productionLineOptions } = useProductionLineOptions();
   const disabledLine = [ROLES.OPERATOR as string].includes(String(user?.role));
@@ -84,21 +84,8 @@ export default function Filters() {
 
   const handleClear = useCallback(() => {
     form.reset();
-    setFilters({
-      product_code: "",
-      roll_id: "",
-      number: "",
-      roll_width_max: "",
-      roll_width_min: "",
-      job_order_number: "",
-      status: "",
-      detected_from: "",
-      detected_to: "",
-      line_id: isEmpty(user?.line?.id)
-        ? productionLineOptions?.[0]?.value ?? ""
-        : String(user?.line?.id),
-    });
-  }, [form, setFilters, user?.line?.id, productionLineOptions]);
+    resetFilters();
+  }, [form, resetFilters]);
 
   return (
     <div className="space-y-2">

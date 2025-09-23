@@ -24,8 +24,25 @@ export default function useItemFilters() {
     status: parseAsString.withDefault(""),
     detected_from: parseAsString.withDefault(""),
     detected_to: parseAsString.withDefault(""),
-    line_id: parseAsString.withDefault(""),
+    line_id: parseAsString.withDefault(defaultLineId),
   });
+
+  const resetFilters = useMemo(
+    () => () =>
+      setFilters({
+        product_code: "",
+        number: "",
+        roll_id: "",
+        job_order_number: "",
+        roll_width_min: "",
+        roll_width_max: "",
+        status: "",
+        detected_from: "",
+        detected_to: "",
+        line_id: defaultLineId,
+      }),
+    [setFilters, defaultLineId]
+  );
 
   // Ensure line_id always has a value (from query or default)
   const mergedFilters = useMemo(
@@ -39,5 +56,6 @@ export default function useItemFilters() {
   return {
     filters: mergedFilters,
     setFilters,
+    resetFilters,
   };
 }
