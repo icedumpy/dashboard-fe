@@ -66,8 +66,7 @@ export default function Filters() {
         ? filters.status.split(",").filter(Boolean)
         : undefined,
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [filters]);
+  }, [filters, form]);
 
   const values = useWatch({ control: form.control });
   const filledCount = Object.entries(values).filter(
