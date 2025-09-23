@@ -3,18 +3,19 @@ import { parseAsInteger, useQueryState } from "nuqs";
 
 import DataTable from "@/components/data-table";
 
-import { STATION } from "@/constants/station";
 import { useItemAPI } from "@/hooks/item/use-item";
 import { COLUMNS_ROLL } from "../constants/columns-roll";
 import StatisticRoll from "./statistic-roll";
-import useOperatorFilters from "../hooks/use-operator-filters";
+import useItemFilters from "../hooks/use-item-filters";
+import { STATION } from "@/constants/station";
+import dayjs from "dayjs";
 
 import type { OrderBy } from "@/types/order";
 
 export default function RollTable() {
-  const { values: filters } = useOperatorFilters();
   const [sortBy, setSortBy] = useState<string>("");
   const [orderBy, setOrderBy] = useState<OrderBy>("");
+  const { filters } = useItemFilters();
   const [rollPage, setRollPage] = useQueryState(
     "rollPage",
     parseAsInteger.withDefault(1)
@@ -26,6 +27,12 @@ export default function RollTable() {
     sort_by: sortBy,
     order_by: orderBy,
     status: filters.status ? filters.status.split(",") : [],
+    detected_from: filters.detected_from
+      ? dayjs(filters.detected_from).toISOString()
+      : undefined,
+    detected_to: filters.detected_to
+      ? dayjs(filters.detected_to).toISOString()
+      : undefined,
   });
 
   return (
