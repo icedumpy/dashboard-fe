@@ -22,7 +22,7 @@ import { isEmpty } from "radash";
 
 interface MultiSelectProps {
   options: OptionT[];
-  value: string[];
+  value?: string[];
   onChange: (selected: string[]) => void;
   placeholder?: string;
   className?: string;
@@ -52,7 +52,7 @@ export function MultiSelect({
 
   const handleUnselect = React.useCallback(
     (item: string) => {
-      onChange(value.filter((i) => i !== item));
+      onChange((value ?? []).filter((i) => i !== item));
     },
     [onChange, value]
   );
@@ -62,7 +62,7 @@ export function MultiSelect({
       const input = e.target as HTMLInputElement;
       if (input.value === "") {
         if (e.key === "Backspace") {
-          onChange(value.slice(0, -1));
+          onChange((value ?? []).slice(0, -1));
         }
       }
     },
@@ -90,10 +90,9 @@ export function MultiSelect({
           disabled={disabled}
         >
           <div className="flex items-center w-full min-w-0 gap-1 overflow-hidden flex-nowrap">
-            {isEmpty(value) && (
+            {isEmpty(value?.filter(Boolean)) ? (
               <span className="text-muted-foreground">{placeholder}</span>
-            )}
-            {value?.length > 0 && (
+            ) : (
               <span className="block w-full min-w-0 truncate">
                 {value?.join(", ")}
               </span>

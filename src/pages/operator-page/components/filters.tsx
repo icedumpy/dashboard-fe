@@ -290,7 +290,7 @@ export default function Filters() {
                     <MultiSelect
                       placeholder="เลือกสถานะ"
                       options={statusOptions}
-                      value={filters.status?.split(",") as unknown as string[]}
+                      value={filters.status?.split(",")}
                       onChange={(value) => {
                         field.onChange(value);
                         setFilters({ ...filters, status: value.join(",") });

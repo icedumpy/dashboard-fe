@@ -19,7 +19,7 @@ export default function useItemFilters() {
     job_order_number: parseAsString.withDefault(""),
     roll_width_min: parseAsString.withDefault(""),
     roll_width_max: parseAsString.withDefault(""),
-    status: parseAsString,
+    status: parseAsString.withDefault(""),
     detected_from: parseAsString.withDefault(""),
     detected_to: parseAsString.withDefault(""),
     line_id: parseAsString.withDefault(defaultLineId),
