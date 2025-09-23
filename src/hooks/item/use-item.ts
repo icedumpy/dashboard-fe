@@ -8,7 +8,7 @@ import type { FilterType } from "@/pages/operator-page/types";
 import type { OrderBy } from "@/types/order";
 
 export const useItemAPI = (
-  params: FilterType & { sort_by?: string; order_by: OrderBy }
+  params: FilterType & { sort_by?: string; order_by?: OrderBy }
 ) =>
   useQuery({
     queryKey: [ITEM_ENDPOINT, sanitizeQueryParams(params)],
