@@ -7,17 +7,16 @@ export function canRequestChanges(
   status: string,
   userLineId: string | number,
   currentLineId: string | number,
-  isPendingReview: boolean,
   userRole?: RoleType
 ): boolean {
   const editableStatuses = [STATUS.DEFECT, STATUS.RECHECK, STATUS.REJECTED];
-  const disallowedRoles: RoleType[] = [ROLES.VIEWER, ROLES.INSPECTOR];
+  const allowedRoles: RoleType[] = [ROLES.OPERATOR];
 
   const isEditable = editableStatuses.includes(status);
   const isSameLine = String(userLineId) === String(currentLineId);
-  const isRoleAllowed = userRole ? !disallowedRoles.includes(userRole) : true;
+  const isRoleAllowed = userRole ? allowedRoles.includes(userRole) : true;
 
-  return isEditable && isSameLine && !isPendingReview && !isRoleAllowed;
+  return isEditable && isSameLine && isRoleAllowed;
 }
 
 export function isHiddenRepairImages(statusCode: string | undefined) {
