@@ -47,13 +47,13 @@ export default function ReviewDecisionButton({
 
   const dialogTitle =
     decision === REVIEW_STATE.APPROVED
-      ? "อนุมัติการแก้ไข Defect"
-      : "ไม่อนุมัติการแก้ไข Defect";
+      ? "อนุมัติการเปลี่ยนสถานะ"
+      : "ปฏิเสธการเปลี่ยนสถานะ";
 
   const confirmDescription =
     decision === REVIEW_STATE.APPROVED
-      ? "ยืนยันการแก้ไข Defect สำหรับ:"
-      : "ปฏิเสธการแก้ไขสำหรับ:";
+      ? "ยืนยันการเปลี่ยนสถานะ สำหรับ:"
+      : "ปฏิเสธการเปลี่ยนสถานะ สำหรับ:";
 
   const form = useForm({
     defaultValues: {
@@ -69,7 +69,7 @@ export default function ReviewDecisionButton({
 
   const handleSubmit = () => {
     const values = form.getValues();
-    const title = decision === REVIEW_STATE.APPROVED ? "อนุมัติ" : "ไม่อนุมัติ";
+    const title = decision === REVIEW_STATE.APPROVED ? "อนุมัติ" : "ปฏิเสธ";
     reviewDecision.mutate(
       { reviewId: reviewId, decision: decision, note: values.note ?? "" },
       {
@@ -103,9 +103,7 @@ export default function ReviewDecisionButton({
       </DialogTrigger>
       <DialogContent aria-describedby={undefined}>
         <DialogHeader>
-          <DialogTitle>
-            {dialogTitle} {buttonProps?.size}
-          </DialogTitle>
+          <DialogTitle>{dialogTitle}</DialogTitle>
         </DialogHeader>
         <div className="space-y-2">
           <Form {...form}>

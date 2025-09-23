@@ -1,13 +1,13 @@
 import StatusBadge from "@/components/status-badge";
 import ViewDetailButton from "../components/view-detail-button";
-import ReviewApproveButton from "../components/review-approve-button";
-import ReviewRejectButton from "../components/review-reject-button";
+import ReviewDecisionButton from "@/components/review-decision-button";
 
 import { useItemDetailAPI } from "@/hooks/item/use-item-detail";
 import { useProductionLineOptions } from "@/hooks/option/use-production-line-option";
 import { STATION } from "@/constants/station";
 import { STATUS_LIST } from "@/constants/status";
 import { useDefectOptionAPI } from "@/hooks/option/use-defect-option";
+import { REVIEW_STATE } from "@/constants/review";
 
 import type { ColumnDef } from "@tanstack/react-table";
 import type { StatusT } from "@/types/status";
@@ -97,8 +97,18 @@ export const REVIEW_COLUMNS: ColumnDef<ChangeStatusT>[] = [
             itemId={String(itemId)}
             reviewId={String(requestId)}
           />
-          <ReviewApproveButton itemId={itemId} requestId={requestId} />
-          <ReviewRejectButton itemId={itemId} requestId={requestId} />
+          <ReviewDecisionButton
+            itemId={String(itemId)}
+            reviewId={String(requestId)}
+            decision={REVIEW_STATE.APPROVED}
+            buttonProps={{ className: "size-8" }}
+          />
+          <ReviewDecisionButton
+            itemId={String(itemId)}
+            reviewId={String(requestId)}
+            decision={REVIEW_STATE.REJECTED}
+            buttonProps={{ className: "size-8" }}
+          />
         </div>
       );
     },
