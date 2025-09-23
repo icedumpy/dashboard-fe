@@ -6,10 +6,11 @@ import { STATION } from "@/contants/station";
 import { useItemAPI } from "@/hooks/item/use-item";
 import { COLUMNS_BUNDLE } from "../constants/columns-bundle";
 import StatisticBundle from "./statistic-bundle";
-import useOperatorFilters from "../hooks/use-operator-filters";
+import useItemFilters from "../hooks/use-item-filters";
+import dayjs from "dayjs";
 
 export default function BundleTable() {
-  const { values: filters } = useOperatorFilters();
+  const { filters } = useItemFilters();
   const [bundlePage, setBundlePage] = useQueryState(
     "bundlePage",
     parseAsInteger.withDefault(1)
@@ -20,6 +21,12 @@ export default function BundleTable() {
     page: +bundlePage,
     station: STATION.BUNDLE,
     status: filters.status ? filters.status.split(",") : [],
+    detected_from: filters.detected_from
+      ? dayjs(filters.detected_from).toISOString()
+      : undefined,
+    detected_to: filters.detected_to
+      ? dayjs(filters.detected_to).toISOString()
+      : undefined,
   });
 
   return (

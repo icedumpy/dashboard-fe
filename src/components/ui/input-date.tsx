@@ -122,7 +122,7 @@ export function InputDate({
             <Input
               type="time"
               id="time-picker"
-              step="1"
+              step="60"
               onChange={(e) => {
                 if (_value) {
                   const [hours, minutes, seconds] = e.target.value

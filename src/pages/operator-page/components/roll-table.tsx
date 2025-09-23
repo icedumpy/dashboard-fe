@@ -2,14 +2,15 @@ import { parseAsInteger, useQueryState } from "nuqs";
 
 import DataTable from "@/components/data-table";
 
-import { STATION } from "@/contants/station";
 import { useItemAPI } from "@/hooks/item/use-item";
 import { COLUMNS_ROLL } from "../constants/columns-roll";
 import StatisticRoll from "./statistic-roll";
-import useOperatorFilters from "../hooks/use-operator-filters";
+import useItemFilters from "../hooks/use-item-filters";
+import { STATION } from "@/contants/station";
+import dayjs from "dayjs";
 
 export default function RollTable() {
-  const { values: filters } = useOperatorFilters();
+  const { filters } = useItemFilters();
   const [rollPage, setRollPage] = useQueryState(
     "rollPage",
     parseAsInteger.withDefault(1)
@@ -19,6 +20,12 @@ export default function RollTable() {
     page: +rollPage,
     station: STATION.ROLL,
     status: filters.status ? filters.status.split(",") : [],
+    detected_from: filters.detected_from
+      ? dayjs(filters.detected_from).toISOString()
+      : undefined,
+    detected_to: filters.detected_to
+      ? dayjs(filters.detected_to).toISOString()
+      : undefined,
   });
 
   return (

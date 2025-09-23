@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { FilterIcon, RotateCcwIcon } from "lucide-react";
 import { useWatch } from "react-hook-form";
 import { useForm } from "react-hook-form";
@@ -25,7 +25,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import UseOperatorFilters from "../hooks/use-operator-filters";
+import useItemFilters from "../hooks/use-item-filters";
 
 import { useStationStatusOptions } from "@/hooks/option/use-station-status-option";
 import { filtersSchema } from "../schema";
@@ -37,23 +37,23 @@ import { cn } from "@/lib/utils";
 
 export default function Filters() {
   const { user } = useAuth();
-  const { values: filters, setters } = UseOperatorFilters();
+  const { filters, setFilters } = useItemFilters();
   const [toggleFilter, setToggleFilter] = useState(false);
   const { data: productionLineOptions } = useProductionLineOptions();
   const disabledLine = [ROLES.OPERATOR as string].includes(String(user?.role));
 
   const form = useForm<z.infer<typeof filtersSchema>>({
     defaultValues: {
-      product_code: filters.product_code || "",
-      roll_id: filters.roll_id || "",
-      number: filters.number || "",
-      roll_width_max: filters.roll_width_max || "",
-      roll_width_min: filters.roll_width_min || "",
-      job_order_number: filters.job_order_number || "",
+      product_code: undefined,
+      roll_id: undefined,
+      number: undefined,
+      roll_width_max: undefined,
+      roll_width_min: undefined,
+      job_order_number: undefined,
       status: undefined,
-      detected_from: filters.detected_from || "",
-      detected_to: filters.detected_to || "",
-      line_id: filters.line_id || "",
+      detected_from: undefined,
+      detected_to: undefined,
+      line_id: undefined,
     },
     resolver: zodResolver(filtersSchema),
   });
@@ -64,7 +64,6 @@ export default function Filters() {
   ).length;
 
   const statusOptions = useStationStatusOptions();
-
   const isOperator = user?.role === ROLES.OPERATOR;
   const calendarDisabled = isOperator
     ? {
@@ -73,40 +72,23 @@ export default function Filters() {
       }
     : undefined;
 
-  useEffect(() => {
-    setters.setProductCode(values.product_code ?? "");
-    setters.setRollId(values.roll_id ?? "");
-    setters.setNumber(values.number ?? "");
-    setters.setJobOrderNumber(values.job_order_number ?? "");
-    setters.setRollWidthMin(
-      values.roll_width_min ? String(values.roll_width_min) : ""
-    );
-    setters.setRollWidthMax(
-      values.roll_width_max ? String(values.roll_width_max) : ""
-    );
-    setters.setStatus(values.status?.length ? values.status.join(",") : "");
-    setters.setDetectedFrom(
-      values.detected_from ? dayjs(values.detected_from)?.toISOString() : ""
-    );
-    setters.setDetectedTo(
-      values.detected_to ? dayjs(values.detected_to)?.toISOString() : ""
-    );
-
-    if (values.line_id) setters.setLineId(values.line_id || "");
-  }, [values, setters]);
-
   const handleClear = useCallback(() => {
-    form.setValue("product_code", "");
-    form.setValue("roll_id", "");
-    form.setValue("number", "");
-    form.setValue("job_order_number", "");
-    form.setValue("roll_width_min", "");
-    form.setValue("roll_width_max", "");
-    form.setValue("status", undefined);
-    form.setValue("detected_from", "");
-    form.setValue("detected_to", "");
-    form.setValue("line_id", "");
-  }, [form]);
+    form.reset();
+    setFilters({
+      product_code: "",
+      roll_id: "",
+      number: "",
+      roll_width_max: "",
+      roll_width_min: "",
+      job_order_number: "",
+      status: "",
+      detected_from: "",
+      detected_to: "",
+      line_id: isEmpty(user?.line?.id)
+        ? productionLineOptions?.[0]?.value ?? ""
+        : String(user?.line?.id),
+    });
+  }, [form, setFilters, user?.line?.id, productionLineOptions]);
 
   return (
     <div className="space-y-2">
@@ -114,7 +96,9 @@ export default function Filters() {
         <p>Production Line:</p>
         <Select
           value={filters?.line_id}
-          onValueChange={setters.setLineId}
+          onValueChange={(lineId) =>
+            setFilters({ ...filters, line_id: lineId })
+          }
           disabled={disabledLine}
         >
           <SelectTrigger className="bg-white">
@@ -166,8 +150,12 @@ export default function Filters() {
                   <FormLabel>Product Code</FormLabel>
                   <FormControl>
                     <Input
-                      value={field.value}
-                      onChange={field.onChange}
+                      value={filters.product_code}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        field.onChange(value);
+                        setFilters({ ...filters, product_code: value });
+                      }}
                       placeholder="ค้นหา Product Code"
                     />
                   </FormControl>
@@ -181,7 +169,15 @@ export default function Filters() {
                 <FormItem>
                   <FormLabel>Roll Id</FormLabel>
                   <FormControl>
-                    <Input {...field} placeholder="ค้นหา Roll Id" />
+                    <Input
+                      value={filters.roll_id}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        field.onChange(value);
+                        setFilters({ ...filters, roll_id: value });
+                      }}
+                      placeholder="ค้นหา Roll Id"
+                    />
                   </FormControl>
                 </FormItem>
               )}
@@ -193,7 +189,15 @@ export default function Filters() {
                 <FormItem>
                   <FormLabel>Roll/Bundle Number</FormLabel>
                   <FormControl>
-                    <Input {...field} placeholder="ค้นหา Roll/Bundle Number" />
+                    <Input
+                      value={filters.number}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        field.onChange(value);
+                        setFilters({ ...filters, number: value });
+                      }}
+                      placeholder="ค้นหา Roll/Bundle Number"
+                    />
                   </FormControl>
                 </FormItem>
               )}
@@ -205,7 +209,15 @@ export default function Filters() {
                 <FormItem>
                   <FormLabel>Job Order Number</FormLabel>
                   <FormControl>
-                    <Input {...field} placeholder="ค้นหา Job Order Number" />
+                    <Input
+                      value={filters.job_order_number}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        field.onChange(value);
+                        setFilters({ ...filters, job_order_number: value });
+                      }}
+                      placeholder="ค้นหา Job Order Number"
+                    />
                   </FormControl>
                 </FormItem>
               )}
@@ -219,9 +231,9 @@ export default function Filters() {
                     <FormItem className="flex-1">
                       <FormLabel>Roll Width</FormLabel>
                       <Input
-                        {...field}
                         placeholder="Min"
                         className="rounded-tr-none rounded-br-none"
+                        value={filters.roll_width_min}
                         onChange={(e) => {
                           const value = e.target.value;
                           if (value && isNaN(Number(value))) {
@@ -232,6 +244,7 @@ export default function Filters() {
                           } else {
                             form.clearErrors("roll_width_min");
                             field.onChange(value);
+                            setFilters({ ...filters, roll_width_min: value });
                           }
                         }}
                       />
@@ -245,9 +258,9 @@ export default function Filters() {
                     <FormItem className="flex-1">
                       <FormLabel></FormLabel>
                       <Input
-                        {...field}
                         placeholder="Max"
                         className="border-l-0 rounded-tl-none rounded-bl-none"
+                        value={filters.roll_width_max}
                         onChange={(e) => {
                           const value = e.target.value;
                           if (value && isNaN(Number(value))) {
@@ -258,6 +271,7 @@ export default function Filters() {
                           } else {
                             form.clearErrors("roll_width_max");
                             field.onChange(value);
+                            setFilters({ ...filters, roll_width_max: value });
                           }
                         }}
                       />
@@ -276,8 +290,11 @@ export default function Filters() {
                     <MultiSelect
                       placeholder="เลือกสถานะ"
                       options={statusOptions}
-                      value={field.value as string[]}
-                      onChange={field.onChange}
+                      value={filters.status?.split(",") as unknown as string[]}
+                      onChange={(value) => {
+                        field.onChange(value);
+                        setFilters({ ...filters, status: value.join(",") });
+                      }}
                     />
                   </FormControl>
                 </FormItem>
@@ -294,9 +311,19 @@ export default function Filters() {
                       time
                       format={DATE_TIME_FORMAT}
                       value={
-                        field.value ? dayjs(field.value).toDate() : undefined
+                        filters.detected_from
+                          ? dayjs(filters.detected_from).toDate()
+                          : undefined
                       }
-                      onChange={field.onChange}
+                      onChange={(value) => {
+                        field.onChange(value);
+                        setFilters({
+                          ...filters,
+                          detected_from: value
+                            ? dayjs(value).toISOString()
+                            : "",
+                        });
+                      }}
                       placeholder="วันที่เริ่มต้น"
                       calendarProps={{ disabled: calendarDisabled }}
                     />
@@ -316,9 +343,17 @@ export default function Filters() {
                       time
                       format={DATE_TIME_FORMAT}
                       value={
-                        field.value ? dayjs(field.value).toDate() : undefined
+                        filters.detected_to
+                          ? dayjs(filters.detected_to).toDate()
+                          : undefined
                       }
-                      onChange={field.onChange}
+                      onChange={(value) => {
+                        field.onChange(value);
+                        setFilters({
+                          ...filters,
+                          detected_to: value ? dayjs(value).toISOString() : "",
+                        });
+                      }}
                       placeholder="วันที่สิ้นสุด"
                       calendarProps={{ disabled: calendarDisabled }}
                     />
