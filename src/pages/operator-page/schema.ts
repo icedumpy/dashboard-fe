@@ -48,7 +48,8 @@ export const updateItemDetailsSchema = z.object({
     .regex(TH_NOT_ALLOWED, {
       message: "Job Order Number ไม่สามารถมีอักขระภาษาไทยได้",
     })
-    .nonempty({ message: "กรุณากรอก Job Order Number" }),
+    .nonempty({ message: "กรุณากรอก Job Order Number" })
+    .length(10, { message: "Job Order Number ต้องมี 10 หลัก" }),
   roll_number: z
     .string()
     .regex(TH_NOT_ALLOWED, {
@@ -64,13 +65,15 @@ export const updateItemDetailsSchema = z.object({
     .regex(TH_NOT_ALLOWED, {
       message: "Roll ID ไม่สามารถมีอักขระภาษาไทยได้",
     })
-    .nonempty({ message: "กรุณากรอก Roll ID" }),
+    .nonempty({ message: "กรุณากรอก Roll ID" })
+    .length(6, { message: "Roll ID ต้องมี 6 หลัก" }),
   product_code: z
     .string()
     .regex(TH_NOT_ALLOWED, {
       message: "Product Code ไม่สามารถมีอักขระภาษาไทยได้",
     })
-    .nonempty({ message: "กรุณากรอก Product Code" }),
+    .nonempty({ message: "กรุณากรอก Product Code" })
+    .length(9, { message: "Product Code ต้องมี 9 หลัก" }),
   bundle_number: z.string().regex(TH_NOT_ALLOWED, {
     message: "Bundle Number ไม่สามารถมีอักขระภาษาไทยได้",
   }),
