@@ -1,4 +1,4 @@
-import { REVIEW_STATE } from "@/contants/review";
+import { REVIEW_STATE } from "@/constants/review";
 
 export interface ReviewT {
   id: 5;

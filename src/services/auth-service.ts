@@ -1,4 +1,4 @@
-import { LOGIN_ENDPOINT, PROFILE_ENDPOINT } from "@/contants/api";
+import { LOGIN_ENDPOINT, PROFILE_ENDPOINT } from "@/constants/api";
 import axiosInstance from "@/lib/axios-instance";
 
 import { LoginFormType } from "@/pages/login-page/types";

@@ -12,7 +12,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { Button } from "@/components/ui/button";
 import { Input } from "./input";
 
-import { DATE_FORMAT, TIME_FORMAT } from "@/contants/format";
+import { DATE_FORMAT, TIME_FORMAT } from "@/constants/format";
 
 interface InputDateProps {
   value?: Date;

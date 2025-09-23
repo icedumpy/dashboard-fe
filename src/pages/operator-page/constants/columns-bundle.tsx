@@ -6,9 +6,9 @@ import CheckButton from "../components/check-button";
 import ClassifyScrapButton from "../components/classify-scrap-button";
 import StatusHistoryButton from "@/components/status-history-button/status-history-button";
 
-import { DATE_TIME_FORMAT } from "@/contants/format";
-import { STATION } from "@/contants/station";
-import { STATUS } from "@/contants/status";
+import { DATE_TIME_FORMAT } from "@/constants/format";
+import { STATION } from "@/constants/station";
+import { STATUS } from "@/constants/status";
 
 import type { StationItemType } from "@/types/station";
 

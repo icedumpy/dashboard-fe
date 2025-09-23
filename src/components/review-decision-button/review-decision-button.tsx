@@ -27,8 +27,8 @@ import { Button } from "@/components/ui/button";
 import { useReviewDecisionAPI } from "@/hooks/review/use-review-decision";
 import { useItemDetailAPI } from "@/hooks/item/use-item-detail";
 import useDismissDialog from "@/hooks/use-dismiss-dialog";
-import { REVIEW_STATE } from "@/contants/review";
-import { REVIEW_ENDPOINT } from "@/contants/api";
+import { REVIEW_STATE } from "@/constants/review";
+import { REVIEW_ENDPOINT } from "@/constants/api";
 import { cn } from "@/lib/utils";
 import { reviewSchema } from "./schema";
 

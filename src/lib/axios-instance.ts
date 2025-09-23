@@ -1,8 +1,8 @@
 import axios from "axios";
 import qs from "qs";
 
-import { API_V1 } from "@/contants/api";
-import { ACCESS_TOKEN, REFRESH_TOKEN } from "@/contants/auth";
+import { API_V1 } from "@/constants/api";
+import { ACCESS_TOKEN, REFRESH_TOKEN } from "@/constants/auth";
 import { ApiError } from "@/utils/api-error";
 import clearAuthSession from "@/utils/clear-auth-session";
 import getCookie from "@/utils/get-cookie";

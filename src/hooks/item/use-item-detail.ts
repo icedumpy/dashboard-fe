@@ -1,6 +1,6 @@
 import { useQuery, UseQueryOptions } from "@tanstack/react-query";
 
-import { ITEM_ENDPOINT } from "@/contants/api";
+import { ITEM_ENDPOINT } from "@/constants/api";
 import { ItemService } from "@/services/item-service";
 
 import type { StationDetailResponse } from "@/types/station";

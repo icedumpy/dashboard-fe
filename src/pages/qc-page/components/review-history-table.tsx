@@ -14,8 +14,8 @@ import { HISTORY_COLUMNS } from "../constants/history-columns";
 import { useAuth } from "@/hooks/auth/use-auth";
 import { useDefectOptionAPI } from "@/hooks/option/use-defect-option";
 import { useReviewAPI } from "@/hooks/review/use-review";
-import { REVIEW_STATE_OPTION, REVIEW_STATE } from "@/contants/review";
-import { ALL_OPTION } from "@/contants/option";
+import { REVIEW_STATE_OPTION, REVIEW_STATE } from "@/constants/review";
+import { ALL_OPTION } from "@/constants/option";
 
 import type { ReviewStateT } from "@/types/review";
 

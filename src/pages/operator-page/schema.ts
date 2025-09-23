@@ -1,7 +1,7 @@
 import z from "zod";
 
-import { STATUS } from "@/contants/status";
-import { TH_NOT_ALLOWED } from "@/contants/validate";
+import { STATUS } from "@/constants/status";
+import { TH_NOT_ALLOWED } from "@/constants/validate";
 
 export const filtersSchema = z.object({
   product_code: z.string().optional(),

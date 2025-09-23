@@ -30,10 +30,10 @@ import { STATUS_OPTIONS } from "./constants";
 import { updateStatusSchema } from "./schema";
 import { useItemDetailAPI } from "@/hooks/item/use-item-detail";
 import { useChangeStatus } from "@/hooks/change-status/use-create-change-status";
-import { ITEM_ENDPOINT } from "@/contants/api";
+import { ITEM_ENDPOINT } from "@/constants/api";
 import { useDefectOptionAPI } from "@/hooks/option/use-defect-option";
-import { STATION } from "@/contants/station";
-import { STATUS } from "@/contants/status";
+import { STATION } from "@/constants/station";
+import { STATUS } from "@/constants/status";
 
 import type { UpdateStatusT } from "./types";
 

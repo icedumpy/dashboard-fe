@@ -1,7 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 
 import { ItemService } from "@/services/item-service";
-import { ITEM_FIX_REQUEST_ENDPOINT } from "@/contants/api";
+import { ITEM_FIX_REQUEST_ENDPOINT } from "@/constants/api";
 
 export const useItemFixRequest = () => {
   const mutation = useMutation({

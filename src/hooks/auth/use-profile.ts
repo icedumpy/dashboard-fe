@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 
-import { PROFILE_ENDPOINT } from "@/contants/api";
+import { PROFILE_ENDPOINT } from "@/constants/api";
 import { AuthService } from "@/services/auth-service";
 
 export const useProfileAPI = () =>

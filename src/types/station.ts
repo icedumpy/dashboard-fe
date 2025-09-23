@@ -1,4 +1,4 @@
-import { STATION } from "@/contants/station";
+import { STATION } from "@/constants/station";
 
 import type { PaginationType } from "./pagination";
 import type { ImageT } from "./image";

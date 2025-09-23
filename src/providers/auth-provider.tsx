@@ -3,8 +3,8 @@ import { useQueryClient } from "@tanstack/react-query";
 
 import { useLoginAPI } from "@/hooks/auth/use-login";
 import { useProfileAPI } from "@/hooks/auth/use-profile";
-import { ACCESS_TOKEN, REFRESH_TOKEN } from "@/contants/auth";
-import { PROFILE_ENDPOINT } from "@/contants/api";
+import { ACCESS_TOKEN, REFRESH_TOKEN } from "@/constants/auth";
+import { PROFILE_ENDPOINT } from "@/constants/api";
 import { AuthContext } from "@/contexts/auth-context";
 import setCookie from "@/utils/set-cookie";
 import removeCookie from "@/utils/remove-cookie";

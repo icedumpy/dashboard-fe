@@ -16,13 +16,13 @@ import FileUpload from "@/components/ui/file-upload";
 import ConfirmDetail from "./confirm-detail";
 import ConfirmEditChecklist from "./confirm-edit-check-list";
 
-import { ITEM_ENDPOINT } from "@/contants/api";
+import { ITEM_ENDPOINT } from "@/constants/api";
 import { useImageUpload } from "@/hooks/upload/use-image-upload";
 import { useItemDetailAPI } from "@/hooks/item/use-item-detail";
 import { useItemFixRequest } from "@/hooks/item/use-item-fix-request";
 import { useAuth } from "@/hooks/auth/use-auth";
-import { ROLES } from "@/contants/auth";
-import { STATUS } from "@/contants/status";
+import { ROLES } from "@/constants/auth";
+import { STATUS } from "@/constants/status";
 
 import type { ImageT } from "@/types/image";
 import type { CheckButtonProps } from "../types";

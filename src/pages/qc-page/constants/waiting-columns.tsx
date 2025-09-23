@@ -6,7 +6,7 @@ import ActionButton from "../components/action-button";
 import StatusHistoryButton from "@/components/status-history-button";
 import ProductionLineCode from "../components/production-line-code";
 
-import { DATE_TIME_FORMAT } from "@/contants/format";
+import { DATE_TIME_FORMAT } from "@/constants/format";
 
 import type { ReviewT } from "@/types/review";
 

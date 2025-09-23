@@ -22,7 +22,7 @@ import ImageRepair from "./image-repair";
 import ProductDetail from "./production-details";
 import UpdateStatusButton from "@/components/update-status-button";
 
-import { ITEM_ENDPOINT } from "@/contants/api";
+import { ITEM_ENDPOINT } from "@/constants/api";
 import {
   shouldShowUpdateStatusButton,
   isHiddenRepairImages,

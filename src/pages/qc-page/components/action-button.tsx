@@ -3,7 +3,7 @@ import { useQueryState } from "nuqs";
 import ViewDetailButton from "./view-detail-button";
 import ReviewDecisionButton from "@/components/review-decision-button";
 
-import { REVIEW_STATE } from "@/contants/review";
+import { REVIEW_STATE } from "@/constants/review";
 import { TABS, TABS_KEYS } from "../constants/tabs";
 
 export default function ActionButton({

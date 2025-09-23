@@ -7,7 +7,7 @@ import AuthGuard from "@/components/auth-guard";
 import QCPage from "@/pages/qc-page";
 
 import { useAuth } from "./hooks/auth/use-auth";
-import { ROLES } from "./contants/auth";
+import { ROLES } from "./constants/auth";
 
 import type { RoleType } from "./types/auth";
 

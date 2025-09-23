@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { ImageUpIcon } from "lucide-react";
-import { IMAGE_PATH_ENDPOINT } from "@/contants/api";
+
+import { IMAGE_PATH_ENDPOINT } from "@/constants/api";
 import { UploadService } from "@/services/upload-service";
 
 interface FileUploadProps {

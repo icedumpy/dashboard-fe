@@ -1,6 +1,6 @@
 import { isEmpty } from "radash";
 
-import { REVIEW_STATE_OPTION } from "@/contants/review";
+import { REVIEW_STATE_OPTION } from "@/constants/review";
 
 import type { LineResponse } from "@/hooks/line/use-line";
 import type { OptionT } from "@/types/option";

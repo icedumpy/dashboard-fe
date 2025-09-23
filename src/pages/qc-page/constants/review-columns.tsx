@@ -5,8 +5,8 @@ import ReviewRejectButton from "../components/review-reject-button";
 
 import { useItemDetailAPI } from "@/hooks/item/use-item-detail";
 import { useProductionLineOptions } from "@/hooks/option/use-production-line-option";
-import { STATION } from "@/contants/station";
-import { STATUS_LIST } from "@/contants/status";
+import { STATION } from "@/constants/station";
+import { STATUS_LIST } from "@/constants/status";
 import { useDefectOptionAPI } from "@/hooks/option/use-defect-option";
 
 import type { ColumnDef } from "@tanstack/react-table";

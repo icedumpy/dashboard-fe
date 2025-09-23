@@ -1,5 +1,5 @@
 import axiosInstance from "@/lib/axios-instance";
-import { IMAGE_PATH_ENDPOINT, IMAGE_UPLOAD_ENDPOINT } from "@/contants/api";
+import { IMAGE_PATH_ENDPOINT, IMAGE_UPLOAD_ENDPOINT } from "@/constants/api";
 
 export const UploadService = {
   getImageBold: async (image_path?: string) => {

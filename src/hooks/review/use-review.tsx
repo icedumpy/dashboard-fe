@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 
-import { REVIEW_ENDPOINT } from "@/contants/api";
+import { REVIEW_ENDPOINT } from "@/constants/api";
 import { ReviewService } from "@/services/review-service";
 import { sanitizeQueryParams } from "@/utils/sanitize-query-params";
 

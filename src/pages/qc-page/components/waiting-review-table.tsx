@@ -9,8 +9,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import { ALL_OPTION } from "@/contants/option";
-import { REVIEW_STATE } from "@/contants/review";
+import { ALL_OPTION } from "@/constants/option";
+import { REVIEW_STATE } from "@/constants/review";
 import { useAuth } from "@/hooks/auth/use-auth";
 import { useDefectOptionAPI } from "@/hooks/option/use-defect-option";
 import { useProductionLineOptions } from "@/hooks/option/use-production-line-option";
