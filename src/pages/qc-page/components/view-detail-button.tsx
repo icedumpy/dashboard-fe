@@ -19,7 +19,7 @@ import UpdateStatusButton from "@/components/update-status-button";
 import ReviewDecisionButton from "@/components/review-decision-button";
 
 import { useItemDetailAPI } from "@/hooks/item/use-item-detail";
-import { shouldShowUpdateStatusButton } from "@/utils/item-status";
+import { shouldShowUpdateStatusButton } from "@/helpers/item";
 import { useAuth } from "@/hooks/auth/use-auth";
 import { REVIEW_STATE } from "@/constants/review";
 import { TABS, TABS_KEYS } from "../constants/tabs";

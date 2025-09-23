@@ -27,7 +27,7 @@ import {
   shouldShowUpdateStatusButton,
   isHiddenRepairImages,
   canRequestChanges,
-} from "@/utils/item-status";
+} from "@/helpers/item";
 import { useAuth } from "@/hooks/auth/use-auth";
 import { useItemDetailAPI } from "@/hooks/item/use-item-detail";
 import { useItemFixRequest } from "@/hooks/item/use-item-fix-request";
@@ -66,7 +66,8 @@ export default function CheckButton({
   const canRequestChangesValue = canRequestChanges(
     status,
     Number(user?.line?.id),
-    line
+    line,
+    user?.role
   );
 
   const toggleOpen = useCallback(() => {

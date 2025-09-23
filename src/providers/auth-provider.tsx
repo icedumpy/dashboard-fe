@@ -6,8 +6,7 @@ import { useProfileAPI } from "@/hooks/auth/use-profile";
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "@/constants/auth";
 import { PROFILE_ENDPOINT } from "@/constants/api";
 import { AuthContext } from "@/contexts/auth-context";
-import setCookie from "@/utils/set-cookie";
-import removeCookie from "@/utils/remove-cookie";
+import { removeCookie, setCookie } from "@/utils/cookie";
 
 import type { LoginFormType } from "@/pages/login-page/types";
 import type { AuthContextType } from "@/contexts/auth-context";

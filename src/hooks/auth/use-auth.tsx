@@ -2,11 +2,10 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 
 import axiosInstance from "@/lib/axios-instance";
-import setCookie from "@/utils/set-cookie";
-import getCookie from "@/utils/get-cookie";
+import { getCookie, setCookie } from "@/utils/cookie";
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "@/constants/auth";
 import { LOGIN_ENDPOINT, PROFILE_ENDPOINT } from "@/constants/api";
-import clearAuthSession from "@/utils/clear-auth-session";
+import { clearAuthSession } from "@/helpers/auth";
 
 import type { LoginFormType } from "@/pages/login-page/types";
 import type { UserType } from "@/types/auth";
