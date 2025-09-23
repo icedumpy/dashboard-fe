@@ -17,7 +17,7 @@ export const updateStatusSchema = z
       return true;
     },
     {
-      message: "กรุณาเลือกประเภทความเสียหาย",
+      error: "กรุณาเลือกประเภทความเสียหาย",
       path: ["defect_type_ids"],
     }
   );

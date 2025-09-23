@@ -10,7 +10,7 @@ export const reviewSchema = z
   .refine(
     (data) => data.decision !== REVIEW_STATE.REJECTED || !!data.note?.trim(),
     {
-      message: "Note is required when decision is REJECTED",
+      error: "Note is required when decision is REJECTED",
       path: ["note"],
     }
   );

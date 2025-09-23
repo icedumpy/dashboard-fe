@@ -35,9 +35,9 @@ export const classifyScrapSchema = z
   .superRefine((data, ctx) => {
     if (data.type === "defect" && (!data.images || data.images.length === 0)) {
       ctx.addIssue({
-        code: z.ZodIssueCode.custom,
+        code: "custom",
         path: ["images"],
-        message: "images is required when type is defect",
+        error: "images is required when type is defect",
       });
     }
   });
@@ -46,33 +46,33 @@ export const updateItemDetailsSchema = z.object({
   job_order_number: z
     .string()
     .regex(TH_NOT_ALLOWED, {
-      message: "Job Order Number ไม่สามารถมีอักขระภาษาไทยได้",
+      error: "Job Order Number ไม่สามารถมีอักขระภาษาไทยได้",
     })
-    .nonempty({ message: "กรุณากรอก Job Order Number" })
-    .length(10, { message: "Job Order Number ต้องมี 10 หลัก" }),
+    .nonempty({ error: "กรุณากรอก Job Order Number" })
+    .length(10, { error: "Job Order Number ต้องมี 10 หลัก" }),
   roll_number: z
     .string()
     .regex(TH_NOT_ALLOWED, {
-      message: "Roll Number ไม่สามารถมีอักขระภาษาไทยได้",
+      error: "Roll Number ไม่สามารถมีอักขระภาษาไทยได้",
     })
-    .nonempty({ message: "กรุณากรอก Roll Number" }),
+    .nonempty({ error: "กรุณากรอก Roll Number" }),
   roll_width: z
     .number({ error: "กรุณากรอก Roll Width" })
-    .min(0, { message: "กรุณากรอก Roll Width ให้มากกว่าหรือเท่ากับ 0" })
-    .max(9999, { message: "กรุณากรอก Roll Width ให้ไม่เกิน 4 หลัก" }),
+    .min(0, { error: "กรุณากรอก Roll Width ให้มากกว่าหรือเท่ากับ 0" })
+    .max(9999, { error: "กรุณากรอก Roll Width ให้ไม่เกิน 4 หลัก" }),
   roll_id: z
     .string()
-    .regex(TH_NOT_ALLOWED, { message: "Roll ID ไม่สามารถมีอักขระภาษาไทยได้" })
-    .nonempty({ message: "กรุณากรอก Roll ID" })
-    .length(6, { message: "Roll ID ต้องมี 6 หลัก" }),
+    .regex(TH_NOT_ALLOWED, { error: "Roll ID ไม่สามารถมีอักขระภาษาไทยได้" })
+    .nonempty({ error: "กรุณากรอก Roll ID" })
+    .length(6, { error: "Roll ID ต้องมี 6 หลัก" }),
   product_code: z
     .string()
     .regex(TH_NOT_ALLOWED, {
-      message: "Product Code ไม่สามารถมีอักขระภาษาไทยได้",
+      error: "Product Code ไม่สามารถมีอักขระภาษาไทยได้",
     })
-    .nonempty({ message: "กรุณากรอก Product Code" })
-    .length(9, { message: "Product Code ต้องมี 9 หลัก" }),
+    .nonempty({ error: "กรุณากรอก Product Code" })
+    .length(9, { error: "Product Code ต้องมี 9 หลัก" }),
   bundle_number: z.string().regex(TH_NOT_ALLOWED, {
-    message: "Bundle Number ไม่สามารถมีอักขระภาษาไทยได้",
+    error: "Bundle Number ไม่สามารถมีอักขระภาษาไทยได้",
   }),
 });
