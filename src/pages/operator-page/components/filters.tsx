@@ -42,6 +42,7 @@ export default function Filters() {
   const { data: productionLineOptions } = useProductionLineOptions();
   const disabledLine = [ROLES.OPERATOR as string].includes(String(user?.role));
 
+  // TODO: Find a better way to avoid not using form
   const form = useForm<z.infer<typeof filtersSchema>>({
     defaultValues: {
       product_code: undefined,
