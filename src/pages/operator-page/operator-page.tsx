@@ -11,13 +11,13 @@ import { useAuth } from "@/hooks/auth/use-auth";
 import { useProductionLineOptions } from "@/hooks/option/use-production-line-option";
 import { useLineAPI } from "@/hooks/line/use-line";
 import { ROLES } from "@/contants/auth";
-import UseOperatorFilters from "./hooks/use-operator-filters";
 import RollTable from "./components/roll-table";
 import BundleTable from "./components/bunble-table";
+import useItemFilters from "./hooks/use-item-filters";
 
 export default function OperatorPage() {
   const { user } = useAuth();
-  const { values: filters } = UseOperatorFilters();
+  const { filters } = useItemFilters();
   const { data: lines } = useLineAPI();
   const { data: productionLineOptions } = useProductionLineOptions();
 

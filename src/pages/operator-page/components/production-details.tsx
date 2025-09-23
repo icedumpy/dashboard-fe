@@ -25,7 +25,7 @@ import { ITEM_ENDPOINT } from "@/contants/api";
 import { useItemUpdate } from "@/hooks/item/use-item-update";
 import { ROLES } from "@/contants/auth";
 import { useAuth } from "@/hooks/auth/use-auth";
-import UseOperatorFilters from "@/pages/operator-page/hooks/use-operator-filters";
+import useItemFilters from "@/pages/operator-page/hooks/use-item-filters";
 
 import type { StationDetailResponse } from "@/types/station";
 import type { UpdateItemDetail } from "../types";
@@ -44,7 +44,7 @@ export default function ProductDetail({
 }: ProductDetailProps) {
   const { user } = useAuth();
   const queryClient = useQueryClient();
-  const { values: filters } = UseOperatorFilters();
+  const { filters } = useItemFilters();
   const { data: lines } = useLineAPI();
   const { data: defectOptions } = useDefectOptionAPI();
   const [mode, setMode] = useState<"VIEW" | "EDIT">("VIEW");
