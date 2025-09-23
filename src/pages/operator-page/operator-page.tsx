@@ -12,7 +12,7 @@ import { useProductionLineOptions } from "@/hooks/option/use-production-line-opt
 import { useLineAPI } from "@/hooks/line/use-line";
 import { ROLES } from "@/constants/auth";
 import RollTable from "./components/roll-table";
-import BundleTable from "./components/bunble-table";
+import BundleTable from "./components/bundle-table";
 import useItemFilters from "./hooks/use-item-filters";
 
 export default function OperatorPage() {
