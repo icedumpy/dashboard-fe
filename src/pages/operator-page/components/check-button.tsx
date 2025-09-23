@@ -66,8 +66,7 @@ export default function CheckButton({
   const canRequestChangesValue = canRequestChanges(
     status,
     Number(user?.line?.id),
-    line,
-    isPendingReview
+    line
   );
 
   const toggleOpen = useCallback(() => {
