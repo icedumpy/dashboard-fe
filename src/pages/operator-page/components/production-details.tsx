@@ -70,8 +70,8 @@ export default function ProductDetail({
     form.reset({
       ...data,
       roll_id: data?.roll_id || "",
-      roll_number: data?.roll_number || undefined,
-      bundle_number: data?.bundle_number || undefined,
+      roll_number: data?.roll_number || "",
+      bundle_number: data?.bundle_number || "",
     });
   }, [data, form]);
 
@@ -189,6 +189,7 @@ export default function ProductDetail({
                   onClick={() => {
                     setMode("VIEW");
                     form.clearErrors();
+                    form.reset();
                   }}
                 >
                   ยกเลิก
