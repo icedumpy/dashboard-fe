@@ -22,8 +22,11 @@ export default function useItemFilters() {
     status: parseAsString.withDefault(""),
     detected_from: parseAsString.withDefault(""),
     detected_to: parseAsString.withDefault(""),
-    line_id: parseAsString.withDefault(defaultLineId),
+    line_id: parseAsString.withDefault(""),
   });
 
-  return { filters, setFilters };
+  return {
+    filters: { ...filters, line_id: filters?.line_id ?? defaultLineId },
+    setFilters,
+  };
 }
