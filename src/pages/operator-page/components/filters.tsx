@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { FilterIcon, RotateCcwIcon } from "lucide-react";
 import { useWatch } from "react-hook-form";
 import { useForm } from "react-hook-form";
@@ -58,6 +58,16 @@ export default function Filters() {
     },
     resolver: zodResolver(filtersSchema),
   });
+
+  useEffect(() => {
+    form.reset({
+      ...filters,
+      status: filters.status
+        ? filters.status.split(",").filter(Boolean)
+        : undefined,
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filters]);
 
   const values = useWatch({ control: form.control });
   const filledCount = Object.entries(values).filter(
@@ -151,7 +161,7 @@ export default function Filters() {
                   <FormLabel>Product Code</FormLabel>
                   <FormControl>
                     <Input
-                      value={filters.product_code}
+                      value={field.value}
                       onChange={(e) => {
                         const value = e.target.value;
                         field.onChange(value);
@@ -171,7 +181,7 @@ export default function Filters() {
                   <FormLabel>Roll Id</FormLabel>
                   <FormControl>
                     <Input
-                      value={filters.roll_id}
+                      value={field.value}
                       onChange={(e) => {
                         const value = e.target.value;
                         field.onChange(value);
@@ -191,7 +201,7 @@ export default function Filters() {
                   <FormLabel>Roll/Bundle Number</FormLabel>
                   <FormControl>
                     <Input
-                      value={filters.number}
+                      value={field.value}
                       onChange={(e) => {
                         const value = e.target.value;
                         field.onChange(value);
@@ -211,7 +221,7 @@ export default function Filters() {
                   <FormLabel>Job Order Number</FormLabel>
                   <FormControl>
                     <Input
-                      value={filters.job_order_number}
+                      value={field.value}
                       onChange={(e) => {
                         const value = e.target.value;
                         field.onChange(value);
@@ -234,7 +244,7 @@ export default function Filters() {
                       <Input
                         placeholder="Min"
                         className="rounded-tr-none rounded-br-none"
-                        value={filters.roll_width_min}
+                        value={field.value}
                         onChange={(e) => {
                           const value = e.target.value;
                           if (value && isNaN(Number(value))) {
@@ -261,7 +271,7 @@ export default function Filters() {
                       <Input
                         placeholder="Max"
                         className="border-l-0 rounded-tl-none rounded-bl-none"
-                        value={filters.roll_width_max}
+                        value={field.value}
                         onChange={(e) => {
                           const value = e.target.value;
                           if (value && isNaN(Number(value))) {
@@ -291,7 +301,7 @@ export default function Filters() {
                     <MultiSelect
                       placeholder="เลือกสถานะ"
                       options={statusOptions}
-                      value={filters.status?.split(",")}
+                      value={field.value}
                       onChange={(value) => {
                         field.onChange(value);
                         setFilters({ ...filters, status: value.join(",") });
@@ -312,9 +322,7 @@ export default function Filters() {
                       time
                       format={DATE_TIME_FORMAT}
                       value={
-                        filters.detected_from
-                          ? dayjs(filters.detected_from).toDate()
-                          : undefined
+                        field.value ? dayjs(field.value).toDate() : undefined
                       }
                       onChange={(value) => {
                         field.onChange(value);
@@ -344,9 +352,7 @@ export default function Filters() {
                       time
                       format={DATE_TIME_FORMAT}
                       value={
-                        filters.detected_to
-                          ? dayjs(filters.detected_to).toDate()
-                          : undefined
+                        field.value ? dayjs(field.value).toDate() : undefined
                       }
                       onChange={(value) => {
                         field.onChange(value);

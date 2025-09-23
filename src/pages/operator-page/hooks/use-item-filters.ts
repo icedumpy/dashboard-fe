@@ -1,5 +1,6 @@
 import { parseAsString, useQueryStates } from "nuqs";
 import { isEmpty } from "radash";
+import { useMemo } from "react";
 
 import { useAuth } from "@/hooks/auth/use-auth";
 import { useProductionLineOptions } from "@/hooks/option/use-production-line-option";
@@ -8,9 +9,10 @@ export default function useItemFilters() {
   const { user } = useAuth();
   const { data: productionLineOptions } = useProductionLineOptions();
 
-  const defaultLineId = isEmpty(user?.line?.id)
-    ? productionLineOptions?.[0]?.value ?? ""
-    : String(user?.line?.id);
+  const defaultLineId = useMemo(() => {
+    if (!isEmpty(user?.line?.id)) return String(user?.line?.id);
+    return productionLineOptions?.[0]?.value ?? "";
+  }, [user?.line?.id, productionLineOptions]);
 
   const [filters, setFilters] = useQueryStates({
     product_code: parseAsString.withDefault(""),
@@ -25,8 +27,17 @@ export default function useItemFilters() {
     line_id: parseAsString.withDefault(""),
   });
 
+  // Ensure line_id always has a value (from query or default)
+  const mergedFilters = useMemo(
+    () => ({
+      ...filters,
+      line_id: filters.line_id || defaultLineId,
+    }),
+    [filters, defaultLineId]
+  );
+
   return {
-    filters: { ...filters, line_id: filters?.line_id ?? defaultLineId },
+    filters: mergedFilters,
     setFilters,
   };
 }
