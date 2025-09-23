@@ -1,4 +1,7 @@
-import { CHANGE_STATUS_ENDPOINT, DECIDE_STATUS_ENDPOINT } from "@/contants/api";
+import {
+  CHANGE_STATUS_ENDPOINT,
+  DECIDE_STATUS_ENDPOINT,
+} from "@/constants/api";
 import { ChangeStatusParams } from "@/hooks/change-status/use-create-change-status";
 import { DecideStatusParams } from "@/hooks/change-status/use-decide-status";
 import axiosInstance from "@/lib/axios-instance";

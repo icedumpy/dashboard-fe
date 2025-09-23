@@ -15,9 +15,9 @@ import {
 
 import useDismissDialog from "@/hooks/use-dismiss-dialog";
 import { useItemDetailAPI } from "@/hooks/item/use-item-detail";
-import { CHANGE_STATUS_ENDPOINT } from "@/contants/api";
+import { CHANGE_STATUS_ENDPOINT } from "@/constants/api";
 import { useDecideStatus } from "@/hooks/change-status/use-decide-status";
-import { REVIEW_STATE } from "@/contants/review";
+import { REVIEW_STATE } from "@/constants/review";
 
 export default function ReviewApproveButton({
   itemId,

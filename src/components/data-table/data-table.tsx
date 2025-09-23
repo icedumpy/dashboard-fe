@@ -6,7 +6,6 @@ import {
   getSortedRowModel,
   getPaginationRowModel,
   flexRender,
-  SortingState,
 } from "@tanstack/react-table";
 
 import {
@@ -18,8 +17,11 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import DataTablePagination from "./data-table-pagination";
+import SortIcon from "./components/sort-icon";
+import { Button } from "@/components/ui/button";
 
 import { cn } from "@/lib/utils";
+import { ORDER_BY } from "@/constants/order";
 
 import type { DataTableProps } from "./types";
 
@@ -28,33 +30,42 @@ export function DataTable<T extends object>({
   columns,
   isLoading,
   pagination,
+  sorting,
 }: DataTableProps<T>) {
-  const [sorting, setSorting] = React.useState<SortingState>([]);
   const [pageIndex, setPageIndex] = React.useState(0);
 
   const pageSize = pagination?.page_size ?? 10;
+
+  const handleSortClick = React.useCallback(
+    (columnId: string) => {
+      if (!sorting) return;
+      const isCurrentlySorted = sorting.sortBy === columnId;
+      sorting.onSortChange?.({
+        sortBy: columnId,
+        orderBy:
+          isCurrentlySorted && sorting.orderBy === ORDER_BY.DESC
+            ? ORDER_BY.ASC
+            : ORDER_BY.DESC,
+      });
+    },
+    [sorting]
+  );
 
   const table = useReactTable({
     data,
     columns,
     state: {
-      sorting,
       pagination: { pageIndex, pageSize },
     },
     getRowId: (row, index) => {
-      // Example 1: Use a unique 'id' property if it exists on your data objects
       if (
         "id" in row &&
         (typeof row.id === "string" || typeof row.id === "number")
       ) {
         return String(row.id);
       }
-      // Example 2: Fallback to a stable index-based ID if 'id' is not present
-      // or if you need a different unique identifier.
-      // This ensures a stable ID even if the data order changes slightly.
       return `row-${index}`;
     },
-    onSortingChange: setSorting,
     onPaginationChange: (updater) => {
       const next =
         typeof updater === "function"
@@ -80,14 +91,47 @@ export function DataTable<T extends object>({
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
-              {headerGroup.headers.map((header) => (
-                <TableHead key={header.id} className="px-4 py-2">
-                  {flexRender(
-                    header.column.columnDef.header,
-                    header.getContext()
-                  )}
-                </TableHead>
-              ))}
+              {headerGroup.headers.map((header) => {
+                const enableSorting =
+                  header.column.columnDef.enableSorting ?? false;
+                const isSorted = header.id === sorting?.sortBy;
+
+                if (enableSorting) {
+                  return (
+                    <TableHead key={header.id} className="px-4 py-2">
+                      <Button
+                        variant="ghost"
+                        className="shadow-none cursor-pointer"
+                        onClick={() => handleSortClick(header.column.id)}
+                      >
+                        {flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                        <SortIcon
+                          isSorted={isSorted}
+                          orderBy={sorting?.orderBy}
+                        />
+                      </Button>
+                    </TableHead>
+                  );
+                }
+
+                return (
+                  <TableHead
+                    key={header.id}
+                    className="px-4 py-2"
+                    onClick={() =>
+                      console.log("header clicked", header.column.id)
+                    }
+                  >
+                    {flexRender(
+                      header.column.columnDef.header,
+                      header.getContext()
+                    )}
+                  </TableHead>
+                );
+              })}
             </TableRow>
           ))}
         </TableHeader>

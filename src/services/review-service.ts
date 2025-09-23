@@ -1,4 +1,4 @@
-import { REVIEW_DECISION_ENDPOINT, REVIEW_ENDPOINT } from "@/contants/api";
+import { REVIEW_DECISION_ENDPOINT, REVIEW_ENDPOINT } from "@/constants/api";
 import axiosInstance from "@/lib/axios-instance";
 
 import type { ReviewDecisionParams } from "@/hooks/review/use-review-decision";

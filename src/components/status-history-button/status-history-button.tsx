@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/dialog";
 import StatusBadge from "@/components/status-badge";
 
-import { DATE_TIME_FORMAT } from "@/contants/format";
+import { DATE_TIME_FORMAT } from "@/constants/format";
 import { useItemStatusHistory } from "@/hooks/item/use-item-status-history";
 
 import type { ColumnDef } from "@tanstack/react-table";

@@ -17,7 +17,7 @@ import {
   DownloadReportParams,
   useItemReportAPI,
 } from "@/hooks/item/use-item-report";
-import { STATION } from "@/contants/station";
+import { STATION } from "@/constants/station";
 import { downloadFile } from "@/utils/download-file";
 import { useLineAPI } from "@/hooks/line/use-line";
 import { getLineCode } from "@/helpers/item";

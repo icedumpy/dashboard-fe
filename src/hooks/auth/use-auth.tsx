@@ -4,8 +4,8 @@ import { useNavigate } from "react-router-dom";
 import axiosInstance from "@/lib/axios-instance";
 import setCookie from "@/utils/set-cookie";
 import getCookie from "@/utils/get-cookie";
-import { ACCESS_TOKEN, REFRESH_TOKEN } from "@/contants/auth";
-import { LOGIN_ENDPOINT, PROFILE_ENDPOINT } from "@/contants/api";
+import { ACCESS_TOKEN, REFRESH_TOKEN } from "@/constants/auth";
+import { LOGIN_ENDPOINT, PROFILE_ENDPOINT } from "@/constants/api";
 import clearAuthSession from "@/utils/clear-auth-session";
 
 import type { LoginFormType } from "@/pages/login-page/types";

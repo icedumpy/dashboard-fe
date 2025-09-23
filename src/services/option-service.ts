@@ -1,5 +1,8 @@
 import axiosInstance from "@/lib/axios-instance";
-import { DEFECT_TYPE_ENDPOINT, PRODUCTION_LINE_ENDPOINT } from "@/contants/api";
+import {
+  DEFECT_TYPE_ENDPOINT,
+  PRODUCTION_LINE_ENDPOINT,
+} from "@/constants/api";
 
 import type { ProductionLineT } from "@/types/line";
 import type { OptionT } from "@/types/option";

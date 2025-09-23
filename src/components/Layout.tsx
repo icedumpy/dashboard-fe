@@ -1,7 +1,8 @@
 import React from "react";
 import { Factory, LogOut, User, Bell } from "lucide-react";
+
 import { useAuth } from "@/hooks/auth/use-auth";
-import { ROLES } from "@/contants/auth";
+import { ROLES } from "@/constants/auth";
 
 interface LayoutProps {
   children: React.ReactNode;

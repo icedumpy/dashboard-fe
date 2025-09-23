@@ -1,6 +1,6 @@
 import { VariantProps } from "class-variance-authority";
 
-import { REVIEW_STATE } from "@/contants/review";
+import { REVIEW_STATE } from "@/constants/review";
 import { buttonVariants } from "@/components/ui/button";
 
 export interface ReviewDecisionButtonProps {

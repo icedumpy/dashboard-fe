@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 
-import { DEFECT_TYPE_ENDPOINT } from "@/contants/api";
+import { DEFECT_TYPE_ENDPOINT } from "@/constants/api";
 import { OptionService } from "@/services/option-service";
 
 export const useDefectOptionAPI = () =>

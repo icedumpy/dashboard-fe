@@ -4,7 +4,7 @@ import {
   ITEM_REPORT_ENDPOINT,
   ITEM_SCRAP_ENDPOINT,
   ITEM_STATUS_HISTORY_ENDPOINT,
-} from "@/contants/api";
+} from "@/constants/api";
 import { ItemUpdateParams } from "@/hooks/item/use-item-update";
 import axiosInstance from "@/lib/axios-instance";
 

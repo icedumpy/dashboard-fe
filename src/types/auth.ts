@@ -1,4 +1,4 @@
-import { ROLES } from "@/contants/auth";
+import { ROLES } from "@/constants/auth";
 
 export interface UserType {
   id: number;

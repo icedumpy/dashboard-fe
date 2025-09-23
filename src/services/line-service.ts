@@ -1,4 +1,4 @@
-import { PRODUCTION_LINE_ENDPOINT } from "@/contants/api";
+import { PRODUCTION_LINE_ENDPOINT } from "@/constants/api";
 import axiosInstance from "@/lib/axios-instance";
 
 export const LineService = {

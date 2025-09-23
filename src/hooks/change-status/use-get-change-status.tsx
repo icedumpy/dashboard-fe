@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 
-import { CHANGE_STATUS_ENDPOINT } from "@/contants/api";
+import { CHANGE_STATUS_ENDPOINT } from "@/constants/api";
 import { ChangeStatusService } from "@/services/change-status-service";
 
 export const useGetChangeStatus = (params: unknown) =>

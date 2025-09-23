@@ -1,5 +1,5 @@
-import { ROLES } from "@/contants/auth";
-import { STATUS } from "@/contants/status";
+import { ROLES } from "@/constants/auth";
+import { STATUS } from "@/constants/status";
 
 import type { RoleType, UserType } from "@/types/auth";
 

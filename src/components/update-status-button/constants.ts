@@ -1,4 +1,4 @@
-import { STATUS } from "@/contants/status";
+import { STATUS } from "@/constants/status";
 
 export const STATUS_OPTIONS = [
   {

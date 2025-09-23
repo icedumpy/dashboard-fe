@@ -1,7 +1,7 @@
 import z from "zod";
 
 import { updateStatusSchema } from "./schema";
-import { STATION } from "@/contants/station";
+import { STATION } from "@/constants/station";
 
 export type UpdateStatusT = z.infer<typeof updateStatusSchema>;
 

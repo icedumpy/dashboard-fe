@@ -1,5 +1,6 @@
-import { REVIEW_STATE } from "@/contants/review";
 import z from "zod";
+
+import { REVIEW_STATE } from "@/constants/review";
 
 export const reviewSchema = z
   .object({

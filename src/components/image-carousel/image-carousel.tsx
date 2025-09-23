@@ -12,7 +12,7 @@ import {
 import ImageZoom from "../image-zoom";
 
 import { UploadService } from "@/services/upload-service";
-import { IMAGE_PATH_ENDPOINT } from "@/contants/api";
+import { IMAGE_PATH_ENDPOINT } from "@/constants/api";
 
 import type { ImageCarouselProps } from "./types";
 
