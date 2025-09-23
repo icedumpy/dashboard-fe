@@ -57,14 +57,12 @@ export const updateItemDetailsSchema = z.object({
     })
     .nonempty({ message: "กรุณากรอก Roll Number" }),
   roll_width: z
-    .number({ error: "กรุณากรอก Roll Width เป็นตัวเลข" })
+    .number({ error: "กรุณากรอก Roll Width" })
     .min(0, { message: "กรุณากรอก Roll Width ให้มากกว่าหรือเท่ากับ 0" })
     .max(9999, { message: "กรุณากรอก Roll Width ให้ไม่เกิน 4 หลัก" }),
   roll_id: z
     .string()
-    .regex(TH_NOT_ALLOWED, {
-      message: "Roll ID ไม่สามารถมีอักขระภาษาไทยได้",
-    })
+    .regex(TH_NOT_ALLOWED, { message: "Roll ID ไม่สามารถมีอักขระภาษาไทยได้" })
     .nonempty({ message: "กรุณากรอก Roll ID" })
     .length(6, { message: "Roll ID ต้องมี 6 หลัก" }),
   product_code: z
