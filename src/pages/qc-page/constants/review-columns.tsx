@@ -15,8 +15,9 @@ import type { ChangeStatusT } from "@/types/change-status";
 
 export const REVIEW_COLUMNS: ColumnDef<ChangeStatusT>[] = [
   {
-    accessorKey: "line_id",
+    accessorKey: "production_line",
     header: "Production Line",
+    enableSorting: true,
     cell: ({ row }) => {
       const itemId = row.original.item_id;
       return <LineId itemId={itemId} />;
@@ -62,22 +63,24 @@ export const REVIEW_COLUMNS: ColumnDef<ChangeStatusT>[] = [
     },
   },
   {
-    accessorKey: "from_status_id",
+    accessorKey: "status_before",
     header: "Status Before",
-    cell: (info) => {
-      const id = info.getValue() as StatusT;
+    enableSorting: true,
+    cell: ({ row }) => {
+      const id = row.original.from_status_id;
       const status = STATUS_LIST.find((s) => s.id === +id)?.code as StatusT;
-      const defectTypes = info.row.original.defect_type_ids;
+      const defectTypes = row.original.defect_type_ids;
       return <ReviewStatus status={status} defectTypes={defectTypes} />;
     },
   },
   {
-    accessorKey: "to_status_id",
+    accessorKey: "status_after",
     header: "Status After",
-    cell: (info) => {
-      const id = info.getValue() as StatusT;
+    enableSorting: true,
+    cell: ({ row }) => {
+      const id = row.original.to_status_id;
       const status = STATUS_LIST.find((s) => s.id === +id)?.code as StatusT;
-      const defectTypes = info.row.original.defect_type_ids;
+      const defectTypes = row.original.defect_type_ids;
       return <ReviewStatus status={status} defectTypes={defectTypes} />;
     },
   },

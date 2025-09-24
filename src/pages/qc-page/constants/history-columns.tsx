@@ -13,7 +13,7 @@ import type { ReviewT } from "@/types/review";
 
 export const HISTORY_COLUMNS: ColumnDef<ReviewT>[] = [
   {
-    accessorKey: "line_id",
+    accessorKey: "production_line",
     header: "Production Line",
     enableSorting: true,
     meta: { className: "text-center" },
@@ -48,7 +48,7 @@ export const HISTORY_COLUMNS: ColumnDef<ReviewT>[] = [
     cell: (info) => info.row.original.item.job_order_number,
   },
   {
-    accessorKey: "status",
+    accessorKey: "state",
     header: "Status",
     enableSorting: true,
     meta: { className: "text-start" },
@@ -62,10 +62,14 @@ export const HISTORY_COLUMNS: ColumnDef<ReviewT>[] = [
     ),
   },
   {
-    accessorKey: "decision_note",
+    accessorKey: "decision",
     header: "Decision",
     enableSorting: true,
-    meta: { className: "text-center" },
+    cell: ({ row }) => (
+      <p className="max-w-md break-words min-w-fit text-wrap line-clamp-2">
+        {row.original.decision_note}
+      </p>
+    ),
   },
   {
     accessorKey: "reviewed_by",
