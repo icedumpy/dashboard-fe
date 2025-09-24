@@ -39,11 +39,13 @@ export interface StationResponse {
 }
 
 export interface SummaryT {
-  total: number;
-  defects: number;
-  scrap: number;
+  defect: number;
+  normal: number;
   pending_defect: number;
-  pending_scrap: number;
+  qc_passed: number;
+  rejected: number;
+  scrap: number;
+  total: number;
 }
 
 export interface StationDetailResponse {
