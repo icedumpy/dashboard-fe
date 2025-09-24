@@ -13,7 +13,7 @@ import useItemFilters from "../hooks/use-item-filters";
 export default function BundleTable() {
   const { filters } = useItemFilters();
 
-  const dataTable = useDataTable({
+  const { sortingProps, page, resetPage, paginationProps } = useDataTable({
     pageQueryKey: "bundlePage",
     resetPageOnFiltersChange: true,
   });
@@ -21,10 +21,9 @@ export default function BundleTable() {
   const apiParams = useMemo(
     () => ({
       ...filters,
-      page: dataTable.page,
       station: STATION.BUNDLE,
-      sort_by: dataTable.sortBy,
-      order_by: dataTable.orderBy,
+      sort_by: sortingProps.sortBy,
+      order_by: sortingProps.orderBy,
       status: filters.status ? filters.status.split(",") : [],
       detected_from: filters.detected_from
         ? dayjs(filters.detected_from).toISOString()
@@ -33,14 +32,14 @@ export default function BundleTable() {
         ? dayjs(filters.detected_to).toISOString()
         : undefined,
     }),
-    [filters, dataTable.page, dataTable.sortBy, dataTable.orderBy]
+    [filters, sortingProps.sortBy, sortingProps.orderBy]
   );
 
-  const { data: bundle } = useItemAPI(apiParams);
+  const { data: bundle } = useItemAPI({ ...apiParams, page: page });
 
   useEffect(() => {
-    dataTable.resetPage();
-  }, [filters, dataTable]);
+    resetPage();
+  }, [resetPage, apiParams]);
 
   return (
     <div className="space-y-2">
@@ -49,8 +48,8 @@ export default function BundleTable() {
       <DataTable
         data={bundle?.data || []}
         columns={COLUMNS_BUNDLE}
-        sorting={dataTable.sortingProps}
-        pagination={dataTable.paginationProps(bundle?.pagination)}
+        sorting={sortingProps}
+        pagination={paginationProps(bundle?.pagination)}
       />
     </div>
   );
