@@ -11,11 +11,13 @@ export default function StatisticBundle({
     <div className="flex flex-wrap gap-2">
       <div
         className={cn(
-          "min-w-[120px] p-2 border rounded text-center flex-1 bg-gray-50"
+          "min-w-[120px] p-2 border rounded text-center flex-1 border-[#B9F8CF] bg-[#DBFCE7] text-[#246630]"
         )}
       >
         <p className="text-xl font-bold">{data?.total ?? 0}</p>
-        <span className="text-sm">จำนวน Bundle ทั้งหมดในกะนี้</span>
+        <span className="text-sm">
+          จำนวนงานดีทั้งหมดในกะนี้ (Normal,QC Passed)
+        </span>
       </div>
       <div
         className={cn(
@@ -33,7 +35,9 @@ export default function StatisticBundle({
         )}
       >
         <p className="text-xl font-bold">{data?.scrap ?? 0}</p>
-        <span className="text-sm">จำนวน Scrap ทั้งหมดในกะนี้</span>
+        <span className="text-sm">
+          จำนวนของเสียทั้งหมดในกะนี้ (Scrap,Rejected)
+        </span>
       </div>
       <div
         className={cn(
