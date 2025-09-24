@@ -52,7 +52,6 @@ export const getCurrentState = (reviews?: ReviewT[]) => {
   return mappedLabel ?? "-";
 };
 
-// Item status related functions
 export function canRequestChanges(
   status: string,
   userLineId: string | number,
