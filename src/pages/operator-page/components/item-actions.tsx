@@ -9,12 +9,12 @@ import { STATUS } from "@/constants/status";
 
 import type { StationItemType } from "@/types/station";
 
-interface RollActionsProps {
+interface ItemActionsProps {
   itemId: number;
   itemData: StationItemType;
 }
 
-export default function RollActions({ itemId, itemData }: RollActionsProps) {
+export default function ItemActions({ itemId, itemData }: ItemActionsProps) {
   const { user } = useAuth();
   const status = itemData?.status_code as StationItemType["status_code"];
   const isPendingReview = itemData?.is_pending_review;

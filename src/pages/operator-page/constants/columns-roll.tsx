@@ -3,7 +3,7 @@ import dayjs from "dayjs";
 
 import StatusBadge from "@/components/status-badge";
 import StatusHistoryButton from "@/components/status-history-button";
-import RollActions from "../components/roll-actions";
+import ItemActions from "../components/item-actions";
 
 import { DATE_TIME_FORMAT } from "@/constants/format";
 
@@ -67,7 +67,7 @@ export const COLUMNS_ROLL: ColumnDef<StationItemType>[] = [
     accessorKey: "action",
     header: "Action",
     cell: ({ row }) => (
-      <RollActions itemId={row.original.id} itemData={row.original} />
+      <ItemActions itemId={row.original.id} itemData={row.original} />
     ),
   },
 ];
