@@ -1,44 +1,46 @@
 import dayjs from "dayjs";
-import { useEffect, useState } from "react";
-import { parseAsInteger, useQueryState } from "nuqs";
+import { useEffect, useMemo } from "react";
 
 import DataTable from "@/components/data-table";
 
+import { useDataTable } from "@/hooks/use-data-table";
 import { STATION } from "@/constants/station";
 import { useItemAPI } from "@/hooks/item/use-item";
 import { COLUMNS_BUNDLE } from "../constants/columns-bundle";
 import StatisticBundle from "./statistic-bundle";
 import useItemFilters from "../hooks/use-item-filters";
 
-import type { OrderBy } from "@/types/order";
-
 export default function BundleTable() {
   const { filters } = useItemFilters();
-  const [sortBy, setSortBy] = useState<string>("");
-  const [orderBy, setOrderBy] = useState<OrderBy>("");
-  const [bundlePage, setBundlePage] = useQueryState(
-    "bundlePage",
-    parseAsInteger.withDefault(1)
-  );
 
-  const { data: bundle } = useItemAPI({
-    ...filters,
-    page: +bundlePage,
-    station: STATION.BUNDLE,
-    sort_by: sortBy,
-    order_by: orderBy,
-    status: filters.status ? filters.status.split(",") : [],
-    detected_from: filters.detected_from
-      ? dayjs(filters.detected_from).toISOString()
-      : undefined,
-    detected_to: filters.detected_to
-      ? dayjs(filters.detected_to).toISOString()
-      : undefined,
+  const dataTable = useDataTable({
+    pageQueryKey: "bundlePage",
+    resetPageOnFiltersChange: true,
   });
 
+  const apiParams = useMemo(
+    () => ({
+      ...filters,
+      page: dataTable.page,
+      station: STATION.BUNDLE,
+      sort_by: dataTable.sortBy,
+      order_by: dataTable.orderBy,
+      status: filters.status ? filters.status.split(",") : [],
+      detected_from: filters.detected_from
+        ? dayjs(filters.detected_from).toISOString()
+        : undefined,
+      detected_to: filters.detected_to
+        ? dayjs(filters.detected_to).toISOString()
+        : undefined,
+    }),
+    [filters, dataTable.page, dataTable.sortBy, dataTable.orderBy]
+  );
+
+  const { data: bundle } = useItemAPI(apiParams);
+
   useEffect(() => {
-    setBundlePage(1);
-  }, [filters, setBundlePage]);
+    dataTable.resetPage();
+  }, [filters, dataTable]);
 
   return (
     <div className="space-y-2">
@@ -47,20 +49,8 @@ export default function BundleTable() {
       <DataTable
         data={bundle?.data || []}
         columns={COLUMNS_BUNDLE}
-        sorting={{
-          sortBy,
-          orderBy,
-          onSortChange: ({ sortBy, orderBy }) => {
-            setSortBy(sortBy);
-            setOrderBy(orderBy);
-          },
-        }}
-        pagination={{
-          ...bundle?.pagination,
-          onPageChange(page) {
-            setBundlePage(page);
-          },
-        }}
+        sorting={dataTable.sortingProps}
+        pagination={dataTable.paginationProps(bundle?.pagination)}
       />
     </div>
   );
