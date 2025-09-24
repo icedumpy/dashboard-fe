@@ -21,12 +21,14 @@ import ImageDefect from "./image-defect";
 import ImageRepair from "./image-repair";
 import ProductDetail from "./production-details";
 import UpdateStatusButton from "@/components/update-status-button";
+import PrinterUpdateButton from "@/components/printer-update-button";
 
 import { ITEM_ENDPOINT } from "@/constants/api";
 import {
   shouldShowUpdateStatusButton,
   isHiddenRepairImages,
   canRequestChanges,
+  canUpdatePrinter,
 } from "@/helpers/item";
 import { useAuth } from "@/hooks/auth/use-auth";
 import { useItemDetailAPI } from "@/hooks/item/use-item-detail";
@@ -70,6 +72,8 @@ export default function CheckButton({
     user?.role
   );
 
+  const showPrinterUpdateButton = canUpdatePrinter(user?.role);
+
   const toggleOpen = useCallback(() => {
     setOpen(!open);
     setMode("VIEW");
@@ -109,11 +113,7 @@ export default function CheckButton({
       {/* Edit */}
       <Dialog open={mode === "VIEW" && open} onOpenChange={toggleOpen}>
         <DialogTrigger asChild>
-          <Button
-            size="sm"
-            className="text-xs rounded h-fit py-0.5"
-            onClick={() => setOpen(true)}
-          >
+          <Button size="xs" className="text-xs" onClick={() => setOpen(true)}>
             ตรวจสอบ
           </Button>
         </DialogTrigger>
@@ -169,6 +169,7 @@ export default function CheckButton({
                 disabled={isChangingStatusPending}
               />
             )}
+            {showPrinterUpdateButton && <PrinterUpdateButton itemId={itemId} />}
             <DialogClose asChild>
               <Button variant="outline" type="button">
                 ปิด

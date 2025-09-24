@@ -91,3 +91,8 @@ export function canEditItemDetail(role?: RoleType) {
   const allowedRoles: RoleType[] = [ROLES.INSPECTOR, ROLES.OPERATOR];
   return !!role && allowedRoles.includes(role);
 }
+
+export function canUpdatePrinter(role?: RoleType) {
+  const allowedRoles: RoleType[] = [ROLES.OPERATOR];
+  return !!role && allowedRoles.includes(role);
+}
