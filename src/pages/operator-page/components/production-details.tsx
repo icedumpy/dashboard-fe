@@ -20,16 +20,19 @@ import { useLineAPI } from "@/hooks/line/use-line";
 import { DATE_TIME_FORMAT } from "@/constants/format";
 import { useDefectOptionAPI } from "@/hooks/option/use-defect-option";
 import { updateItemDetailsSchema } from "../schema";
-import { getCurrentState, getDefectNames, getLineCode } from "@/helpers/item";
+import {
+  getCurrentState,
+  getDefectNames,
+  getLineCode,
+  canEditItemDetail,
+} from "@/helpers/item";
 import { ITEM_ENDPOINT } from "@/constants/api";
 import { useItemUpdate } from "@/hooks/item/use-item-update";
-import { ROLES } from "@/constants/auth";
 import { useAuth } from "@/hooks/auth/use-auth";
 import useItemFilters from "@/pages/operator-page/hooks/use-item-filters";
 
 import type { StationDetailResponse } from "@/types/station";
 import type { UpdateItemDetail } from "../types";
-import type { RoleType } from "@/types/auth";
 
 interface ProductDetailProps {
   data?: StationDetailResponse["data"];
@@ -49,10 +52,6 @@ export default function ProductDetail({
   const { data: defectOptions } = useDefectOptionAPI();
   const [mode, setMode] = useState<"VIEW" | "EDIT">("VIEW");
   const itemUpdate = useItemUpdate();
-
-  const canEditItemDetail =
-    !!user?.role &&
-    ([ROLES.INSPECTOR, ROLES.OPERATOR] as RoleType[]).includes(user.role);
 
   const form = useForm({
     defaultValues: {
@@ -78,6 +77,7 @@ export default function ProductDetail({
   const lineCode = getLineCode(Number(filters.line_id), lines?.data);
   const defectNames = getDefectNames(defects, defectOptions);
   const currentState = getCurrentState(reviews);
+  const canEditItem = canEditItemDetail(user?.role);
 
   const editableFields = useMemo(
     () =>
@@ -171,7 +171,7 @@ export default function ProductDetail({
     <>
       <div className="flex items-baseline justify-between">
         <blockquote className="prose">รายละเอียดการผลิต</blockquote>
-        {canEditItemDetail && (
+        {canEditItem && (
           <div className="space-x-2">
             {mode === "VIEW" ? (
               <Button

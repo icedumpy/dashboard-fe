@@ -86,3 +86,8 @@ export function shouldShowUpdateStatusButton(
     !disallowedRoles.includes(user.role)
   );
 }
+
+export function canEditItemDetail(role?: RoleType) {
+  const allowedRoles: RoleType[] = [ROLES.INSPECTOR, ROLES.OPERATOR];
+  return !!role && allowedRoles.includes(role);
+}
