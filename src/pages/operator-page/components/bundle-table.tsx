@@ -32,7 +32,7 @@ export default function BundleTable() {
     [filters]
   );
 
-  const { data: bundle } = useItemAPI({
+  const { data: bundle, isLoading } = useItemAPI({
     ...apiParams,
     page: page,
     sort_by: sortingProps.sortBy,
@@ -48,6 +48,7 @@ export default function BundleTable() {
       <h3 className="font-medium text-md">Bundle</h3>
       <StatisticBundle data={bundle?.summary} />
       <DataTable
+        isLoading={isLoading}
         data={bundle?.data || []}
         columns={COLUMNS_BUNDLE}
         sorting={sortingProps}

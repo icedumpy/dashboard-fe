@@ -31,7 +31,7 @@ export default function RollTable() {
     [filters]
   );
 
-  const { data: roll } = useItemAPI({
+  const { data: roll, isLoading } = useItemAPI({
     ...apiParams,
     page: page,
     sort_by: sortingProps.sortBy,
@@ -47,6 +47,7 @@ export default function RollTable() {
       <h3 className="font-medium text-md">Roll</h3>
       <StatisticRoll data={roll?.summary} />
       <DataTable
+        isLoading={isLoading}
         data={roll?.data || []}
         columns={COLUMNS_ROLL}
         sorting={sortingProps}

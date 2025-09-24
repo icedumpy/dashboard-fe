@@ -19,6 +19,8 @@ import {
 import DataTablePagination from "./data-table-pagination";
 import SortIcon from "./components/sort-icon";
 import { Button } from "@/components/ui/button";
+import DataTableSkeleton from "./components/data-table-skeleton";
+import DataTableEmpty from "./components/data-table-empty";
 
 import { cn } from "@/lib/utils";
 import { ORDER_BY } from "@/constants/order";
@@ -81,10 +83,6 @@ export function DataTable<T extends object>({
     pageCount: Math.ceil(data.length / pageSize),
   });
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
   return (
     <div className="overflow-hidden border rounded-md">
       <Table>
@@ -136,14 +134,10 @@ export function DataTable<T extends object>({
           ))}
         </TableHeader>
         <TableBody>
-          {table.getRowModel().rows.length === 0 ? (
-            <TableRow>
-              <TableCell colSpan={columns.length}>
-                <div className="p-4 text-center text-muted-foreground">
-                  No results.
-                </div>
-              </TableCell>
-            </TableRow>
+          {isLoading ? (
+            <DataTableSkeleton col={columns.length} rows={pageSize / 2} />
+          ) : table.getRowModel().rows.length === 0 ? (
+            <DataTableEmpty columns={columns} />
           ) : (
             table.getRowModel().rows.map((row) => (
               <TableRow key={row.id} className="border-t">
