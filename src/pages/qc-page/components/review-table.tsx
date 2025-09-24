@@ -19,7 +19,7 @@ export default function ReviewTable() {
     pageQueryKey: "page",
   });
 
-  const { data: changeStatus } = useGetChangeStatus({
+  const { data: changeStatus, isLoading } = useGetChangeStatus({
     page: page,
     line_id: filters.line_id,
     sort_by: sortingProps.sortBy,
@@ -53,6 +53,7 @@ export default function ReviewTable() {
         </div>
       </div>
       <DataTable
+        isLoading={isLoading}
         columns={REVIEW_COLUMNS}
         data={changeStatus?.data ?? []}
         sorting={sortingProps}
