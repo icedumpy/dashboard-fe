@@ -6,7 +6,7 @@ import dayjs from "dayjs";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { MultiSelect } from "@/components/ui/multi-select";
-import { InputDate } from "@/components/ui/input-date";
+import { DatePicker } from "@/components/ui/date-picker";
 import {
   Select,
   SelectContent,
@@ -201,9 +201,9 @@ export default function Filters() {
 
           <div className="flex flex-col gap-2">
             <Label className="text-sm font-medium">วันที่เริ่มต้น</Label>
-            <InputDate
-              time
-              format={DATE_TIME_FORMAT}
+            <DatePicker
+              dayBoundary="start"
+              displayFormat={DATE_TIME_FORMAT}
               value={
                 filters.detected_from
                   ? dayjs(filters.detected_from).toDate()
@@ -222,10 +222,9 @@ export default function Filters() {
 
           <div className="flex flex-col gap-2">
             <Label className="text-sm font-medium">วันที่สิ้นสุด</Label>
-            <InputDate
+            <DatePicker
               dayBoundary="end"
-              time
-              format={DATE_TIME_FORMAT}
+              displayFormat={DATE_TIME_FORMAT}
               value={
                 filters.detected_to
                   ? dayjs(filters.detected_to).toDate()
