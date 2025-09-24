@@ -36,7 +36,17 @@ export default function ExportBundleButton({
     )}.csv`;
 
     itemReport.mutate(
-      { ...filters, line_id: filters.line_id, station: STATION.BUNDLE },
+      {
+        ...filters,
+        line_id: filters.line_id,
+        station: STATION.BUNDLE,
+        detected_from: filters.detected_from
+          ? dayjs(filters.detected_from).toISOString()
+          : undefined,
+        detected_to: filters.detected_to
+          ? dayjs(filters.detected_to).toISOString()
+          : undefined,
+      },
       {
         onSuccess(data) {
           downloadFile(data, filename);

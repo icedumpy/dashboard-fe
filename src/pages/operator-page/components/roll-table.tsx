@@ -12,18 +12,14 @@ import useDataTable from "@/hooks/use-data-table";
 
 export default function RollTable() {
   const { filters } = useItemFilters();
-  const dataTable = useDataTable({
+  const { sortingProps, page, resetPage, paginationProps } = useDataTable({
     pageQueryKey: "rollPage",
-    resetPageOnFiltersChange: true,
   });
 
   const apiParams = useMemo(
     () => ({
       ...filters,
-      page: dataTable.page,
       station: STATION.ROLL,
-      sort_by: dataTable.sortBy,
-      order_by: dataTable.orderBy,
       status: filters.status ? filters.status.split(",") : [],
       detected_from: filters.detected_from
         ? dayjs(filters.detected_from).toISOString()
@@ -32,14 +28,19 @@ export default function RollTable() {
         ? dayjs(filters.detected_to).toISOString()
         : undefined,
     }),
-    [filters, dataTable.page, dataTable.sortBy, dataTable.orderBy]
+    [filters]
   );
 
-  const { data: roll } = useItemAPI(apiParams);
+  const { data: roll } = useItemAPI({
+    ...apiParams,
+    page: page,
+    sort_by: sortingProps.sortBy,
+    order_by: sortingProps.orderBy,
+  });
 
   useEffect(() => {
-    dataTable.resetPage();
-  }, [filters, dataTable]);
+    resetPage();
+  }, [resetPage, apiParams]);
 
   return (
     <div className="space-y-2">
@@ -48,8 +49,8 @@ export default function RollTable() {
       <DataTable
         data={roll?.data || []}
         columns={COLUMNS_ROLL}
-        sorting={dataTable.sortingProps}
-        pagination={dataTable.paginationProps(roll?.pagination)}
+        sorting={sortingProps}
+        pagination={paginationProps(roll?.pagination)}
       />
     </div>
   );

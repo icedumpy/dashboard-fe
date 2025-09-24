@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { parseAsInteger, useQueryState } from "nuqs";
+import { useQueryState } from "nuqs";
 
 import DataTable from "@/components/data-table";
 import {
@@ -12,42 +11,41 @@ import {
 
 import { useProductionLineOptions } from "@/hooks/option/use-production-line-option";
 import { HISTORY_COLUMNS } from "../constants/history-columns";
-import { useAuth } from "@/hooks/auth/use-auth";
 import { useDefectOptionAPI } from "@/hooks/option/use-defect-option";
 import { useReviewAPI } from "@/hooks/review/use-review";
 import { REVIEW_STATE_OPTION, REVIEW_STATE } from "@/constants/review";
 import { ALL_OPTION } from "@/constants/option";
 
+import useItemFilters from "@/pages/operator-page/hooks/use-item-filters";
+import useDataTable from "@/hooks/use-data-table";
+
 import type { ReviewStateT } from "@/types/review";
-import type { OrderBy } from "@/types/order";
 
 export default function ReviewHistoryTable() {
-  const { user } = useAuth();
-  const [page, setPage] = useQueryState("page", parseAsInteger.withDefault(1));
-  const [line, setLine] = useQueryState("line_id", {
-    defaultValue: user?.line?.id ? String(user.line?.id) : "",
+  const { filters, setFilters } = useItemFilters();
+  const { sortingProps, page, resetPage, paginationProps } = useDataTable({
+    pageQueryKey: "page",
   });
+
   const [defect, setDefect] = useQueryState("defect", {
     defaultValue: "all",
   });
   const [reviewState, setReviewState] = useQueryState("review-state", {
     defaultValue: "all",
   });
-  const [sortBy, setSortBy] = useState<string>("");
-  const [orderBy, setOrderBy] = useState<OrderBy>("");
 
   const { data: lineOptions } = useProductionLineOptions();
   const { data: defectOptions } = useDefectOptionAPI();
   const { data } = useReviewAPI({
     page: page,
-    line_id: line,
+    line_id: filters.line_id,
     review_state:
       reviewState === "all"
         ? [REVIEW_STATE.REJECTED, REVIEW_STATE.APPROVED]
         : ([reviewState] as ReviewStateT[]),
     defect_type_id: defect === "all" ? undefined : defect,
-    sort_by: sortBy,
-    order_by: orderBy,
+    sort_by: sortingProps?.sortBy,
+    order_by: sortingProps?.orderBy,
   });
 
   return (
@@ -70,10 +68,10 @@ export default function ReviewHistoryTable() {
             </SelectContent>
           </Select>
           <Select
-            value={line}
+            value={filters.line_id}
             onValueChange={(value) => {
-              setPage(1);
-              setLine(value);
+              resetPage();
+              setFilters({ ...filters, line_id: value });
             }}
           >
             <SelectTrigger>
@@ -90,7 +88,7 @@ export default function ReviewHistoryTable() {
           <Select
             value={defect}
             onValueChange={(value) => {
-              setPage(1);
+              resetPage();
               setDefect(value);
             }}
           >
@@ -110,18 +108,8 @@ export default function ReviewHistoryTable() {
       <DataTable
         columns={HISTORY_COLUMNS}
         data={data?.data ?? []}
-        sorting={{
-          sortBy,
-          orderBy,
-          onSortChange: ({ sortBy, orderBy }) => {
-            setSortBy(sortBy);
-            setOrderBy(orderBy);
-          },
-        }}
-        pagination={{
-          ...data?.pagination,
-          onPageChange: setPage,
-        }}
+        sorting={sortingProps}
+        pagination={paginationProps(data?.pagination)}
       />
     </div>
   );

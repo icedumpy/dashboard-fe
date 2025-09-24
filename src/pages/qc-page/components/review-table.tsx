@@ -1,5 +1,3 @@
-import { parseAsInteger, useQueryState } from "nuqs";
-
 import DataTable from "@/components/data-table";
 import {
   Select,
@@ -10,25 +8,22 @@ import {
 } from "@/components/ui/select";
 
 import { REVIEW_COLUMNS } from "../constants/review-columns";
-import { useAuth } from "@/hooks/auth/use-auth";
 import { useProductionLineOptions } from "@/hooks/option/use-production-line-option";
 import { useGetChangeStatus } from "@/hooks/change-status/use-get-change-status";
-import { useState } from "react";
-import { OrderBy } from "@/types/order";
+import useItemFilters from "@/pages/operator-page/hooks/use-item-filters";
+import useDataTable from "@/hooks/use-data-table";
 
 export default function ReviewTable() {
-  const { user } = useAuth();
-  const [, setPage] = useQueryState("page", parseAsInteger.withDefault(1));
-  const [line, setLine] = useQueryState("line_id", {
-    defaultValue: user?.line?.id ? String(user.line?.id) : "",
+  const { filters, setFilters } = useItemFilters();
+  const { sortingProps, page, resetPage, paginationProps } = useDataTable({
+    pageQueryKey: "page",
   });
 
-  const [sortBy, setSortBy] = useState<string>("");
-  const [orderBy, setOrderBy] = useState<OrderBy>("");
   const { data: changeStatus } = useGetChangeStatus({
-    line_id: line,
-    sort_by: sortBy,
-    order_by: orderBy,
+    page: page,
+    line_id: filters.line_id,
+    sort_by: sortingProps.sortBy,
+    order_by: sortingProps.orderBy,
   });
 
   const { data: lineOptions } = useProductionLineOptions();
@@ -38,10 +33,10 @@ export default function ReviewTable() {
         <p>รายการที่รอตรวจสอบการแก้ไขสถานะ</p>
         <div className="flex justify-between gap-2">
           <Select
-            value={line}
+            value={filters.line_id}
             onValueChange={(value) => {
-              setPage(1);
-              setLine(value);
+              resetPage();
+              setFilters({ ...filters, line_id: value });
             }}
           >
             <SelectTrigger>
@@ -60,20 +55,8 @@ export default function ReviewTable() {
       <DataTable
         columns={REVIEW_COLUMNS}
         data={changeStatus?.data ?? []}
-        sorting={{
-          sortBy,
-          orderBy,
-          onSortChange: ({ sortBy, orderBy }) => {
-            setSortBy(sortBy);
-            setOrderBy(orderBy);
-          },
-        }}
-        pagination={{
-          ...changeStatus?.pagination,
-          onPageChange(page) {
-            setPage(page);
-          },
-        }}
+        sorting={sortingProps}
+        pagination={paginationProps(changeStatus?.pagination)}
       />
     </div>
   );
