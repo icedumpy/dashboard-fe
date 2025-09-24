@@ -19,11 +19,7 @@ export default function ReviewTable() {
     pageQueryKey: "page",
   });
 
-<<<<<<< HEAD
-  const { data: changeStatus } = useGetChangeStatus({
-=======
   const { data: changeStatus, isLoading } = useGetChangeStatus({
->>>>>>> develop
     page: page,
     line_id: filters.line_id,
     sort_by: sortingProps.sortBy,
