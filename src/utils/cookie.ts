@@ -16,7 +16,6 @@ export function removeCookie(name: string, options?: Cookies.CookieAttributes) {
   return Cookies.remove(name, options);
 }
 
-// Convenience functions for common use cases
 export function getAllCookies() {
   return Cookies.get();
 }
