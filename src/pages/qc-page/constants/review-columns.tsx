@@ -17,7 +17,6 @@ export const REVIEW_COLUMNS: ColumnDef<ChangeStatusT>[] = [
   {
     accessorKey: "line_id",
     header: "Production Line",
-    enableSorting: true,
     cell: ({ row }) => {
       const itemId = row.original.item_id;
       return <LineId itemId={itemId} />;
@@ -43,7 +42,7 @@ export const REVIEW_COLUMNS: ColumnDef<ChangeStatusT>[] = [
     },
   },
   {
-    accessorKey: "roll_number",
+    accessorKey: "number",
     header: "Roll/Bundle Number",
     enableSorting: true,
     meta: { className: "text-center" },
@@ -65,7 +64,6 @@ export const REVIEW_COLUMNS: ColumnDef<ChangeStatusT>[] = [
   {
     accessorKey: "from_status_id",
     header: "Status Before",
-    enableSorting: true,
     cell: (info) => {
       const id = info.getValue() as StatusT;
       const status = STATUS_LIST.find((s) => s.id === +id)?.code as StatusT;
@@ -76,7 +74,6 @@ export const REVIEW_COLUMNS: ColumnDef<ChangeStatusT>[] = [
   {
     accessorKey: "to_status_id",
     header: "Status After",
-    enableSorting: true,
     cell: (info) => {
       const id = info.getValue() as StatusT;
       const status = STATUS_LIST.find((s) => s.id === +id)?.code as StatusT;
