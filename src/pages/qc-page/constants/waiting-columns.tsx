@@ -12,7 +12,7 @@ import type { ReviewT } from "@/types/review";
 
 export const WAITING_COLUMNS: ColumnDef<ReviewT>[] = [
   {
-    accessorKey: "line_id",
+    accessorKey: "production_line",
     header: "Production Line",
     enableSorting: true,
     meta: { className: "text-center" },
@@ -33,7 +33,7 @@ export const WAITING_COLUMNS: ColumnDef<ReviewT>[] = [
     cell: (info) => info.row.original.item.product_code,
   },
   {
-    accessorKey: "roll_number",
+    accessorKey: "number",
     header: "Roll/Bundle Number",
     enableSorting: true,
     meta: { className: "text-center" },
@@ -47,7 +47,7 @@ export const WAITING_COLUMNS: ColumnDef<ReviewT>[] = [
     cell: (info) => info.row.original.item.job_order_number,
   },
   {
-    accessorKey: "detected_at",
+    accessorKey: "submitted_at",
     header: "Timestamp",
     enableSorting: true,
     meta: { className: "text-center" },
@@ -55,7 +55,7 @@ export const WAITING_COLUMNS: ColumnDef<ReviewT>[] = [
       dayjs(info.row.original.submitted_at).format(DATE_TIME_FORMAT),
   },
   {
-    accessorKey: "status_code",
+    accessorKey: "state",
     header: "Status",
     enableSorting: true,
     meta: { className: "text-start" },
