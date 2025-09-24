@@ -68,7 +68,7 @@ export function useDataTable(
     pageQueryKey = "page",
     defaultSortBy = "",
     defaultOrderBy = "" as OrderBy,
-    resetPageOnFiltersChange = true,
+    resetPageOnFiltersChange = false,
   } = options;
 
   // Query states

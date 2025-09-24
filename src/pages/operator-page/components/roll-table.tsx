@@ -14,16 +14,12 @@ export default function RollTable() {
   const { filters } = useItemFilters();
   const { sortingProps, page, resetPage, paginationProps } = useDataTable({
     pageQueryKey: "rollPage",
-    resetPageOnFiltersChange: true,
   });
 
   const apiParams = useMemo(
     () => ({
       ...filters,
-
       station: STATION.ROLL,
-      sort_by: sortingProps.sortBy,
-      order_by: sortingProps.orderBy,
       status: filters.status ? filters.status.split(",") : [],
       detected_from: filters.detected_from
         ? dayjs(filters.detected_from).toISOString()
@@ -32,10 +28,15 @@ export default function RollTable() {
         ? dayjs(filters.detected_to).toISOString()
         : undefined,
     }),
-    [filters, sortingProps.sortBy, sortingProps.orderBy]
+    [filters]
   );
 
-  const { data: roll } = useItemAPI({ ...apiParams, page: page });
+  const { data: roll } = useItemAPI({
+    ...apiParams,
+    page: page,
+    sort_by: sortingProps.sortBy,
+    order_by: sortingProps.orderBy,
+  });
 
   useEffect(() => {
     resetPage();
