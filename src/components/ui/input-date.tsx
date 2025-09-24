@@ -123,6 +123,7 @@ export function InputDate({
               type="time"
               id="time-picker"
               step="60"
+              lang="en-GB"
               onChange={(e) => {
                 if (_value) {
                   const [hours, minutes, seconds] = e.target.value
