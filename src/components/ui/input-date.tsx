@@ -9,10 +9,10 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
-import { Button } from "@/components/ui/button";
-import { Input } from "./input";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { ScrollArea, ScrollBar } from "./scroll-area";
 
-import { DATE_FORMAT, TIME_FORMAT } from "@/constants/format";
+import { DATE_FORMAT } from "@/constants/format";
 
 interface InputDateProps {
   value?: Date;
@@ -39,10 +39,28 @@ export function InputDate({
 }: InputDateProps) {
   const [open, setOpen] = React.useState(false);
   const [_value, _setValue] = React.useState<Date | undefined>();
+  const hourRefs = React.useRef<Record<number, HTMLButtonElement | null>>({});
+  const minuteRefs = React.useRef<Record<number, HTMLButtonElement | null>>({});
 
   React.useEffect(() => {
     _setValue(value);
   }, [value]);
+
+  // Scroll to selected hour/minute when popover opens and time is selected
+  React.useEffect(() => {
+    if (open && time && _value) {
+      setTimeout(() => {
+        const hourIdx = _value.getHours();
+        const minuteIdx = _value.getMinutes();
+        const hourBtn = hourRefs.current[hourIdx];
+        const minuteBtn = minuteRefs.current[minuteIdx];
+        if (hourBtn)
+          hourBtn.scrollIntoView({ block: "center", behavior: "smooth" });
+        if (minuteBtn)
+          minuteBtn.scrollIntoView({ block: "center", behavior: "smooth" });
+      }, 100); // Wait for DOM
+    }
+  }, [open, time, _value]);
 
   const calendarMonth = Array.isArray(calendarProps?.disabled)
     ? undefined
@@ -54,6 +72,55 @@ export function InputDate({
     onChange?.(_value);
     setOpen(false);
   }, [onChange, _value]);
+
+  const handleTimeChange = React.useCallback(
+    (type: "hour" | "minute", val: string) => {
+      if (!_value) return;
+
+      let newDate = dayjs(_value);
+
+      if (type === "hour") {
+        newDate = newDate.hour(Number(val));
+      } else if (type === "minute") {
+        newDate = newDate.minute(Number(val));
+      }
+
+      _setValue(newDate.toDate());
+    },
+    [_value]
+  );
+
+  const hours = React.useMemo(
+    () => Array.from({ length: 24 }, (_, i) => i),
+    []
+  );
+  const minutes = React.useMemo(
+    () => Array.from({ length: 60 }, (_, i) => i),
+    []
+  );
+
+  // Helper to render time buttons
+  const renderTimeButtons = (
+    values: number[],
+    selected: number | undefined,
+    onClick: (val: number) => void,
+    refs: React.MutableRefObject<Record<number, HTMLButtonElement | null>>
+  ) =>
+    values.map((val) => (
+      <button
+        ref={(el) => (refs.current[val] = el)}
+        key={val}
+        className={buttonVariants({
+          size: "icon",
+          variant: selected === val ? "default" : "ghost",
+          className: "sm:w-full shrink-0 aspect-square",
+        })}
+        aria-pressed={selected === val}
+        onClick={() => onClick(val)}
+      >
+        {val.toString()}
+      </button>
+    ));
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -94,55 +161,70 @@ export function InputDate({
           )}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-auto p-0 overflow-hidden" align="start">
-        <Calendar
-          defaultMonth={_value}
-          mode="single"
-          selected={_value}
-          captionLayout="dropdown"
-          disabled={calendarProps?.disabled}
-          startMonth={calendarMonth?.before}
-          endMonth={
-            calendarMonth?.after
-              ? dayjs(calendarMonth.after).add(1, "M").toDate()
-              : undefined
-          }
-          onSelect={(value) => {
-            const date = dayBoundary
-              ? dayBoundary === "start"
-                ? dayjs(value).startOf("day").toDate()
-                : dayjs(value).endOf("day").toDate()
-              : value;
-
-            _setValue(date);
-          }}
-        />
-        {time && (
-          <div className="p-2 border-t">
-            <Input
-              type="time"
-              id="time-picker"
-              step="60"
-              onChange={(e) => {
-                if (_value) {
-                  const [hours, minutes, seconds] = e.target.value
-                    .split(":")
-                    .map(Number);
-                  const newDate = dayjs(_value)
-                    .hour(hours)
-                    .minute(minutes)
-                    .second(seconds)
-                    .toDate();
-                  _setValue(newDate);
-                }
-              }}
-              defaultValue={
-                _value ? dayjs(_value).format(TIME_FORMAT) : undefined
+      <PopoverContent className="w-auto p-0 mx-4 overflow-hidden" align="start">
+        <div className="divide-y sm:flex sm:divide-x">
+          <Calendar
+            defaultMonth={_value}
+            mode="single"
+            selected={_value}
+            captionLayout="dropdown"
+            disabled={calendarProps?.disabled}
+            startMonth={calendarMonth?.before}
+            endMonth={
+              calendarMonth?.after
+                ? dayjs(calendarMonth.after).add(1, "M").toDate()
+                : undefined
+            }
+            onSelect={(selectedDate) => {
+              if (!selectedDate) return;
+              let newDate: Date;
+              if (_value) {
+                // preserve time if already selected
+                const hour = _value.getHours();
+                const minute = _value.getMinutes();
+                newDate = dayjs(selectedDate)
+                  .hour(hour)
+                  .minute(minute)
+                  .second(0)
+                  .toDate();
+              } else {
+                // fallback to boundary logic
+                newDate = dayBoundary
+                  ? dayBoundary === "start"
+                    ? dayjs(selectedDate).startOf("day").toDate()
+                    : dayjs(selectedDate).endOf("day").toDate()
+                  : selectedDate;
               }
-              className="bg-background appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
-            />
-          </div>
-        )}
+              _setValue(newDate);
+            }}
+          />
+          {time && (
+            <div className="flex flex-col sm:flex-row sm:h-[300px] divide-y sm:divide-y-0 sm:divide-x">
+              <ScrollArea className="w-64 sm:w-auto">
+                <div className="flex p-2 sm:flex-col">
+                  {renderTimeButtons(
+                    hours.reverse(),
+                    _value?.getHours(),
+                    (val) => handleTimeChange("hour", val.toString()),
+                    hourRefs
+                  )}
+                </div>
+                <ScrollBar orientation="horizontal" className="sm:hidden" />
+              </ScrollArea>
+              <ScrollArea className="w-64 sm:w-auto">
+                <div className="flex p-2 sm:flex-col">
+                  {renderTimeButtons(
+                    minutes,
+                    _value?.getMinutes(),
+                    (val) => handleTimeChange("minute", val.toString()),
+                    minuteRefs
+                  )}
+                </div>
+                <ScrollBar orientation="horizontal" className="sm:hidden" />
+              </ScrollArea>
+            </div>
+          )}
+        </div>
         <div className="flex justify-end gap-2 p-2 border-t">
           <Button
             size="sm"

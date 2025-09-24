@@ -22,9 +22,12 @@ import type { ItemStatusHistoryT } from "@/types/station";
 
 export default function StatusHistoryButton({ itemId }: { itemId: number }) {
   const [open, setOpen] = useState(false);
-  const { data: statusHistory } = useItemStatusHistory(String(itemId), {
-    enabled: open && Boolean(itemId),
-  });
+  const { data: statusHistory, isLoading } = useItemStatusHistory(
+    String(itemId),
+    {
+      enabled: open && Boolean(itemId),
+    }
+  );
 
   const columns: ColumnDef<ItemStatusHistoryT>[] = [
     {
@@ -70,7 +73,11 @@ export default function StatusHistoryButton({ itemId }: { itemId: number }) {
           <DialogTitle>ประวัติการแก้ไขสถานะ</DialogTitle>
         </DialogHeader>
         <div className="overflow-auto">
-          <DataTable columns={columns} data={statusHistory ?? []} />
+          <DataTable
+            isLoading={isLoading}
+            columns={columns}
+            data={statusHistory ?? []}
+          />
         </div>
         <DialogFooter>
           <DialogClose asChild>

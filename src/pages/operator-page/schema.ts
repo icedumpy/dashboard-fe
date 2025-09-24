@@ -55,7 +55,8 @@ export const updateItemDetailsSchema = z.object({
     .regex(TH_NOT_ALLOWED, {
       error: "Roll Number ไม่สามารถมีอักขระภาษาไทยได้",
     })
-    .nonempty({ error: "กรุณากรอก Roll Number" }),
+    .nonempty({ error: "กรุณากรอก Roll Number" })
+    .length(6, { error: "Roll Number ต้องมี 6 หลัก" }),
   roll_width: z
     .number({ error: "กรุณากรอก Roll Width" })
     .min(0, { error: "กรุณากรอก Roll Width ให้มากกว่าหรือเท่ากับ 0" })

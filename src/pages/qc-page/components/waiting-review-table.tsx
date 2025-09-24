@@ -30,7 +30,7 @@ export default function WaitingReviewTable() {
 
   const { data: lineOptions } = useProductionLineOptions();
   const { data: defectOptions } = useDefectOptionAPI();
-  const { data } = useReviewAPI({
+  const { data, isLoading } = useReviewAPI({
     page: page,
     line_id: filters.line_id,
     review_state: [REVIEW_STATE.PENDING],
@@ -77,6 +77,7 @@ export default function WaitingReviewTable() {
         </div>
       </div>
       <DataTable
+        isLoading={isLoading}
         columns={WAITING_COLUMNS}
         data={data?.data ?? []}
         sorting={sortingProps}

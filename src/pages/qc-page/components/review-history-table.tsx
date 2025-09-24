@@ -36,7 +36,7 @@ export default function ReviewHistoryTable() {
 
   const { data: lineOptions } = useProductionLineOptions();
   const { data: defectOptions } = useDefectOptionAPI();
-  const { data } = useReviewAPI({
+  const { data, isLoading } = useReviewAPI({
     page: page,
     line_id: filters.line_id,
     review_state:
@@ -106,6 +106,7 @@ export default function ReviewHistoryTable() {
         </div>
       </div>
       <DataTable
+        isLoading={isLoading}
         columns={HISTORY_COLUMNS}
         data={data?.data ?? []}
         sorting={sortingProps}
