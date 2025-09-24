@@ -1,5 +1,6 @@
 import { useCallback, useMemo, useState } from "react";
 import { parseAsInteger, useQueryState } from "nuqs";
+
 import type { OrderBy } from "@/types/order";
 
 interface UseDataTableOptions {
@@ -20,8 +21,8 @@ interface PaginationData {
 interface UseDataTableReturn {
   // State
   page: number;
-  sortBy: string;
-  orderBy: OrderBy;
+  sortBy?: string;
+  orderBy?: OrderBy;
 
   // Setters
   setPage: (page: number) => void;
@@ -34,8 +35,8 @@ interface UseDataTableReturn {
     sortBy,
     orderBy,
   }: {
-    sortBy: string;
-    orderBy: OrderBy;
+    sortBy?: string;
+    orderBy?: OrderBy;
   }) => void;
 
   // Reset functions
@@ -45,14 +46,14 @@ interface UseDataTableReturn {
 
   // Props for DataTable
   sortingProps: {
-    sortBy: string;
-    orderBy: OrderBy;
+    sortBy?: string;
+    orderBy?: OrderBy;
     onSortChange: ({
       sortBy,
       orderBy,
     }: {
-      sortBy: string;
-      orderBy: OrderBy;
+      sortBy?: string;
+      orderBy?: OrderBy;
     }) => void;
   };
 
@@ -66,8 +67,8 @@ export function useDataTable(
 ): UseDataTableReturn {
   const {
     pageQueryKey = "page",
-    defaultSortBy = "",
-    defaultOrderBy = "" as OrderBy,
+    defaultSortBy = undefined,
+    defaultOrderBy = undefined,
     resetPageOnFiltersChange = false,
   } = options;
 
@@ -77,8 +78,10 @@ export function useDataTable(
     parseAsInteger.withDefault(1)
   );
 
-  const [sortBy, setSortByState] = useState<string>(defaultSortBy);
-  const [orderBy, setOrderByState] = useState<OrderBy>(defaultOrderBy);
+  const [sortBy, setSortByState] = useState<string | undefined>(defaultSortBy);
+  const [orderBy, setOrderByState] = useState<OrderBy | undefined>(
+    defaultOrderBy
+  );
 
   // Memoized handlers
   const handlePageChange = useCallback(
@@ -89,7 +92,7 @@ export function useDataTable(
   );
 
   const handleSortChange = useCallback(
-    ({ sortBy, orderBy }: { sortBy: string; orderBy: OrderBy }) => {
+    ({ sortBy, orderBy }: { sortBy?: string; orderBy?: OrderBy }) => {
       setSortByState(sortBy);
       setOrderByState(orderBy);
 
