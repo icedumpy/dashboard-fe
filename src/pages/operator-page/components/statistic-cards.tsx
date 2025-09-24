@@ -2,7 +2,7 @@ import { cn } from "@/lib/utils";
 
 import type { StationResponse } from "@/types/station";
 
-export default function StatisticBundle({
+export default function StatisticCards({
   data,
 }: {
   data?: StationResponse["summary"];
@@ -15,47 +15,47 @@ export default function StatisticBundle({
         )}
       >
         <p className="text-xl font-bold">{data?.total ?? 0}</p>
-        <span className="text-sm">
+        <span className="text-xs">
           จำนวนงานดีทั้งหมดในกะนี้ (Normal,QC Passed)
         </span>
       </div>
       <div
         className={cn(
-          "min-w-[120px] p-2 border rounded text-center flex-1",
+          "min-w-[120px] p-2 border rounded text-center flex-1 min-w-[120px",
           "bg-orange-50 border-orange-200 text-orange-800"
         )}
       >
         <p className="text-xl font-bold">{data?.defects ?? 0}</p>
-        <span className="text-sm">จำนวน Defect ทั้งหมดในกะนี้</span>
+        <span className="text-xs">จำนวน Defect ทั้งหมดในกะนี้</span>
       </div>
       <div
         className={cn(
-          "min-w-[120px] p-2 border rounded text-center flex-1",
+          "min-w-[120px] p-2 border rounded text-center flex-1 min-w-[120px",
           "bg-red-50 border-red-200 text-red-800"
         )}
       >
         <p className="text-xl font-bold">{data?.scrap ?? 0}</p>
-        <span className="text-sm">
+        <span className="text-xs">
           จำนวนของเสียทั้งหมดในกะนี้ (Scrap,Rejected)
         </span>
       </div>
       <div
         className={cn(
-          "min-w-[120px] p-2 border rounded text-center flex-1",
+          "min-w-[120px] p-2 border rounded text-center flex-1 min-w-[120px",
           "bg-orange-100 border-orange-300 text-orange-700"
         )}
       >
         <p className="text-xl font-bold">{data?.pending_defect ?? 0}</p>
-        <span className="text-sm">จำนวน Defect ที่รอการตรวจสอบ</span>
+        <span className="text-xs">จำนวน Defect ที่รอการตรวจสอบ</span>
       </div>
       {/* <div
         className={cn(
-          "min-w-[120px] p-2 border rounded text-center flex-1",
+          "min-w-[120px] p-2 border rounded text-center flex-1 min-w-[120px",
           "bg-red-100 border-red-300 text-red-700"
         )}
       >
         <p className="text-xl font-bold">{data?.pending_scrap ?? 0}</p>
-        <span className="text-sm">จำนวน Scrap ที่รอการตรวจสอบ</span>
+        <span className="text-xs">จำนวน Scrap ที่รอการตรวจสอบ</span>
       </div> */}
     </div>
   );

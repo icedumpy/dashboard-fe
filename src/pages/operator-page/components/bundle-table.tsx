@@ -7,7 +7,7 @@ import { useDataTable } from "@/hooks/use-data-table";
 import { STATION } from "@/constants/station";
 import { useItemAPI } from "@/hooks/item/use-item";
 import { COLUMNS_BUNDLE } from "../constants/columns-bundle";
-import StatisticBundle from "./statistic-bundle";
+import StatisticCards from "./statistic-cards";
 import useItemFilters from "../hooks/use-item-filters";
 
 export default function BundleTable() {
@@ -46,7 +46,7 @@ export default function BundleTable() {
   return (
     <div className="space-y-2">
       <h3 className="font-medium text-md">Bundle</h3>
-      <StatisticBundle data={bundle?.summary} />
+      <StatisticCards data={bundle?.summary} />
       <DataTable
         isLoading={isLoading}
         data={bundle?.data || []}

@@ -6,7 +6,7 @@ import DataTable from "@/components/data-table";
 import { useItemAPI } from "@/hooks/item/use-item";
 import { COLUMNS_ROLL } from "../constants/columns-roll";
 import { STATION } from "@/constants/station";
-import StatisticRoll from "./statistic-roll";
+import StatisticCards from "./statistic-cards";
 import useItemFilters from "../hooks/use-item-filters";
 import useDataTable from "@/hooks/use-data-table";
 
@@ -45,7 +45,7 @@ export default function RollTable() {
   return (
     <div className="space-y-2">
       <h3 className="font-medium text-md">Roll</h3>
-      <StatisticRoll data={roll?.summary} />
+      <StatisticCards data={roll?.summary} />
       <DataTable
         isLoading={isLoading}
         data={roll?.data || []}
