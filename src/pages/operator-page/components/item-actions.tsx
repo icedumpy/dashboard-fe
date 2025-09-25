@@ -6,34 +6,25 @@ import { STATION } from "@/constants/station";
 import { canUpdatePrinter } from "@/helpers/item";
 import { useAuth } from "@/hooks/auth/use-auth";
 import { STATUS } from "@/constants/status";
+import { useItemDetailAPI } from "@/hooks/item/use-item-detail";
 
 import type { StationItemType } from "@/types/station";
 
 interface ItemActionsProps {
   itemId: number;
-  itemData: StationItemType;
 }
 
-export default function ItemActions({ itemId, itemData }: ItemActionsProps) {
+export default function ItemActions({ itemId }: ItemActionsProps) {
   const { user } = useAuth();
-  const status = itemData?.status_code as StationItemType["status_code"];
-  const isPendingReview = itemData?.is_pending_review;
+  const { data } = useItemDetailAPI(String(itemId));
+
+  const status = data?.data?.status_code as StationItemType["status_code"];
   const isClassifyScrap = status === STATUS.RECHECK;
-  const isChangingStatusPending = itemData?.is_changing_status_pending;
-  const showPrinterUpdateButton = canUpdatePrinter(user?.role);
+  const showPrinterUpdateButton = canUpdatePrinter(data?.defects, user?.role);
 
   return (
     <div className="flex items-center gap-2">
-      {itemId && (
-        <CheckButton
-          itemId={itemId}
-          status={status}
-          isPendingReview={isPendingReview}
-          itemData={itemData}
-          stationType={STATION.ROLL}
-          isChangingStatusPending={isChangingStatusPending}
-        />
-      )}
+      {itemId && <CheckButton itemId={itemId} stationType={STATION.ROLL} />}
       {showPrinterUpdateButton && (
         <PrinterUpdateButton
           itemId={itemId}

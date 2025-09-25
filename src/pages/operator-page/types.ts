@@ -4,12 +4,11 @@ import { filtersSchema, updateItemDetailsSchema } from "./schema";
 
 import type { StationItemType, StationType } from "@/types/station";
 export interface CheckButtonProps {
-  isPendingReview: boolean;
   itemId: StationItemType["id"];
-  status: StationItemType["status_code"];
-  itemData?: StationItemType;
+  // isPendingReview: boolean;
+  // status: StationItemType["status_code"];
   stationType: StationType;
-  isChangingStatusPending?: boolean;
+  // isChangingStatusPending?: boolean;
 }
 
 export type FilterType = z.infer<typeof filtersSchema>;

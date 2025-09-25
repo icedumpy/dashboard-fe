@@ -18,9 +18,8 @@ export interface StationItemType {
   detected_at: string;
   status_code: StatusT;
   ai_note: string;
-  scrap_requires_qc: boolean;
-  scrap_confirmed_by?: number;
-  scrap_confirmed_at?: string;
+  acknowledged_by?: number;
+  acknowledged_at?: string;
   current_review_id: string;
   images_count: number;
   defects_count: number;
