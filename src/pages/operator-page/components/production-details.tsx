@@ -67,10 +67,11 @@ export default function ProductDetail({
 
   useEffect(() => {
     form.reset({
-      ...data,
+      job_order_number: data?.job_order_number || "",
       roll_id: data?.roll_id || "",
       roll_number: data?.roll_number || "",
       bundle_number: data?.bundle_number || "",
+      product_code: data?.product_code || "",
     });
   }, [data, form]);
 
