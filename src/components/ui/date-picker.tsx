@@ -2,7 +2,6 @@ import * as React from "react";
 import dayjs from "dayjs";
 import { DayPickerProps } from "react-day-picker";
 import { CalendarIcon, XIcon } from "lucide-react";
-import { isNumber } from "radash";
 
 import {
   Popover,
@@ -247,11 +246,8 @@ function TimeButtonList({
   onClick: (val: number) => void;
   refs: React.MutableRefObject<Record<number, HTMLButtonElement | null>>;
 }) {
-  // 150px container height - 36px button height / 2 - 8px (to adjust for rounding errors)
-  const padding = 150 - 36 / 2 - 8;
   return (
     <div className="flex sm:flex-col">
-      {isNumber(selected) && <div style={{ height: padding }} />}
       {values.map((val) => (
         <button
           role="option"
@@ -268,7 +264,6 @@ function TimeButtonList({
           {val.toString().padStart(2, "0")}
         </button>
       ))}
-      {isNumber(selected) && <div style={{ height: padding }} />}
     </div>
   );
 }
