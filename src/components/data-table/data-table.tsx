@@ -42,13 +42,16 @@ export function DataTable<T extends object>({
     (columnId: string) => {
       if (!sorting) return;
       const isCurrentlySorted = sorting.sortBy === columnId;
-      sorting.onSortChange?.({
-        sortBy: columnId,
-        orderBy:
-          isCurrentlySorted && sorting.orderBy === ORDER_BY.DESC
-            ? ORDER_BY.ASC
-            : ORDER_BY.DESC,
-      });
+      if (!isCurrentlySorted) {
+        // Not sorted: set to DESC
+        sorting.onSortChange?.({ sortBy: columnId, orderBy: ORDER_BY.DESC });
+      } else if (sorting.orderBy === ORDER_BY.DESC) {
+        // DESC: set to ASC
+        sorting.onSortChange?.({ sortBy: columnId, orderBy: ORDER_BY.ASC });
+      } else {
+        // ASC: reset sort
+        sorting.onSortChange?.({ sortBy: undefined, orderBy: undefined });
+      }
     },
     [sorting]
   );

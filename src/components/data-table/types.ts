@@ -10,9 +10,9 @@ export type DataTableProps<T extends object> = {
   pageSize?: number;
   pagination?: DataTablePaginationProps;
   sorting?: {
-    sortBy: string;
-    orderBy: OrderBy;
-    onSortChange: (value: { sortBy: string; orderBy: OrderBy }) => void;
+    sortBy?: string;
+    orderBy?: OrderBy;
+    onSortChange: (value: { sortBy?: string; orderBy?: OrderBy }) => void;
   };
 };
 
