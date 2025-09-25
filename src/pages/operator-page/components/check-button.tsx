@@ -66,7 +66,9 @@ export default function CheckButton({ itemId, stationType }: CheckButtonProps) {
   );
 
   const isPendingReview = Boolean(data?.data?.is_pending_review);
-  const isChangingStatusPending = data?.data?.is_changing_status_pending;
+  const isChangingStatusPending = Boolean(
+    data?.data?.is_changing_status_pending
+  );
   const showPrinterUpdateButton = canUpdatePrinter(data?.defects, user?.role);
 
   const toggleOpen = useCallback(() => {

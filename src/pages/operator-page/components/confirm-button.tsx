@@ -27,12 +27,7 @@ import { STATUS } from "@/constants/status";
 import type { ImageT } from "@/types/image";
 import type { CheckButtonProps } from "../types";
 
-export default function ConfirmButton({
-  itemId,
-  status,
-  isPendingReview,
-  isChangingStatusPending,
-}: CheckButtonProps) {
+export default function ConfirmButton({ itemId }: CheckButtonProps) {
   const [open, setOpen] = useState(false);
   const { user } = useAuth();
   const { data } = useItemDetailAPI(String(itemId), {
@@ -43,6 +38,10 @@ export default function ConfirmButton({
   const queryClient = useQueryClient();
   const imageUpload = useImageUpload();
   const itemFixRequest = useItemFixRequest();
+  const isPendingReview = Boolean(data?.data?.is_pending_review);
+  const isChangingStatusPending = Boolean(
+    data?.data?.is_changing_status_pending
+  );
 
   const onConfirmEdit = useCallback(() => {
     itemFixRequest.mutate(
