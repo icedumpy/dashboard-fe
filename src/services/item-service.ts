@@ -1,4 +1,5 @@
 import {
+  ITEM_ACKNOWLEDGE_ENDPOINT,
   ITEM_ENDPOINT,
   ITEM_FIX_REQUEST_ENDPOINT,
   ITEM_REPORT_ENDPOINT,
@@ -65,6 +66,12 @@ export const ItemService = {
         roll_width: params.roll_width,
         roll_id: params.roll_id,
       }
+    );
+    return response.data;
+  },
+  itemAcknowledge: async (itemId: string) => {
+    const response = await axiosInstance.post(
+      ITEM_ACKNOWLEDGE_ENDPOINT.replace("{item_id}", itemId)
     );
     return response.data;
   },

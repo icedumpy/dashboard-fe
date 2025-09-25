@@ -7,7 +7,7 @@ import { STATUS } from "@/constants/status";
 import type { LineResponse } from "@/hooks/line/use-line";
 import type { RoleType, UserType } from "@/types/auth";
 import type { OptionT } from "@/types/option";
-import type { ReviewT } from "@/types/station";
+import type { ReviewT, StationDetailResponse } from "@/types/station";
 
 export const getLineCode = (
   lineId?: number,
@@ -53,11 +53,12 @@ export const getCurrentState = (reviews?: ReviewT[]) => {
 };
 
 export function canRequestChanges(
-  status: string,
-  userLineId: string | number,
-  currentLineId: string | number,
+  status?: string,
+  userLineId?: string | number,
+  currentLineId?: string | number,
   userRole?: RoleType
 ): boolean {
+  if (!status || !userLineId || !currentLineId) return false;
   const editableStatuses = [STATUS.DEFECT, STATUS.RECHECK, STATUS.REJECTED];
   const allowedRoles: RoleType[] = [ROLES.OPERATOR];
 
@@ -90,4 +91,17 @@ export function shouldShowUpdateStatusButton(
 export function canEditItemDetail(role?: RoleType) {
   const allowedRoles: RoleType[] = [ROLES.INSPECTOR, ROLES.OPERATOR];
   return !!role && allowedRoles.includes(role);
+}
+
+export function canUpdatePrinter(
+  defects?: StationDetailResponse["defects"],
+  role?: RoleType
+): boolean {
+  if (!role || !defects) return false;
+
+  const allowedRoles: RoleType[] = [ROLES.OPERATOR, ROLES.INSPECTOR];
+  const hasScratchDefect = defects?.some(
+    (defect) => defect.defect_type_code === "SCRATCH"
+  );
+  return allowedRoles.includes(role) && !!hasScratchDefect;
 }

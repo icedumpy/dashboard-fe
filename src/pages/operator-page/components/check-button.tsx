@@ -21,12 +21,14 @@ import ImageDefect from "./image-defect";
 import ImageRepair from "./image-repair";
 import ProductDetail from "./production-details";
 import UpdateStatusButton from "@/components/update-status-button";
+import PrinterUpdateButton from "@/components/printer-update-button";
 
 import { ITEM_ENDPOINT } from "@/constants/api";
 import {
   shouldShowUpdateStatusButton,
   isHiddenRepairImages,
   canRequestChanges,
+  canUpdatePrinter,
 } from "@/helpers/item";
 import { useAuth } from "@/hooks/auth/use-auth";
 import { useItemDetailAPI } from "@/hooks/item/use-item-detail";
@@ -36,14 +38,7 @@ import { useImageUpload } from "@/hooks/upload/use-image-upload";
 import type { ImageT } from "@/types/image";
 import type { CheckButtonProps } from "../types";
 
-export default function CheckButton({
-  itemId,
-  status,
-  isPendingReview = false,
-  itemData,
-  stationType,
-  isChangingStatusPending,
-}: CheckButtonProps) {
+export default function CheckButton({ itemId, stationType }: CheckButtonProps) {
   const [open, setOpen] = useState(false);
   const [mode, setMode] = useState<"VIEW" | "EDIT">("VIEW");
   const { user } = useAuth();
@@ -62,13 +57,19 @@ export default function CheckButton({
     data?.data?.status_code,
     user
   );
-  const hiddenRepairImages = isHiddenRepairImages(itemData?.status_code);
+  const hiddenRepairImages = isHiddenRepairImages(data?.data?.status_code);
   const canRequestChangesValue = canRequestChanges(
-    status,
+    data?.data?.status_code,
     Number(user?.line?.id),
     line,
     user?.role
   );
+
+  const isPendingReview = Boolean(data?.data?.is_pending_review);
+  const isChangingStatusPending = Boolean(
+    data?.data?.is_changing_status_pending
+  );
+  const showPrinterUpdateButton = canUpdatePrinter(data?.defects, user?.role);
 
   const toggleOpen = useCallback(() => {
     setOpen(!open);
@@ -109,11 +110,7 @@ export default function CheckButton({
       {/* Edit */}
       <Dialog open={mode === "VIEW" && open} onOpenChange={toggleOpen}>
         <DialogTrigger asChild>
-          <Button
-            size="sm"
-            className="text-xs rounded h-fit py-0.5"
-            onClick={() => setOpen(true)}
-          >
+          <Button size="xs" className="text-xs" onClick={() => setOpen(true)}>
             ตรวจสอบ
           </Button>
         </DialogTrigger>
@@ -122,7 +119,9 @@ export default function CheckButton({
           className="overflow-auto sm:max-w-4xl"
         >
           <DialogHeader>
-            <DialogTitle>ตรวจสอบ {itemData?.station.toUpperCase()}</DialogTitle>
+            <DialogTitle>
+              ตรวจสอบ {data?.data?.station.toUpperCase()}
+            </DialogTitle>
             <DialogDescription>
               {data?.data?.product_code} - Roll {data?.data.roll_number}
             </DialogDescription>
@@ -169,6 +168,7 @@ export default function CheckButton({
                 disabled={isChangingStatusPending}
               />
             )}
+            {showPrinterUpdateButton && <PrinterUpdateButton itemId={itemId} />}
             <DialogClose asChild>
               <Button variant="outline" type="button">
                 ปิด
