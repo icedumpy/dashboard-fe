@@ -57,8 +57,8 @@ export default function SummaryDashboard() {
   return (
     <div className="space-y-3">
       <Card>
-        <CardContent className="flex items-baseline gap-3">
-          <div className="flex items-center gap-2 mt-6">
+        <CardContent className="flex flex-col items-baseline gap-3 md:flex-row">
+          <div className="flex flex-col items-start justify-start gap-2 mt-6 md:items-center md:flex-row">
             <Label>Production Line</Label>
             <Select
               value={filters.line_id}
@@ -84,7 +84,7 @@ export default function SummaryDashboard() {
               disabled: calendarDisabled,
             }}
             disableTime
-            className="w-[200px]"
+            className="w-full md:w-[200px]"
             placeholder="วันที่เริ่มต้น"
             value={dateFrom ?? undefined}
             onChange={(date) => {
@@ -102,7 +102,7 @@ export default function SummaryDashboard() {
             calendarProps={{
               disabled: calendarDisabled,
             }}
-            className="w-[200px]"
+            className="w-full md:w-[200px]"
             placeholder="วันที่สิ้นสุด"
             value={dateTo ?? undefined}
             onChange={(date) => {
