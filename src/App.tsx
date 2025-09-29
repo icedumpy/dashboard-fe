@@ -5,6 +5,7 @@ import OperatorPage from "@/pages/operator-page";
 import ProtectedRoute from "@/components/protected-route";
 import AuthGuard from "@/components/auth-guard";
 import QCPage from "@/pages/qc-page";
+import ViewerPage from "./pages/viewer-page";
 
 import { useAuth } from "./hooks/auth/use-auth";
 import { ROLES } from "./constants/auth";
@@ -16,8 +17,9 @@ function App() {
 
   const getDashboard = (role?: RoleType) => {
     switch (role) {
-      case ROLES.OPERATOR:
       case ROLES.VIEWER:
+        return <ViewerPage />;
+      case ROLES.OPERATOR:
         return <OperatorPage />;
       case ROLES.INSPECTOR:
         return <QCPage />;
