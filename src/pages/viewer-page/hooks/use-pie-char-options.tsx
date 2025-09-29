@@ -8,9 +8,9 @@ export function usePieChartOptions(
   data: PieChartData[],
   colors?: string[]
 ): EChartsOption {
-  return useMemo(
+  const options: EChartsOption = useMemo(
     () => ({
-      ...colors,
+      ...(colors && { color: colors }),
       tooltip: { trigger: "item" },
       legend: { orient: "horizontal", top: "top" },
       series: [
@@ -35,4 +35,6 @@ export function usePieChartOptions(
     }),
     [data, colors]
   );
+
+  return options;
 }

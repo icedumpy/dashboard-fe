@@ -7,9 +7,9 @@ export const useBarChartOptions = (
   categories: string[],
   colors?: string[]
 ): EChartsOption => {
-  return useMemo(
+  const options: EChartsOption = useMemo(
     () => ({
-      ...colors,
+      ...(colors && { color: colors }),
       grid: {
         left: "2%",
         right: "10%",
@@ -26,4 +26,6 @@ export const useBarChartOptions = (
     }),
     [data, categories, colors]
   );
+
+  return options;
 };

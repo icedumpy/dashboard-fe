@@ -1,4 +1,4 @@
-import ReactECharts, { EChartsOption } from "echarts-for-react";
+import ReactECharts from "echarts-for-react";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import StatCard from "../stat-card";
@@ -6,29 +6,30 @@ import ChartContainer from "../chart-container";
 
 import { useBarChartOptions } from "../../hooks/use-bar-chart-options";
 import { usePieChartOptions } from "../../hooks/use-pie-char-options";
+import { useStackedBarOptions } from "../../hooks/use-stacked-bar-options";
 
 export default function ProductionSection({
   title,
   data,
   colors,
-  stackBarOption,
 }: {
   title: string;
   data: {
     barChart: { data: number[]; categories: string[] };
     pieChart: { value: number; name: string }[];
     stats: { label: string; value: string | number }[];
+    stacked: { value: number; name: string }[];
   };
   colors?: string[];
-  stackBarOption: EChartsOption;
 }) {
   const barChartOptions = useBarChartOptions(
     data.barChart.data,
     data.barChart.categories,
     colors
   );
-
   const pieOptions = usePieChartOptions(data.pieChart, colors);
+  const stackBarOption = useStackedBarOptions({ colors: colors });
+
   return (
     <div className="space-y-4">
       <h2 className="text-lg font-bold">{title}</h2>

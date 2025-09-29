@@ -1,5 +1,6 @@
-import ProductionSection from "./production-section";
+import dayjs from "dayjs";
 
+import ProductionSection from "./production-section";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Select,
@@ -12,17 +13,15 @@ import { DatePicker } from "@/components/ui/date-picker";
 import { Label } from "@/components/ui/label";
 
 import { useProductionLineOptions } from "@/hooks/option/use-production-line-option";
-import { useStackedBarOptions } from "../../hooks/use-stacked-bar-options";
 import useItemFilters from "@/pages/operator-page/hooks/use-item-filters";
-import dayjs from "dayjs";
 import { parseAsIsoDateTime, useQueryState } from "nuqs";
 import { DATE_TIME_FORMAT } from "@/constants/format";
 import { getLineCode } from "@/helpers/item";
 import { useLineAPI } from "@/hooks/line/use-line";
+import { COLORS_PASTEL } from "@/constants/chart";
 
 export default function SummaryDashboard() {
   const { filters, setFilters } = useItemFilters();
-  const stackBarOption = useStackedBarOptions();
   const { data: productionLines } = useProductionLineOptions();
   const { data: lines } = useLineAPI();
 
@@ -135,9 +134,8 @@ export default function SummaryDashboard() {
                 { label: "จำนวนชิ้นงานที่ตรวจสอบแล้ว", value: 999999 },
                 { label: "จำนวนชิ้นงานที่รอตรวจสอบ", value: 999999 },
               ],
+              stacked: [],
             }}
-            // colors={COLORS_PASTEL}
-            stackBarOption={stackBarOption}
           />
           <ProductionSection
             title={"BUNDLE"}
@@ -171,9 +169,9 @@ export default function SummaryDashboard() {
                 { label: "จำนวนชิ้นงานที่ตรวจสอบแล้ว", value: 999999 },
                 { label: "จำนวนชิ้นงานที่รอตรวจสอบ", value: 999999 },
               ],
+              stacked: [],
             }}
-            // colors={COLORS_BRIGHT}
-            stackBarOption={stackBarOption}
+            colors={COLORS_PASTEL}
           />
         </CardContent>
       </Card>

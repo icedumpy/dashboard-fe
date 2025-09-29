@@ -1,6 +1,13 @@
+import { EChartsOption } from "echarts-for-react";
 import { useMemo } from "react";
 
-export function useStackedBarOptions() {
+interface UseStackedBarOptionsProps {
+  colors?: string[];
+}
+
+export function useStackedBarOptions({
+  colors,
+}: UseStackedBarOptionsProps): EChartsOption {
   const options = useMemo(() => {
     const rawData = [
       [100, 302, 301, 334, 390, 330, 320],
@@ -32,6 +39,7 @@ export function useStackedBarOptions() {
     }));
 
     return {
+      ...(colors && { color: colors }),
       grid: {
         left: "2%",
         right: "2%",
@@ -62,7 +70,7 @@ export function useStackedBarOptions() {
       },
       series,
     };
-  }, []);
+  }, [colors]);
 
   return options;
 }
