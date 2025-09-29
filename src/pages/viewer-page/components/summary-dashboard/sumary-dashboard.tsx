@@ -27,8 +27,8 @@ export default function SummaryDashboard() {
   const { data: productionLines } = useProductionLineOptions();
   const { data: lines } = useLineAPI();
 
-  const [dateForm, setDateForm] = useQueryState(
-    "date_form",
+  const [dateFrom, setDateFrom] = useQueryState(
+    "date_from",
     parseAsIsoDateTime
   );
   const [dateTo, setDateTo] = useQueryState("date_to", parseAsIsoDateTime);
@@ -43,14 +43,14 @@ export default function SummaryDashboard() {
   const { data: rollSummary } = useSummary({
     line_id: Number(filters.line_id),
     station: STATION.ROLL,
-    date_form: dateForm ? dayjs(dateForm).format(DATE_FORMAT_ISO) : undefined,
+    date_from: dateFrom ? dayjs(dateFrom).format(DATE_FORMAT_ISO) : undefined,
     date_to: dateTo ? dayjs(dateTo).format(DATE_FORMAT_ISO) : undefined,
   });
 
   const { data: bundleSummary } = useSummary({
     line_id: Number(filters.line_id),
     station: STATION.BUNDLE,
-    date_form: dateForm ? dayjs(dateForm).format(DATE_FORMAT_ISO) : undefined,
+    date_from: dateFrom ? dayjs(dateFrom).format(DATE_FORMAT_ISO) : undefined,
     date_to: dateTo ? dayjs(dateTo).format(DATE_FORMAT_ISO) : undefined,
   });
 
@@ -86,12 +86,12 @@ export default function SummaryDashboard() {
             disableTime
             className="w-[200px]"
             placeholder="วันที่เริ่มต้น"
-            value={dateForm ?? undefined}
+            value={dateFrom ?? undefined}
             onChange={(date) => {
               if (date) {
-                setDateForm(date);
+                setDateFrom(date);
               } else {
-                setDateForm(null);
+                setDateFrom(null);
               }
             }}
           />

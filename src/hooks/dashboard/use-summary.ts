@@ -8,7 +8,7 @@ import type { StationType } from "@/types/station";
 export interface SummaryParams {
   line_id: number;
   station: StationType;
-  date_form?: string | Date;
+  date_from?: string | Date;
   date_to?: string | Date;
 }
 
