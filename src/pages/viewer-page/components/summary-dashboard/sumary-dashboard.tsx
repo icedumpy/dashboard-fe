@@ -121,7 +121,7 @@ export default function SummaryDashboard() {
         </CardHeader>
         <CardContent className="space-y-4">
           <ProductionSection
-            title={"ROLL"}
+            title={"Roll"}
             data={{
               stats: rollSummary?.cards,
               barChart: rollSummary?.status_totals,
@@ -130,7 +130,7 @@ export default function SummaryDashboard() {
             }}
           />
           <ProductionSection
-            title={"BUNDLE"}
+            title={"Bundle"}
             data={{
               stats: bundleSummary?.cards,
               barChart: bundleSummary?.status_totals,

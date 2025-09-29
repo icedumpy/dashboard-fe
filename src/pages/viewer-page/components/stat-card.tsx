@@ -11,7 +11,7 @@ export default function StatCard({
     <Card className="grid flex-auto w-full text-center border shadow-none min-h-28 place-content-center">
       <CardContent className="p-2">
         <p className="text-2xl font-bold">{value}</p>
-        <p>{label}</p>
+        <p className="capitalize">{label}</p>
       </CardContent>
     </Card>
   );

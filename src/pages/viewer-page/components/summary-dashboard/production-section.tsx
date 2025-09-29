@@ -33,7 +33,7 @@ export default function ProductionSection({
 
   const statsMapped = [
     {
-      label: "จำนวน Roll ทั้งหมด",
+      label: `จำนวน ${title} ทั้งหมด`,
       value: data?.stats?.total_items ?? 0,
     },
     {
@@ -50,7 +50,7 @@ export default function ProductionSection({
 
   return (
     <div className="space-y-4">
-      <h2 className="text-lg font-bold">{title}</h2>
+      <h2 className="text-lg font-bold">{title} Station</h2>
       <div className="flex flex-col gap-4 lg:flex-row">
         <div className="flex flex-col gap-4 md:flex-row lg:flex-col basis-1/4">
           {statsMapped.map((stat, idx) => (
