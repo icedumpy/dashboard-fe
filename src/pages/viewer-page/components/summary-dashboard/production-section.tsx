@@ -8,6 +8,8 @@ import { useBarChartOptions } from "../../hooks/use-bar-chart-options";
 import { usePieChartOptions } from "../../hooks/use-pie-char-options";
 import { useStackedBarOptions } from "../../hooks/use-stacked-bar-options";
 
+import type { SummaryResponse } from "@/hooks/dashboard/use-summary";
+
 export default function ProductionSection({
   title,
   data,
@@ -15,27 +17,41 @@ export default function ProductionSection({
 }: {
   title: string;
   data: {
-    barChart: { data: number[]; categories: string[] };
-    pieChart: { value: number; name: string }[];
-    stats: { label: string; value: string | number }[];
-    stacked: { value: number; name: string }[];
+    stats?: SummaryResponse["cards"];
+    barChart?: SummaryResponse["status_totals"];
+    pieChart?: SummaryResponse["defect_pie"];
+    stacked?: SummaryResponse["daily_stacked"];
   };
   colors?: string[];
 }) {
-  const barChartOptions = useBarChartOptions(
-    data.barChart.data,
-    data.barChart.categories,
-    colors
-  );
-  const pieOptions = usePieChartOptions(data.pieChart, colors);
-  const stackBarOption = useStackedBarOptions({ colors: colors });
+  const barChartOptions = useBarChartOptions({ data: data.barChart, colors });
+  const pieOptions = usePieChartOptions({ data: data.pieChart, colors });
+  const stackBarOption = useStackedBarOptions({
+    data: data?.stacked,
+    colors: colors,
+  });
+
+  const statsMapped = [
+    {
+      label: "จำนวน Roll ทั้งหมด",
+      value: data?.stats?.total_items ?? 0,
+    },
+    {
+      label: "จำนวนชิ้นงานที่ตรวจสอบแล้ว",
+      value: data?.stats?.inspected_items ?? 0,
+    },
+    {
+      label: "จำนวนชิ้นงานที่รอตรวจสอบ",
+      value: data?.stats?.pending_items ?? 0,
+    },
+  ];
 
   return (
     <div className="space-y-4">
       <h2 className="text-lg font-bold">{title}</h2>
       <div className="flex flex-col gap-4 lg:flex-row">
         <div className="flex flex-col gap-4 md:flex-row lg:flex-col basis-1/4">
-          {data.stats.map((stat, idx) => (
+          {statsMapped.map((stat, idx) => (
             <StatCard key={idx} value={stat.value} label={stat.label} />
           ))}
         </div>

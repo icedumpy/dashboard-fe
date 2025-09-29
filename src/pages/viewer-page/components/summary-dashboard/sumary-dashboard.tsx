@@ -19,6 +19,8 @@ import { DATE_TIME_FORMAT } from "@/constants/format";
 import { getLineCode } from "@/helpers/item";
 import { useLineAPI } from "@/hooks/line/use-line";
 import { COLORS_PASTEL } from "@/constants/chart";
+import { useSummary } from "@/hooks/dashboard/use-summary";
+import { STATION } from "@/constants/station";
 
 export default function SummaryDashboard() {
   const { filters, setFilters } = useItemFilters();
@@ -37,6 +39,20 @@ export default function SummaryDashboard() {
   };
 
   const lineCode = getLineCode(Number(filters.line_id), lines?.data);
+
+  const { data: rollSummary } = useSummary({
+    line_id: Number(filters.line_id),
+    station: STATION.ROLL,
+    date_form: startDate ?? undefined,
+    date_to: endDate ?? undefined,
+  });
+
+  const { data: bundleSummary } = useSummary({
+    line_id: Number(filters.line_id),
+    station: STATION.BUNDLE,
+    date_form: startDate ?? undefined,
+    date_to: endDate ?? undefined,
+  });
 
   return (
     <div className="space-y-3">
@@ -105,71 +121,19 @@ export default function SummaryDashboard() {
           <ProductionSection
             title={"ROLL"}
             data={{
-              barChart: {
-                data: [120, 200, 150, 80, 70],
-                categories: [
-                  "Normal",
-                  "Defect",
-                  "QC Passed",
-                  "Rejected",
-                  "Scrap",
-                ],
-              },
-              pieChart: [
-                {
-                  value: 1048,
-                  name: "ฉลาก",
-                },
-                {
-                  value: 735,
-                  name: "รอยขีด",
-                },
-                {
-                  value: 580,
-                  name: "บาร์โค้ด",
-                },
-              ],
-              stats: [
-                { label: "จำนวน Roll ทั้งหมด", value: 999999 },
-                { label: "จำนวนชิ้นงานที่ตรวจสอบแล้ว", value: 999999 },
-                { label: "จำนวนชิ้นงานที่รอตรวจสอบ", value: 999999 },
-              ],
-              stacked: [],
+              stats: rollSummary?.cards,
+              barChart: rollSummary?.status_totals,
+              pieChart: rollSummary?.defect_pie,
+              stacked: rollSummary?.daily_stacked,
             }}
           />
           <ProductionSection
             title={"BUNDLE"}
             data={{
-              barChart: {
-                data: [120, 200, 150, 80, 70],
-                categories: [
-                  "Normal",
-                  "Defect",
-                  "QC Passed",
-                  "Rejected",
-                  "Scrap",
-                ],
-              },
-              pieChart: [
-                {
-                  value: 1048,
-                  name: "ฉลาก",
-                },
-                {
-                  value: 735,
-                  name: "รอยขีด",
-                },
-                {
-                  value: 580,
-                  name: "บาร์โค้ด",
-                },
-              ],
-              stats: [
-                { label: "จำนวน Roll ทั้งหมด", value: 999999 },
-                { label: "จำนวนชิ้นงานที่ตรวจสอบแล้ว", value: 999999 },
-                { label: "จำนวนชิ้นงานที่รอตรวจสอบ", value: 999999 },
-              ],
-              stacked: [],
+              stats: bundleSummary?.cards,
+              barChart: bundleSummary?.status_totals,
+              pieChart: bundleSummary?.defect_pie,
+              stacked: bundleSummary?.daily_stacked,
             }}
             colors={COLORS_PASTEL}
           />

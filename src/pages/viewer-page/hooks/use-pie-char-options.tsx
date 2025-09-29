@@ -1,13 +1,21 @@
 import { useMemo } from "react";
 
 import type { EChartsOption } from "echarts";
+import type { SummaryResponse } from "@/hooks/dashboard/use-summary";
 
-type PieChartData = { value: number; name: string };
+interface UsePieChartOptionsProps {
+  data?: SummaryResponse["defect_pie"];
+  colors?: string[];
+}
 
-export function usePieChartOptions(
-  data: PieChartData[],
-  colors?: string[]
-): EChartsOption {
+export function usePieChartOptions({
+  data,
+  colors,
+}: UsePieChartOptionsProps): EChartsOption {
+  const _data = data?.by_type?.map((item) => {
+    return { value: item.count, name: item.name_th };
+  });
+
   const options: EChartsOption = useMemo(
     () => ({
       ...(colors && { color: colors }),
@@ -17,11 +25,11 @@ export function usePieChartOptions(
         {
           type: "pie",
           radius: ["0%", "70%"],
-          data,
+          data: _data,
           label: {
             show: true,
             position: "inside",
-            formatter: "{b}\n{c}\n({d}%)",
+            formatter: "{b}\n{d}%",
           },
           emphasis: {
             itemStyle: {
@@ -33,7 +41,7 @@ export function usePieChartOptions(
         },
       ],
     }),
-    [data, colors]
+    [colors, _data]
   );
 
   return options;

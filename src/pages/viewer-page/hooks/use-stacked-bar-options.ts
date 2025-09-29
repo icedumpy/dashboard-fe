@@ -1,76 +1,106 @@
-import { EChartsOption } from "echarts-for-react";
 import { useMemo } from "react";
+
+import type { EChartsOption } from "echarts-for-react";
+import type { SummaryResponse } from "@/hooks/dashboard/use-summary";
 
 interface UseStackedBarOptionsProps {
   colors?: string[];
+  data?: SummaryResponse["daily_stacked"];
 }
 
 export function useStackedBarOptions({
+  data,
   colors,
 }: UseStackedBarOptionsProps): EChartsOption {
-  const options = useMemo(() => {
-    const rawData = [
-      [100, 302, 301, 334, 390, 330, 320],
-      [320, 132, 101, 134, 90, 230, 210],
-      [220, 182, 191, 234, 290, 330, 310],
-      [150, 212, 201, 154, 190, 330, 410],
-      [820, 832, 901, 934, 1290, 1330, 1320],
-    ];
+  // Transform data with proper validation
+  const chartData = useMemo(() => {
+    if (!data?.series?.length || !data?.labels?.length) {
+      return {
+        rawData: [],
+        seriesNames: [],
+        xAxisData: [],
+        totalData: [],
+      };
+    }
 
-    const seriesNames = ["Normal", "Defect", "Scrap", "QC Passed", "Rejected"];
+    const rawData = data.series.map((s) => s.data);
+    const seriesNames = data.series.map((s) => s.status_code);
+    const xAxisData = data.labels;
 
-    const series = seriesNames.map((name, sid) => ({
-      name,
-      type: "bar",
-      stack: true,
-      barWidth: "60%",
-      label: {
-        show: sid === seriesNames.length - 1,
-        formatter: (param: { dataIndex: number }) => {
-          let sum = 0;
-          series.forEach((item) => {
-            sum += item.data[param.dataIndex];
-          });
-          return sum;
-        },
-        position: "top",
-      },
-      data: rawData[sid],
-    }));
+    // Calculate totals for each data point
+    const totalData = xAxisData.map((_, index) =>
+      rawData.reduce((sum, series) => sum + (series[index] || 0), 0)
+    );
 
     return {
+      rawData,
+      seriesNames,
+      xAxisData,
+      totalData,
+    };
+  }, [data]);
+
+  // Generate series configuration
+  const seriesConfig = useMemo(() => {
+    return chartData.seriesNames.map((name, index) => ({
+      name,
+      type: "bar" as const,
+      stack: "total",
+      barWidth: "60%",
+      data: chartData.rawData[index] || [],
+      label: {
+        show: index === chartData.seriesNames.length - 1,
+        position: "top" as const,
+        formatter: (params: { dataIndex: number }) => {
+          // Calculate sum for all series at this data point
+          let totalSum = 0;
+          chartData.rawData.forEach((seriesData) => {
+            totalSum += seriesData[params.dataIndex] || 0;
+          });
+
+          return totalSum > 0 ? totalSum.toLocaleString() : "";
+        },
+      },
+    }));
+  }, [chartData]);
+
+  return useMemo(
+    (): EChartsOption => ({
       ...(colors && { color: colors }),
       grid: {
         left: "2%",
         right: "2%",
-        bottom: "15%",
+        bottom: "4%",
+        top: "16%",
         containLabel: true,
       },
       legend: {
         orient: "horizontal",
-        bottom: true,
+        top: "5%",
+        left: "center",
       },
       tooltip: {
         trigger: "axis",
-      },
-      yAxis: {
-        type: "value",
+        axisPointer: {
+          type: "shadow",
+        },
       },
       xAxis: {
         type: "category",
-        data: [
-          "01/09/2025",
-          "02/09/2025",
-          "03/09/2025",
-          "04/09/2025",
-          "05/09/2025",
-          "06/09/2025",
-          "07/09/2025",
-        ],
+        data: chartData.xAxisData,
+        axisLabel: {
+          rotate: chartData.xAxisData.length > 7 ? 45 : 0,
+          interval: 0,
+        },
       },
-      series,
-    };
-  }, [colors]);
-
-  return options;
+      yAxis: {
+        type: "value",
+        axisLabel: {
+          formatter: (value: number) => value.toLocaleString(),
+        },
+      },
+      series: seriesConfig,
+    }),
+    [colors, chartData, seriesConfig]
+  );
 }
