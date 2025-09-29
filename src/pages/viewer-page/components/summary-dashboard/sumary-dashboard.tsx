@@ -15,7 +15,7 @@ import { Label } from "@/components/ui/label";
 import { useProductionLineOptions } from "@/hooks/option/use-production-line-option";
 import useItemFilters from "@/pages/operator-page/hooks/use-item-filters";
 import { parseAsIsoDateTime, useQueryState } from "nuqs";
-import { DATE_FORMAT_ISO } from "@/constants/format";
+import { DATE_FORMAT, DATE_FORMAT_ISO } from "@/constants/format";
 import { getLineCode } from "@/helpers/item";
 import { useLineAPI } from "@/hooks/line/use-line";
 import { COLORS_PASTEL } from "@/constants/chart";
@@ -79,7 +79,7 @@ export default function SummaryDashboard() {
             </Select>
           </div>
           <DatePicker
-            displayFormat={DATE_FORMAT_ISO}
+            displayFormat={DATE_FORMAT}
             calendarProps={{
               disabled: calendarDisabled,
             }}
@@ -98,7 +98,7 @@ export default function SummaryDashboard() {
           <DatePicker
             dayBoundary="end"
             disableTime
-            displayFormat={DATE_FORMAT_ISO}
+            displayFormat={DATE_FORMAT}
             calendarProps={{
               disabled: calendarDisabled,
             }}

@@ -2,6 +2,8 @@ import { useMemo } from "react";
 
 import type { EChartsOption } from "echarts-for-react";
 import type { SummaryResponse } from "@/hooks/dashboard/use-summary";
+import dayjs from "dayjs";
+import { DATE_FORMAT } from "@/constants/format";
 
 interface UseStackedBarOptionsProps {
   colors?: string[];
@@ -25,7 +27,9 @@ export function useStackedBarOptions({
 
     const rawData = data.series.map((s) => s.data);
     const seriesNames = data.series.map((s) => s.status_code);
-    const xAxisData = data.labels;
+    const xAxisData = data.labels.map((label) =>
+      dayjs(label).format(DATE_FORMAT)
+    );
 
     // Calculate totals for each data point
     const totalData = xAxisData.map((_, index) =>
