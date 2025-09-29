@@ -13,6 +13,7 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 
 import { DATE_FORMAT } from "@/constants/format";
+import { cn } from "@/lib/utils";
 
 interface DatePickerProps {
   value?: Date;
@@ -20,9 +21,10 @@ interface DatePickerProps {
   onChange?: (date: Date | undefined) => void;
   placeholder?: string;
   disabled?: boolean;
-  calendarProps: Partial<DayPickerProps>;
+  calendarProps?: Partial<DayPickerProps>;
   displayFormat?: string;
   dayBoundary?: "start" | "end";
+  className?: string;
 }
 
 export function DatePicker({
@@ -34,6 +36,7 @@ export function DatePicker({
   displayFormat = DATE_FORMAT,
   calendarProps,
   dayBoundary = "start",
+  className,
 }: DatePickerProps) {
   const [open, setOpen] = React.useState(false);
   const [_value, _setValue] = React.useState<Date | undefined>();
@@ -109,15 +112,15 @@ export function DatePicker({
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger>
+      <PopoverTrigger className={cn(className)}>
         <Button
           type="button"
           variant="outline"
-          role="combobox"
+          role="button"
           aria-expanded={open}
           id="date"
           disabled={disabled}
-          className="justify-between w-full px-3! font-normal group"
+          className={cn("justify-between w-full px-3! font-normal group")}
         >
           {value ? (
             dayjs(value).format(displayFormat)
