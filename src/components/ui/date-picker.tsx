@@ -112,18 +112,15 @@ export function DatePicker({
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
+      <PopoverTrigger className={cn(className)}>
         <Button
           type="button"
           variant="outline"
-          role="combobox"
+          role="button"
           aria-expanded={open}
           id="date"
           disabled={disabled}
-          className={cn(
-            "justify-between w-full px-3! font-normal group",
-            className
-          )}
+          className={cn("justify-between w-full px-3! font-normal group")}
         >
           {value ? (
             dayjs(value).format(displayFormat)

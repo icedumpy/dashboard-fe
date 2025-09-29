@@ -53,14 +53,22 @@ export const useBarChartOptions = ({
           label: {
             show: true,
             position: "outside",
-            formatter: "{c}",
+            formatter: (params) => {
+              const value =
+                typeof params.value === "number"
+                  ? params.value
+                  : Array.isArray(params.value) &&
+                    typeof params.value[0] === "number"
+                  ? params.value[0]
+                  : 0;
+              return value > 0 ? value.toLocaleString() : "";
+            },
           },
           barMaxWidth: 50,
         },
       ],
       tooltip: {
         trigger: "item",
-        formatter: "{b}: {c}",
       },
     }),
     [colors, chartData.categories, chartData.values]
