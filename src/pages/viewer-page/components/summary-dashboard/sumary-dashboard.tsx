@@ -15,7 +15,7 @@ import { Label } from "@/components/ui/label";
 import { useProductionLineOptions } from "@/hooks/option/use-production-line-option";
 import useItemFilters from "@/pages/operator-page/hooks/use-item-filters";
 import { parseAsIsoDateTime, useQueryState } from "nuqs";
-import { DATE_TIME_FORMAT } from "@/constants/format";
+import { DATE_FORMAT_ISO } from "@/constants/format";
 import { getLineCode } from "@/helpers/item";
 import { useLineAPI } from "@/hooks/line/use-line";
 import { COLORS_PASTEL } from "@/constants/chart";
@@ -27,11 +27,11 @@ export default function SummaryDashboard() {
   const { data: productionLines } = useProductionLineOptions();
   const { data: lines } = useLineAPI();
 
-  const [startDate, setStartDate] = useQueryState(
-    "start_date",
+  const [dateForm, setDateForm] = useQueryState(
+    "date_form",
     parseAsIsoDateTime
   );
-  const [endDate, setEndDate] = useQueryState("end_date", parseAsIsoDateTime);
+  const [dateTo, setDateTo] = useQueryState("date_to", parseAsIsoDateTime);
 
   const calendarDisabled = {
     before: dayjs().subtract(30, "day").toDate(),
@@ -43,15 +43,15 @@ export default function SummaryDashboard() {
   const { data: rollSummary } = useSummary({
     line_id: Number(filters.line_id),
     station: STATION.ROLL,
-    date_form: startDate ?? undefined,
-    date_to: endDate ?? undefined,
+    date_form: dateForm ? dayjs(dateForm).format(DATE_FORMAT_ISO) : undefined,
+    date_to: dateTo ? dayjs(dateTo).format(DATE_FORMAT_ISO) : undefined,
   });
 
   const { data: bundleSummary } = useSummary({
     line_id: Number(filters.line_id),
     station: STATION.BUNDLE,
-    date_form: startDate ?? undefined,
-    date_to: endDate ?? undefined,
+    date_form: dateForm ? dayjs(dateForm).format(DATE_FORMAT_ISO) : undefined,
+    date_to: dateTo ? dayjs(dateTo).format(DATE_FORMAT_ISO) : undefined,
   });
 
   return (
@@ -79,35 +79,37 @@ export default function SummaryDashboard() {
             </Select>
           </div>
           <DatePicker
-            displayFormat={DATE_TIME_FORMAT}
+            displayFormat={DATE_FORMAT_ISO}
             calendarProps={{
               disabled: calendarDisabled,
             }}
+            disableTime
             className="w-[200px]"
             placeholder="วันที่เริ่มต้น"
-            value={startDate ?? undefined}
+            value={dateForm ?? undefined}
             onChange={(date) => {
               if (date) {
-                setStartDate(date);
+                setDateForm(date);
               } else {
-                setStartDate(null);
+                setDateForm(null);
               }
             }}
           />
           <DatePicker
             dayBoundary="end"
-            displayFormat={DATE_TIME_FORMAT}
+            disableTime
+            displayFormat={DATE_FORMAT_ISO}
             calendarProps={{
               disabled: calendarDisabled,
             }}
             className="w-[200px]"
             placeholder="วันที่สิ้นสุด"
-            value={endDate ?? undefined}
+            value={dateTo ?? undefined}
             onChange={(date) => {
               if (date) {
-                setEndDate(date);
+                setDateTo(date);
               } else {
-                setEndDate(null);
+                setDateTo(null);
               }
             }}
           />

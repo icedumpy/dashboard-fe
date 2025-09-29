@@ -47,4 +47,5 @@ export const useSummary = (params: SummaryParams) =>
   useQuery<SummaryResponse>({
     queryKey: [DASHBOARD_SUMMARY_ENDPOINT, params],
     queryFn: () => DashboardService.getSummary(params),
+    enabled: Boolean(params.line_id && params.station),
   });
