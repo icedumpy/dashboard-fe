@@ -1,4 +1,5 @@
-import ReactECharts from "echarts-for-react";
+import ReactECharts, { EChartsInstance } from "echarts-for-react";
+import { useEffect, useRef } from "react";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import StatCard from "../stat-card";
@@ -24,6 +25,7 @@ export default function ProductionSection({
   };
   colors?: string[];
 }) {
+  const stackedRef = useRef<EChartsInstance | null>(null);
   const barChartOptions = useBarChartOptions({ data: data.barChart, colors });
   const pieOptions = usePieChartOptions({ data: data.pieChart, colors });
   const stackBarOption = useStackedBarOptions({
@@ -45,6 +47,47 @@ export default function ProductionSection({
       value: data?.stats?.pending_items ?? 0,
     },
   ];
+
+  useEffect(() => {
+    const chart = stackedRef.current?.getEchartsInstance();
+
+    if (!chart) return;
+
+    const handleLegendSelect = (e: { selected: Record<string, boolean> }) => {
+      const selected = e.selected;
+      const series = stackBarOption.series as Array<{
+        type: string;
+        name: string;
+        data?: number[];
+      }>;
+
+      // Filter only the series that are of type 'bar' and are selected
+      const activeSeries = series.filter(
+        (s) => s.type === "bar" && selected[s.name]
+      );
+
+      // Calculate total data for the active series
+      const totalData = stackBarOption.xAxis?.data?.map(
+        (_: unknown, idx: number) =>
+          activeSeries.reduce((sum, s) => sum + (s.data?.[idx] ?? 0), 0)
+      );
+
+      chart.setOption({
+        series: [
+          ...activeSeries,
+          {
+            ...series.find((s) => s.name === "Total"),
+            data: totalData,
+          },
+        ],
+      });
+    };
+
+    chart.on("legendselectchanged", handleLegendSelect);
+    return () => {
+      chart.off("legendselectchanged", handleLegendSelect);
+    };
+  }, [stackBarOption]);
 
   return (
     <div className="space-y-4">
@@ -69,6 +112,7 @@ export default function ProductionSection({
         </CardHeader>
         <CardContent>
           <ReactECharts
+            ref={stackedRef}
             style={{ width: "100%", height: "100%", minHeight: 300 }}
             option={stackBarOption}
           />
