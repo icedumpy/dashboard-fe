@@ -46,26 +46,34 @@ export function useStackedBarOptions({
 
   // Generate series configuration
   const seriesConfig = useMemo(() => {
-    return chartData.seriesNames.map((name, index) => ({
+    const baseSeries = chartData.seriesNames.map((name, index) => ({
       name,
       type: "bar" as const,
       stack: "total",
       barWidth: "60%",
       data: chartData.rawData[index] || [],
-      label: {
-        show: index === chartData.seriesNames.length - 1,
-        position: "top" as const,
-        formatter: (params: { dataIndex: number }) => {
-          // Calculate sum for all series at this data point
-          let totalSum = 0;
-          chartData.rawData.forEach((seriesData) => {
-            totalSum += seriesData[params.dataIndex] || 0;
-          });
-
-          return totalSum > 0 ? totalSum.toLocaleString() : "";
-        },
-      },
     }));
+
+    const totalSeries = {
+      name: "Total",
+      type: "bar" as const,
+      barWidth: "60%",
+      barGap: "-100%",
+      data: chartData.totalData,
+      itemStyle: {
+        color: "rgba(0,0,0,0)",
+      },
+      label: {
+        show: true,
+        position: "top" as const,
+        formatter: (params: { value: number }) =>
+          params.value > 0 ? params.value.toLocaleString() : "",
+      },
+      tooltip: { show: false },
+      legendHoverLink: false,
+    };
+
+    return [...baseSeries, totalSeries];
   }, [chartData]);
 
   return useMemo(
@@ -75,13 +83,14 @@ export function useStackedBarOptions({
         left: "2%",
         right: "2%",
         bottom: "4%",
-        top: "16%",
+        top: "22%",
         containLabel: true,
       },
       legend: {
         orient: "horizontal",
         top: "5%",
         left: "center",
+        data: chartData.seriesNames,
       },
       tooltip: {
         trigger: "axis",
