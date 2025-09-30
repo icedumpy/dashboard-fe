@@ -89,7 +89,7 @@ export function DataTable<T extends object>({
   return (
     <div className="overflow-hidden border rounded-md">
       <Table>
-        <TableHeader>
+        <TableHeader className="bg-accent">
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
               {headerGroup.headers.map((header) => {
@@ -99,10 +99,11 @@ export function DataTable<T extends object>({
 
                 if (enableSorting) {
                   return (
-                    <TableHead key={header.id} className="px-4 py-2">
+                    <TableHead key={header.id} className="px-3 py-1">
                       <Button
+                        size="sm"
                         variant="ghost"
-                        className="shadow-none cursor-pointer"
+                        className="p-0! shadow-none cursor-pointer"
                         onClick={() => handleSortClick(header.column.id)}
                       >
                         {flexRender(
@@ -119,13 +120,7 @@ export function DataTable<T extends object>({
                 }
 
                 return (
-                  <TableHead
-                    key={header.id}
-                    className="px-4 py-2"
-                    onClick={() =>
-                      console.log("header clicked", header.column.id)
-                    }
-                  >
+                  <TableHead key={header.id} className="px-3 py-1">
                     {flexRender(
                       header.column.columnDef.header,
                       header.getContext()
@@ -151,7 +146,7 @@ export function DataTable<T extends object>({
                   return (
                     <TableCell
                       key={cell.id}
-                      className={cn("px-4 py-2", metaClass)}
+                      className={cn("px-3 py-2", metaClass)}
                     >
                       {flexRender(
                         cell.column.columnDef.cell,
