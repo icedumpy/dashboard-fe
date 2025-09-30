@@ -65,6 +65,7 @@ export const useBarChartOptions = ({
             },
           },
           barMaxWidth: 50,
+          showBackground: true,
         },
       ],
       tooltip: {
