@@ -1,3 +1,4 @@
+import { RotateCcwIcon } from "lucide-react";
 import dayjs from "dayjs";
 
 import ProductionSection from "./production-section";
@@ -11,6 +12,7 @@ import {
 } from "@/components/ui/select";
 import { DatePicker } from "@/components/ui/date-picker";
 import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
 
 import { useProductionLineOptions } from "@/hooks/option/use-production-line-option";
 import useItemFilters from "@/pages/operator-page/hooks/use-item-filters";
@@ -54,11 +56,16 @@ export default function SummaryDashboard() {
     date_to: dateTo ? dayjs(dateTo).format(DATE_FORMAT_ISO) : undefined,
   });
 
+  const clearFilters = () => {
+    setDateFrom(null);
+    setDateTo(null);
+  };
+
   return (
     <div className="space-y-3">
       <Card>
-        <CardContent className="flex flex-col items-baseline gap-3 md:flex-row">
-          <div className="flex flex-col items-start justify-start gap-2 mt-6 md:items-center md:flex-row">
+        <CardContent className="flex flex-col items-start gap-3 pt-6 md:items-center md:flex-row">
+          <div className="flex flex-col items-start justify-start gap-2 md:items-center md:flex-row">
             <Label>Production Line</Label>
             <Select
               value={filters.line_id}
@@ -113,6 +120,14 @@ export default function SummaryDashboard() {
               }
             }}
           />
+          <Button
+            variant="outline"
+            className="w-full md:w-fit"
+            disabled={!dateFrom && !dateTo}
+            onClick={clearFilters}
+          >
+            <RotateCcwIcon /> ล้างตัวกรอง
+          </Button>
         </CardContent>
       </Card>
       <Card>
