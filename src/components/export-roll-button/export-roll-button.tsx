@@ -29,8 +29,9 @@ export default function ExportRollButton({
 }) {
   const { data } = useLineAPI();
   const itemReport = useItemReportAPI();
+  const lineCode = getLineCode(Number(filters.line_id), data?.data);
   const handleExport = useCallback(() => {
-    const filename = `roll-station-line-${filters.line_id}-${dayjs().format(
+    const filename = `roll-station-line-${lineCode}-${dayjs().format(
       "YYYY-MM-DD"
     )}.csv`;
 
@@ -42,9 +43,7 @@ export default function ExportRollButton({
         },
       }
     );
-  }, [filters, itemReport]);
-
-  const lineCode = getLineCode(Number(filters.line_id), data?.data);
+  }, [filters, itemReport, lineCode]);
 
   return (
     <Dialog>

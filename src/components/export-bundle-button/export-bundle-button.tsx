@@ -30,8 +30,9 @@ export default function ExportBundleButton({
 }) {
   const { data } = useLineAPI();
   const itemReport = useItemReportAPI();
+  const lineCode = getLineCode(Number(filters.line_id), data?.data);
   const handleExport = useCallback(() => {
-    const filename = `bundle-station-line-${filters.line_id}-${dayjs().format(
+    const filename = `bundle-station-line-${lineCode}-${dayjs().format(
       "YYYY-MM-DD"
     )}.csv`;
 
@@ -53,9 +54,7 @@ export default function ExportBundleButton({
         },
       }
     );
-  }, [itemReport, filters]);
-
-  const lineCode = getLineCode(Number(filters.line_id), data?.data);
+  }, [lineCode, itemReport, filters]);
 
   return (
     <Dialog>
