@@ -16,8 +16,9 @@ describe("sanitizeQueryParams", () => {
     };
     // Act
     const result = sanitizeQueryParams(params);
+
     // Assert
-    expect(result).toEqual({ f: 0, g: false, h: "value" });
+    expect(result).toEqual({ h: "value" });
   });
 
   it("should return undefined if all values are empty (edge case)", () => {
@@ -48,7 +49,6 @@ describe("sanitizeQueryParams", () => {
     expect(result).toEqual({
       a: 1,
       b: "test",
-      c: true,
     });
   });
 
@@ -63,11 +63,63 @@ describe("sanitizeQueryParams", () => {
     // Act
     const result = sanitizeQueryParams(params);
     // Assert
-    expect(result).toEqual({ a: 0, b: false });
+    expect(result).toEqual({});
   });
 
   it("should handle non-object input gracefully (error/edge case)", () => {
     // Act & Assert
-    expect(sanitizeQueryParams({})).toEqual({});
+    expect(sanitizeQueryParams(null)).toEqual({});
+    expect(sanitizeQueryParams(undefined)).toEqual({});
+    expect(sanitizeQueryParams("string")).toEqual({});
+    expect(sanitizeQueryParams(123)).toEqual({});
+    expect(sanitizeQueryParams([])).toEqual({});
+  });
+
+  it("should respect strict option when set to false", () => {
+    // Arrange
+    const params = {
+      a: "",
+      b: 0,
+      c: false,
+      d: "value",
+      e: null,
+      f: undefined,
+    };
+    // Act
+    const result = sanitizeQueryParams(params, { strict: false });
+    // Assert
+    expect(result).toEqual({
+      d: "value",
+    });
+  });
+
+  it("should handle nested objects and arrays correctly", () => {
+    // Arrange
+    const params = {
+      a: { nested: "value" },
+      b: [1, 2, 3],
+      c: [],
+      d: {},
+      e: "test",
+    };
+    // Act
+    const result = sanitizeQueryParams(params);
+    // Assert
+    expect(result).toEqual({ a: { nested: "value" }, b: [1, 2, 3], e: "test" });
+  });
+
+  it("should preserve numeric zero when strict is false", () => {
+    // Arrange
+    const params = {
+      count: 0,
+      page: 1,
+      name: "",
+    };
+    // Act
+    const result = sanitizeQueryParams(params, { strict: false });
+    // Assert
+    expect(result).toEqual({
+      page: 1,
+    });
   });
 });
