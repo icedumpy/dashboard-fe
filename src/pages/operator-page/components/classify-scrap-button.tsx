@@ -24,11 +24,11 @@ import { classifyScrapSchema } from "../schema";
 import { useAuth } from "@/hooks/auth/use-auth";
 import { ROLES } from "@/constants/auth";
 
-import type { StationItemType } from "@/types/station";
+import type { Item } from "@/types/item";
 
 interface ClassifyScrapButtonProps {
   id?: number;
-  status: StationItemType["status_code"];
+  status: Item["status_code"];
 }
 
 export default function ClassifyScrapButton({ id }: ClassifyScrapButtonProps) {

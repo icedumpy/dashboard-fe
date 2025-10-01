@@ -1,11 +1,11 @@
 import { LOGIN_ENDPOINT, PROFILE_ENDPOINT } from "@/constants/api";
 import axiosInstance from "@/lib/axios-instance";
 
-import { LoginFormType } from "@/pages/login-page/types";
+import { LoginForm } from "@/pages/login-page/types";
 
 // Example auth service
 export const AuthService = {
-  login: async (credentials: LoginFormType) => {
+  login: async (credentials: LoginForm) => {
     const response = await axiosInstance.post(LOGIN_ENDPOINT, credentials);
     return response.data;
   },

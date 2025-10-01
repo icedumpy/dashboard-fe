@@ -7,17 +7,17 @@ import { ACCESS_TOKEN, REFRESH_TOKEN } from "@/constants/auth";
 import { LOGIN_ENDPOINT, PROFILE_ENDPOINT } from "@/constants/api";
 import { clearAuthSession } from "@/helpers/auth";
 
-import type { LoginFormType } from "@/pages/login-page/types";
-import type { UserType } from "@/types/auth";
+import type { LoginForm } from "@/pages/login-page/types";
+import type { User } from "@/types/auth";
 
 // Auth API functions
 const authApi = {
-  login: async (credentials: LoginFormType) => {
+  login: async (credentials: LoginForm) => {
     const response = await axiosInstance.post(LOGIN_ENDPOINT, credentials);
     return response.data;
   },
 
-  getCurrentUser: async (): Promise<UserType> => {
+  getCurrentUser: async (): Promise<User> => {
     const response = await axiosInstance.get(PROFILE_ENDPOINT);
     return response.data;
   },

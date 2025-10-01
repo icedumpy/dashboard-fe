@@ -10,12 +10,12 @@ import ViewerPage from "./pages/viewer-page";
 import { useAuth } from "./hooks/auth/use-auth";
 import { ROLES } from "./constants/auth";
 
-import type { RoleType } from "./types/auth";
+import type { Role } from "./types/auth";
 
 function App() {
   const { user } = useAuth();
 
-  const getDashboard = (role?: RoleType) => {
+  const getDashboard = (role?: Role) => {
     switch (role) {
       case ROLES.VIEWER:
         return <ViewerPage />;

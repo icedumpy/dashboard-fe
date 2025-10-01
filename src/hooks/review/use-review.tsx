@@ -4,14 +4,14 @@ import { REVIEW_ENDPOINT } from "@/constants/api";
 import { ReviewService } from "@/services/review-service";
 import { sanitizeQueryParams } from "@/utils/sanitize-query-params";
 
-import type { PaginationType } from "@/types/pagination";
+import type { Pagination } from "@/types/pagination";
 import type { ReviewStateT, ReviewSummaryT, ReviewT } from "@/types/review";
 import type { OrderBy } from "@/types/order";
 
 interface ReviewQueryResponse {
   data: ReviewT[];
   summary?: ReviewSummaryT;
-  pagination: PaginationType;
+  pagination: Pagination;
 }
 
 interface ReviewParams {

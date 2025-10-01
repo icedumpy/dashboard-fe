@@ -3,7 +3,7 @@ import { useQuery, UseQueryOptions } from "@tanstack/react-query";
 import { ITEM_ENDPOINT } from "@/constants/api";
 import { ItemService } from "@/services/item-service";
 
-import type { StationDetailResponse } from "@/types/station";
+import type { StationDetailResponse } from "@/types/item";
 
 export const useItemDetailAPI = (
   id?: string,

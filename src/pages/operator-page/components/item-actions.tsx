@@ -8,7 +8,7 @@ import { useAuth } from "@/hooks/auth/use-auth";
 import { STATUS } from "@/constants/status";
 import { useItemDetailAPI } from "@/hooks/item/use-item-detail";
 
-import type { StationItemType } from "@/types/station";
+import type { Item } from "@/types/item";
 
 interface ItemActionsProps {
   itemId: number;
@@ -18,7 +18,7 @@ export default function ItemActions({ itemId }: ItemActionsProps) {
   const { user } = useAuth();
   const { data } = useItemDetailAPI(String(itemId));
 
-  const status = data?.data?.status_code as StationItemType["status_code"];
+  const status = data?.data?.status_code as Item["status_code"];
   const isClassifyScrap = status === STATUS.RECHECK;
   const showPrinterUpdateButton = canUpdatePrinter(data?.defects, user?.role);
 

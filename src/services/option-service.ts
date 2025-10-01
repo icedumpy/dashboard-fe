@@ -4,7 +4,7 @@ import {
   PRODUCTION_LINE_ENDPOINT,
 } from "@/constants/api";
 
-import type { ProductionLineT } from "@/types/line";
+import type { ProductionLineT } from "@/types/production-line";
 import type { OptionT } from "@/types/option";
 import type { DefectT } from "@/types/defect";
 

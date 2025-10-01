@@ -1,6 +1,6 @@
 import { ColumnDef } from "@tanstack/react-table";
 
-import type { PaginationType } from "@/types/pagination";
+import type { Pagination } from "@/types/pagination";
 import type { OrderBy } from "@/types/order";
 
 export type DataTableProps<T extends object> = {
@@ -16,6 +16,6 @@ export type DataTableProps<T extends object> = {
   };
 };
 
-export interface DataTablePaginationProps extends PaginationType {
+export interface DataTablePaginationProps extends Pagination {
   onPageChange: (page: number) => void;
 }

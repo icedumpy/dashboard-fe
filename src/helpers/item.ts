@@ -5,9 +5,9 @@ import { REVIEW_STATE_OPTION } from "@/constants/review";
 import { STATUS } from "@/constants/status";
 
 import type { LineResponse } from "@/hooks/line/use-line";
-import type { RoleType, UserType } from "@/types/auth";
+import type { Role, User } from "@/types/auth";
 import type { OptionT } from "@/types/option";
-import type { ReviewT, StationDetailResponse } from "@/types/station";
+import type { ReviewT, StationDetailResponse } from "@/types/item";
 
 export const getLineCode = (
   lineId?: number,
@@ -56,11 +56,11 @@ export function canRequestChanges(
   status?: string,
   userLineId?: string | number,
   currentLineId?: string | number,
-  userRole?: RoleType
+  userRole?: Role
 ): boolean {
   if (!status || !userLineId || !currentLineId) return false;
   const editableStatuses = [STATUS.DEFECT, STATUS.RECHECK, STATUS.REJECTED];
-  const allowedRoles: RoleType[] = [ROLES.OPERATOR];
+  const allowedRoles: Role[] = [ROLES.OPERATOR];
 
   const isEditable = editableStatuses.includes(status);
   const isSameLine = String(userLineId) === String(currentLineId);
@@ -75,12 +75,12 @@ export function isHiddenRepairImages(statusCode: string | undefined) {
 
 export function shouldShowUpdateStatusButton(
   statusCode?: string,
-  user?: UserType
+  user?: User
 ): boolean {
   if (!user) return false;
 
   const allowedStatuses = [STATUS.DEFECT, STATUS.NORMAL, STATUS.SCRAP];
-  const disallowedRoles: RoleType[] = [ROLES.VIEWER, ROLES.INSPECTOR];
+  const disallowedRoles: Role[] = [ROLES.VIEWER, ROLES.INSPECTOR];
 
   return (
     allowedStatuses.includes(String(statusCode)) &&
@@ -88,18 +88,18 @@ export function shouldShowUpdateStatusButton(
   );
 }
 
-export function canEditItemDetail(role?: RoleType) {
-  const allowedRoles: RoleType[] = [ROLES.INSPECTOR, ROLES.OPERATOR];
+export function canEditItemDetail(role?: Role) {
+  const allowedRoles: Role[] = [ROLES.INSPECTOR, ROLES.OPERATOR];
   return !!role && allowedRoles.includes(role);
 }
 
 export function canUpdatePrinter(
   defects?: StationDetailResponse["defects"],
-  role?: RoleType
+  role?: Role
 ): boolean {
   if (!role || !defects) return false;
 
-  const allowedRoles: RoleType[] = [ROLES.OPERATOR, ROLES.INSPECTOR];
+  const allowedRoles: Role[] = [ROLES.OPERATOR, ROLES.INSPECTOR];
   const hasScratchDefect = defects?.some(
     (defect) => defect.defect_type_code === "SCRATCH"
   );

@@ -1,4 +1,4 @@
-export interface PaginationType {
+export interface Pagination {
   page?: number;
   page_size?: number;
   total?: number;

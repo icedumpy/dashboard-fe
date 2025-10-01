@@ -1,22 +1,22 @@
 import { ROLES } from "@/constants/auth";
 
-export interface UserType {
+export interface User {
   id: number;
   username: string;
   display_name: string;
-  role: RoleType;
+  role: Role;
   is_active: boolean;
-  line?: LineType;
-  shift?: ShiftType;
+  line?: ProductionLine;
+  shift?: Shift;
 }
 
-export interface LineType {
+export interface ProductionLine {
   id: number;
   code: string;
   name: string;
 }
 
-export interface ShiftType {
+export interface Shift {
   id: number;
   code: string;
   name: string;
@@ -24,4 +24,4 @@ export interface ShiftType {
   end_time: string;
 }
 
-export type RoleType = (typeof ROLES)[keyof typeof ROLES];
+export type Role = (typeof ROLES)[keyof typeof ROLES];

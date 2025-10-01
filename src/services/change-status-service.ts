@@ -7,11 +7,11 @@ import { DecideStatusParams } from "@/hooks/change-status/use-decide-status";
 import axiosInstance from "@/lib/axios-instance";
 
 import type { ChangeStatusSummary, ChangeStatusT } from "@/types/change-status";
-import type { PaginationType } from "@/types/pagination";
+import type { Pagination } from "@/types/pagination";
 
 interface ChangeStatusResponse {
   data: ChangeStatusT[];
-  pagination: PaginationType;
+  pagination: Pagination;
   summary: ChangeStatusSummary;
 }
 

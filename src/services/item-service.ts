@@ -10,14 +10,14 @@ import { ItemUpdateParams } from "@/hooks/item/use-item-update";
 import axiosInstance from "@/lib/axios-instance";
 
 import type { FilterType } from "@/pages/operator-page/types";
-import type { StationDetailResponse, StationResponse } from "@/types/station";
+import type { StationDetailResponse, ItemResponse } from "@/types/item";
 
 export const ItemService = {
   getItems: async (params: FilterType) => {
     const response = await axiosInstance.get(ITEM_ENDPOINT, {
       params,
     });
-    return response.data as StationResponse;
+    return response.data as ItemResponse;
   },
   getItemDetail: async (id?: string) => {
     const response = await axiosInstance.get(`${ITEM_ENDPOINT}/${id}`);

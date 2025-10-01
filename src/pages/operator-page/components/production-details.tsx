@@ -31,7 +31,7 @@ import { useItemUpdate } from "@/hooks/item/use-item-update";
 import { useAuth } from "@/hooks/auth/use-auth";
 import useItemFilters from "@/pages/operator-page/hooks/use-item-filters";
 
-import type { StationDetailResponse } from "@/types/station";
+import type { StationDetailResponse } from "@/types/item";
 import type { UpdateItemDetail } from "../types";
 
 interface ProductDetailProps {

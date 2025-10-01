@@ -8,7 +8,7 @@ import { PROFILE_ENDPOINT } from "@/constants/api";
 import { AuthContext } from "@/contexts/auth-context";
 import { removeCookie, setCookie } from "@/utils/cookie";
 
-import type { LoginFormType } from "@/pages/login-page/types";
+import type { LoginForm } from "@/pages/login-page/types";
 import type { AuthContextType } from "@/contexts/auth-context";
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
@@ -19,7 +19,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const { data: user, isLoading: profileLoading } = useProfileAPI();
 
   const login = useCallback(
-    async (values: LoginFormType): Promise<void> => {
+    async (values: LoginForm): Promise<void> => {
       try {
         const data = await loginMutation.mutateAsync({
           username: values.username,

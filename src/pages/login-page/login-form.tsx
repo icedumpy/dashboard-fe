@@ -15,7 +15,7 @@ import { loginSchema } from "./schema";
 import { useAuth } from "@/hooks/auth/use-auth";
 import { cn } from "@/lib/utils";
 
-import type { LoginFormType } from "./types";
+import type { LoginForm } from "./types";
 
 export default function LoginCard() {
   const { login, isLoginLoading, loginError } = useAuth();
@@ -27,7 +27,7 @@ export default function LoginCard() {
     resolver: zodResolver(loginSchema),
   });
 
-  function onSubmit(values: LoginFormType) {
+  function onSubmit(values: LoginForm) {
     login(values);
   }
 

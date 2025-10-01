@@ -2,10 +2,11 @@ import z from "zod";
 
 import { filtersSchema, updateItemDetailsSchema } from "./schema";
 
-import type { StationItemType, StationType } from "@/types/station";
+import type { Item } from "@/types/item";
+import type { Station } from "@/types/station";
 export interface CheckButtonProps {
-  itemId: StationItemType["id"];
-  stationType: StationType;
+  itemId: Item["id"];
+  stationType: Station;
 }
 
 export type FilterType = z.infer<typeof filtersSchema>;

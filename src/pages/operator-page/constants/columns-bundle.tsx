@@ -9,9 +9,9 @@ import DefectAlertIcon from "@/components/defect-alert-icon";
 import { DATE_TIME_FORMAT } from "@/constants/format";
 import { STATUS } from "@/constants/status";
 
-import type { StationItemType } from "@/types/station";
+import type { Item } from "@/types/item";
 
-export const COLUMNS_BUNDLE: ColumnDef<StationItemType>[] = [
+export const COLUMNS_BUNDLE: ColumnDef<Item>[] = [
   {
     accessorKey: "product_code",
     header: "Product Code",

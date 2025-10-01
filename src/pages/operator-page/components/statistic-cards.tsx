@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 
-import type { StationResponse } from "@/types/station";
+import type { StationResponse } from "@/types/item";
 
 export default function StatisticCards({
   data,

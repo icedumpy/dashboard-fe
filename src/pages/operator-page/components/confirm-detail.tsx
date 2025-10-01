@@ -1,5 +1,5 @@
 import StatusBadge from "@/components/status-badge";
-import { StationDetailResponse } from "@/types/station";
+import { StationDetailResponse } from "@/types/item";
 
 export default function ConfirmDetail({
   data,

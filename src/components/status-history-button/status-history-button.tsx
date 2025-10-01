@@ -18,7 +18,7 @@ import { DATE_TIME_FORMAT } from "@/constants/format";
 import { useItemStatusHistory } from "@/hooks/item/use-item-status-history";
 
 import type { ColumnDef } from "@tanstack/react-table";
-import type { ItemStatusHistoryT } from "@/types/station";
+import type { ItemStatusHistoryT } from "@/types/item";
 
 export default function StatusHistoryButton({ itemId }: { itemId: number }) {
   const [open, setOpen] = useState(false);

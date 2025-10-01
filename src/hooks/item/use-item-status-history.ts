@@ -3,7 +3,7 @@ import { useQuery, UseQueryOptions } from "@tanstack/react-query";
 import { ITEM_STATUS_HISTORY_ENDPOINT } from "@/constants/api";
 import { ItemService } from "@/services/item-service";
 
-import type { ItemStatusHistoryT } from "@/types/station";
+import type { ItemStatusHistoryT } from "@/types/item";
 
 export type ItemStatusHistoryResponse = ItemStatusHistoryT[];
 

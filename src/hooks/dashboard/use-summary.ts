@@ -3,11 +3,11 @@ import { useQuery } from "@tanstack/react-query";
 import { DASHBOARD_SUMMARY_ENDPOINT } from "@/constants/api";
 import { DashboardService } from "@/services/dashboard-service";
 
-import type { StationType } from "@/types/station";
+import type { Station } from "@/types/station";
 
 export interface SummaryParams {
   line_id: number;
-  station: StationType;
+  station: Station;
   date_from?: string | Date;
   date_to?: string | Date;
 }
