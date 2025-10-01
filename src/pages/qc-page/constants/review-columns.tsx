@@ -1,10 +1,11 @@
 import StatusBadge from "@/components/status-badge";
 import ViewDetailButton from "../components/view-detail-button";
 import ReviewDecisionButton from "@/components/review-decision-button";
+import DefectAlertIcon from "@/components/defect-alert-icon";
 
 import { useItemDetailAPI } from "@/hooks/item/use-item-detail";
 import { useProductionLineOptions } from "@/hooks/option/use-production-line-option";
-import { STATION } from "@/constants/station";
+import { STATION, STATION_STATUS } from "@/constants/station";
 import { STATUS_LIST } from "@/constants/status";
 import { useDefectOptionAPI } from "@/hooks/option/use-defect-option";
 import { REVIEW_STATE } from "@/constants/review";
@@ -20,7 +21,17 @@ export const REVIEW_COLUMNS: ColumnDef<ChangeStatusT>[] = [
     enableSorting: true,
     cell: ({ row }) => {
       const itemId = row.original.item_id;
-      return <LineId itemId={itemId} />;
+      const currentStatusId = row.original.to_status_id;
+      const isDefect =
+        (STATUS_LIST.find((s) => s.id === +currentStatusId)
+          ?.code as StatusT) === STATION_STATUS.DEFECT;
+
+      return (
+        <div className="flex items-center justify-start gap-1">
+          <DefectAlertIcon isDefect={isDefect} />
+          <LineId itemId={itemId} />
+        </div>
+      );
     },
   },
   {

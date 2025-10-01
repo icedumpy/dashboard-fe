@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 import type { StatusT } from "@/types/status";
 
 const STATUS_VARIANTS = {
-  DEFECT: "text-orange-800 bg-orange-100 border-orange-200",
+  DEFECT: "text-red-800 bg-red-100 border-red-200",
   RECHECK: "text-orange-800 bg-orange-100 border-orange-200",
   SCRAP: "text-green-800 bg-green-100 border-green-200",
   NORMAL: "text-green-800 bg-green-100 border-green-200",
