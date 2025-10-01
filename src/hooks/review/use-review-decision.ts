@@ -1,4 +1,4 @@
-import { REVIEW_DECISION_ENDPOINT } from "@/contants/api";
+import { REVIEW_DECISION_ENDPOINT } from "@/constants/api";
 import { ReviewService } from "@/services/review-service";
 import { useMutation } from "@tanstack/react-query";
 

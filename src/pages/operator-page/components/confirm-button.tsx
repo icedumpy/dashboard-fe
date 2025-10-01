@@ -16,25 +16,21 @@ import FileUpload from "@/components/ui/file-upload";
 import ConfirmDetail from "./confirm-detail";
 import ConfirmEditChecklist from "./confirm-edit-check-list";
 
-import { ITEM_ENDPOINT } from "@/contants/api";
-import { STATION_STATUS } from "@/contants/station";
+import { ITEM_ENDPOINT } from "@/constants/api";
 import { useImageUpload } from "@/hooks/upload/use-image-upload";
 import { useItemDetailAPI } from "@/hooks/item/use-item-detail";
 import { useItemFixRequest } from "@/hooks/item/use-item-fix-request";
-import { useAuth } from "@/hooks/auth/use-auth-v2";
-import { ROLES } from "@/contants/auth";
+import { useAuth } from "@/hooks/auth/use-auth";
+import { ROLES } from "@/constants/auth";
+import { STATUS } from "@/constants/status";
 
 import type { ImageT } from "@/types/image";
 import type { CheckButtonProps } from "../types";
 
-export default function ConfirmButton({
-  id,
-  status,
-  is_pending_review,
-}: CheckButtonProps) {
+export default function ConfirmButton({ itemId }: CheckButtonProps) {
   const [open, setOpen] = useState(false);
   const { user } = useAuth();
-  const { data } = useItemDetailAPI(String(id), {
+  const { data } = useItemDetailAPI(String(itemId), {
     enabled: open,
     staleTime: Infinity,
   });
@@ -42,11 +38,15 @@ export default function ConfirmButton({
   const queryClient = useQueryClient();
   const imageUpload = useImageUpload();
   const itemFixRequest = useItemFixRequest();
+  const isPendingReview = Boolean(data?.data?.is_pending_review);
+  const isChangingStatusPending = Boolean(
+    data?.data?.is_changing_status_pending
+  );
 
   const onConfirmEdit = useCallback(() => {
     itemFixRequest.mutate(
       {
-        item_data: String(id),
+        itemId: String(itemId),
         image_ids:
           (imageUpload.data?.data as ImageT[]).map((img) => Number(img.id)) ||
           [],
@@ -70,9 +70,9 @@ export default function ConfirmButton({
         },
       }
     );
-  }, [id, imageUpload, itemFixRequest, queryClient]);
+  }, [itemId, imageUpload, itemFixRequest, queryClient]);
 
-  const ALLOWED_STATUSES = [STATION_STATUS.DEFECT, STATION_STATUS.REJECTED];
+  const ALLOWED_STATUSES = [STATUS.DEFECT, STATUS.REJECTED];
 
   if (!ALLOWED_STATUSES.includes(status) || user?.role === ROLES.VIEWER)
     return null;
@@ -83,9 +83,9 @@ export default function ConfirmButton({
         <Button
           size="sm"
           className="text-xs rounded bg-amber-600 hover:bg-amber-600/90 h-fit py-0.5"
-          disabled={is_pending_review}
+          disabled={isPendingReview || isChangingStatusPending}
         >
-          {is_pending_review ? "รอการตรวจสอบ" : "ส่งเรื่องแก้ไข"}
+          {isPendingReview ? "รอการตรวจสอบ" : "ส่งเรื่องแก้ไข"}
         </Button>
       </DialogTrigger>
       <DialogContent>
@@ -95,7 +95,7 @@ export default function ConfirmButton({
         <div className="space-y-4">
           <ConfirmDetail data={data?.data} />
           <ConfirmEditChecklist />
-          {data?.data.status_code != STATION_STATUS.SCRAP && (
+          {data?.data.status_code != STATUS.SCRAP && (
             <div className="p-4 space-y-2 border rounded-md">
               <p>อัปโหลดรูปหลังการแก้ไข (จำเป็น) *</p>
               <FileUpload
@@ -104,7 +104,7 @@ export default function ConfirmButton({
                   const files = e.target.files;
                   const payload = {
                     files: files as unknown as FileList,
-                    item_id: String(id),
+                    item_id: String(itemId),
                   };
 
                   imageUpload.mutate(payload, {
@@ -120,8 +120,10 @@ export default function ConfirmButton({
           )}
         </div>
         <DialogFooter>
-          <DialogClose>
-            <Button variant="outline">ยกเลิก</Button>
+          <DialogClose asChild>
+            <Button variant="outline" type="button">
+              ยกเลิก
+            </Button>
           </DialogClose>
           <Button
             className="bg-amber-600 hover:bg-amber-600/90"

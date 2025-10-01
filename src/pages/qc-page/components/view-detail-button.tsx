@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useQueryState } from "nuqs";
 import { EyeIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -14,15 +15,37 @@ import {
 import ImageDefect from "@/pages/operator-page/components/image-defect";
 import ImageRepair from "@/pages/operator-page/components/image-repair";
 import ProductDetail from "@/pages/operator-page/components/production-details";
+import UpdateStatusButton from "@/components/update-status-button";
+import ReviewDecisionButton from "@/components/review-decision-button";
 
 import { useItemDetailAPI } from "@/hooks/item/use-item-detail";
+import { shouldShowUpdateStatusButton } from "@/helpers/item";
+import { useAuth } from "@/hooks/auth/use-auth";
+import { REVIEW_STATE } from "@/constants/review";
+import { TABS, TABS_KEYS } from "../constants/tabs";
 
-export default function ViewDetailButton({ id }: { id: string }) {
+export default function ViewDetailButton({
+  itemId,
+  reviewId,
+}: {
+  itemId: string;
+  reviewId: string;
+}) {
+  const { user } = useAuth();
   const [open, setOpen] = useState(false);
-  const { data } = useItemDetailAPI(id, {
-    enabled: open,
-    staleTime: Infinity,
+  const [tabs] = useQueryState("tabs", {
+    defaultValue: TABS[0].value,
   });
+  const { data } = useItemDetailAPI(itemId, {
+    enabled: open && Boolean(itemId),
+  });
+
+  const canUpdateStatus =
+    shouldShowUpdateStatusButton(data?.data?.status_code, user) &&
+    data?.data.station;
+
+  const canReviewDecision =
+    tabs === TABS_KEYS.WAITING_FOR_REVIEW || tabs === TABS_KEYS.STATUS_REVIEW;
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -40,7 +63,7 @@ export default function ViewDetailButton({ id }: { id: string }) {
             <div>
               <h3 className="text-xl font-bold">ตรวจสอบ Defect</h3>
               <p className="text-sm font-normal text-muted-foreground">
-                {data?.data?.product_code} - Role {data?.data.roll_number}
+                {data?.data?.product_code} - Roll {data?.data.roll_number}
               </p>
             </div>
           </DialogTitle>
@@ -70,8 +93,32 @@ export default function ViewDetailButton({ id }: { id: string }) {
           </div>
         </div>
         <DialogFooter>
+          {canReviewDecision && (
+            <>
+              <ReviewDecisionButton
+                buttonProps={{ size: "icon" }}
+                itemId={itemId}
+                reviewId={reviewId}
+                decision={REVIEW_STATE.APPROVED}
+              />
+              <ReviewDecisionButton
+                buttonProps={{ size: "icon" }}
+                itemId={itemId}
+                reviewId={reviewId}
+                decision={REVIEW_STATE.REJECTED}
+              />
+            </>
+          )}
+          {canUpdateStatus && (
+            <UpdateStatusButton
+              itemId={itemId}
+              stationType={data?.data.station}
+            />
+          )}
           <DialogClose asChild>
-            <Button variant="outline">ปิด</Button>
+            <Button variant="outline" type="button">
+              ปิด
+            </Button>
           </DialogClose>
         </DialogFooter>
       </DialogContent>

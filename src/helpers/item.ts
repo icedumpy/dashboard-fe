@@ -1,0 +1,107 @@
+import { isEmpty } from "radash";
+
+import { ROLES } from "@/constants/auth";
+import { REVIEW_STATE_OPTION } from "@/constants/review";
+import { STATUS } from "@/constants/status";
+
+import type { LineResponse } from "@/hooks/line/use-line";
+import type { RoleType, UserType } from "@/types/auth";
+import type { OptionT } from "@/types/option";
+import type { ReviewT, StationDetailResponse } from "@/types/station";
+
+export const getLineCode = (
+  lineId?: number,
+  lineData?: LineResponse["data"]
+) => {
+  return (
+    lineData?.find((item) => Number(item.id) === Number(lineId))?.code ?? "-"
+  );
+};
+
+export const getDefectNames = (
+  defects?: { defect_type_code: string }[],
+  defectOptions?: OptionT[]
+) => {
+  if (isEmpty(defects) || isEmpty(defectOptions)) return "-";
+  return defects
+    ?.map(
+      (defect) =>
+        defectOptions?.find(
+          (item) => item?.meta?.code === defect.defect_type_code
+        )?.label ?? "-"
+    )
+    .join(", ");
+};
+
+export const getCurrentState = (reviews?: ReviewT[]) => {
+  if (isEmpty(reviews)) return "-";
+  const sorted =
+    reviews
+      ?.sort(
+        (a, b) =>
+          new Date(a.submitted_at).getTime() -
+          new Date(b.submitted_at).getTime()
+      )
+      .map((review) => review.state) ?? [];
+
+  const latestState = sorted[sorted.length - 1];
+  const mappedLabel = REVIEW_STATE_OPTION.find(
+    (option) => option.value === latestState
+  )?.label;
+
+  return mappedLabel ?? "-";
+};
+
+export function canRequestChanges(
+  status?: string,
+  userLineId?: string | number,
+  currentLineId?: string | number,
+  userRole?: RoleType
+): boolean {
+  if (!status || !userLineId || !currentLineId) return false;
+  const editableStatuses = [STATUS.DEFECT, STATUS.RECHECK, STATUS.REJECTED];
+  const allowedRoles: RoleType[] = [ROLES.OPERATOR];
+
+  const isEditable = editableStatuses.includes(status);
+  const isSameLine = String(userLineId) === String(currentLineId);
+  const isRoleAllowed = userRole ? allowedRoles.includes(userRole) : true;
+
+  return isEditable && isSameLine && isRoleAllowed;
+}
+
+export function isHiddenRepairImages(statusCode: string | undefined) {
+  return ![STATUS.NORMAL, STATUS.SCRAP].includes(String(statusCode));
+}
+
+export function shouldShowUpdateStatusButton(
+  statusCode?: string,
+  user?: UserType
+): boolean {
+  if (!user) return false;
+
+  const allowedStatuses = [STATUS.DEFECT, STATUS.NORMAL, STATUS.SCRAP];
+  const disallowedRoles: RoleType[] = [ROLES.VIEWER, ROLES.INSPECTOR];
+
+  return (
+    allowedStatuses.includes(String(statusCode)) &&
+    !disallowedRoles.includes(user.role)
+  );
+}
+
+export function canEditItemDetail(role?: RoleType) {
+  const allowedRoles: RoleType[] = [ROLES.INSPECTOR, ROLES.OPERATOR];
+  return !!role && allowedRoles.includes(role);
+}
+
+export function canUpdatePrinter(
+  defects?: StationDetailResponse["defects"],
+  role?: RoleType
+): boolean {
+  if (!role || !defects) return false;
+
+  const allowedRoles: RoleType[] = [ROLES.OPERATOR, ROLES.INSPECTOR];
+  const hasScratchDefect = defects?.some(
+    (defect) => defect.defect_type_code === "SCRATCH"
+  );
+  return allowedRoles.includes(role) && !!hasScratchDefect;
+}

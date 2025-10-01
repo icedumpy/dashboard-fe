@@ -1,11 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 
-import { PRODUCTION_LINE_ENDPOINT } from "@/contants/api";
+import { PRODUCTION_LINE_ENDPOINT } from "@/constants/api";
 import { LineService } from "@/services/line-service";
 
 import type { ProductionLineT } from "@/types/line";
 
-interface LineResponse {
+export interface LineResponse {
   data: ProductionLineT[];
 }
 

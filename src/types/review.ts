@@ -1,3 +1,5 @@
+import { REVIEW_STATE } from "@/constants/review";
+
 export interface ReviewT {
   id: 5;
   type: string;
@@ -42,4 +44,13 @@ export interface Defect {
 
 export interface Meta {
   source: string;
+}
+
+export type ReviewStateT = (typeof REVIEW_STATE)[keyof typeof REVIEW_STATE];
+
+export interface ReviewSummaryT {
+  pending: number;
+  approved: number;
+  rejected: number;
+  total: number;
 }

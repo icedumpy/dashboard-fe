@@ -1,6 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 
-import { IMAGE_UPLOAD_ENDPOINT } from "@/contants/api";
+import { IMAGE_UPLOAD_ENDPOINT } from "@/constants/api";
 import { UploadService } from "@/services/upload-service";
 
 export const useImageUpload = () =>

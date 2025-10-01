@@ -8,6 +8,7 @@ import {
   Dialog,
   DialogClose,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -19,10 +20,17 @@ import ConfirmEditChecklist from "./confirm-edit-check-list";
 import ImageDefect from "./image-defect";
 import ImageRepair from "./image-repair";
 import ProductDetail from "./production-details";
+import UpdateStatusButton from "@/components/update-status-button";
+import PrinterUpdateButton from "@/components/printer-update-button";
 
-import { ITEM_ENDPOINT } from "@/contants/api";
-import { STATION_STATUS } from "@/contants/station";
-import { useAuth } from "@/hooks/auth/use-auth-v2";
+import { ITEM_ENDPOINT } from "@/constants/api";
+import {
+  shouldShowUpdateStatusButton,
+  isHiddenRepairImages,
+  canRequestChanges,
+  canUpdatePrinter,
+} from "@/helpers/item";
+import { useAuth } from "@/hooks/auth/use-auth";
 import { useItemDetailAPI } from "@/hooks/item/use-item-detail";
 import { useItemFixRequest } from "@/hooks/item/use-item-fix-request";
 import { useImageUpload } from "@/hooks/upload/use-image-upload";
@@ -30,35 +38,38 @@ import { useImageUpload } from "@/hooks/upload/use-image-upload";
 import type { ImageT } from "@/types/image";
 import type { CheckButtonProps } from "../types";
 
-export default function CheckButton({
-  id,
-  status,
-  is_pending_review,
-  item_data,
-}: CheckButtonProps) {
+export default function CheckButton({ itemId, stationType }: CheckButtonProps) {
   const [open, setOpen] = useState(false);
   const [mode, setMode] = useState<"VIEW" | "EDIT">("VIEW");
   const { user } = useAuth();
-  const [line] = useQueryState("line", {
+  const [line] = useQueryState("line_id", {
     defaultValue: String(user?.line?.id),
   });
 
   const queryClient = useQueryClient();
-
-  const { data } = useItemDetailAPI(String(id), {
+  const { data } = useItemDetailAPI(String(itemId), {
     enabled: open,
-    staleTime: Infinity,
   });
-
   const imageUpload = useImageUpload();
   const itemFixRequest = useItemFixRequest();
 
-  const isEditable = ![
-    STATION_STATUS.NORMAL,
-    STATION_STATUS.QC_PASSED,
-  ].includes(status);
-  const isCrossLine = Number(user?.line?.id) !== Number(line);
-  const canEdit = isEditable && !isCrossLine && !is_pending_review;
+  const canUpdateStatus = shouldShowUpdateStatusButton(
+    data?.data?.status_code,
+    user
+  );
+  const hiddenRepairImages = isHiddenRepairImages(data?.data?.status_code);
+  const canRequestChangesValue = canRequestChanges(
+    data?.data?.status_code,
+    Number(user?.line?.id),
+    line,
+    user?.role
+  );
+
+  const isPendingReview = Boolean(data?.data?.is_pending_review);
+  const isChangingStatusPending = Boolean(
+    data?.data?.is_changing_status_pending
+  );
+  const showPrinterUpdateButton = canUpdatePrinter(data?.defects, user?.role);
 
   const toggleOpen = useCallback(() => {
     setOpen(!open);
@@ -68,7 +79,7 @@ export default function CheckButton({
   const onConfirmEdit = useCallback(() => {
     itemFixRequest.mutate(
       {
-        item_data: String(id),
+        itemId: String(itemId),
         image_ids:
           (imageUpload.data?.data as ImageT[]).map((img) => Number(img.id)) ||
           [],
@@ -87,28 +98,19 @@ export default function CheckButton({
         },
         onError(error) {
           toast.error("แก้ไขไม่สำเร็จ", {
-            description: JSON.stringify(error),
+            description: error.message,
           });
         },
       }
     );
-  }, [id, imageUpload, itemFixRequest, queryClient]);
-
-  const hiddenRepairImages = ![
-    STATION_STATUS.NORMAL,
-    STATION_STATUS.SCRAP,
-  ].includes(String(item_data?.status_code));
+  }, [itemId, imageUpload, itemFixRequest, queryClient]);
 
   return (
     <>
       {/* Edit */}
       <Dialog open={mode === "VIEW" && open} onOpenChange={toggleOpen}>
         <DialogTrigger asChild>
-          <Button
-            size="sm"
-            className="text-xs rounded h-fit py-0.5"
-            onClick={() => setOpen(true)}
-          >
+          <Button size="xs" className="text-xs" onClick={() => setOpen(true)}>
             ตรวจสอบ
           </Button>
         </DialogTrigger>
@@ -117,20 +119,15 @@ export default function CheckButton({
           className="overflow-auto sm:max-w-4xl"
         >
           <DialogHeader>
-            <DialogTitle asChild>
-              <div>
-                <h3 className="text-xl font-bold">
-                  ตรวจสอบ {item_data?.station.toUpperCase()}
-                </h3>
-                <p className="text-sm font-normal text-muted-foreground">
-                  {data?.data?.product_code} - Role {data?.data.roll_number}
-                </p>
-              </div>
+            <DialogTitle>
+              ตรวจสอบ {data?.data?.station.toUpperCase()}
             </DialogTitle>
+            <DialogDescription>
+              {data?.data?.product_code} - Roll {data?.data.roll_number}
+            </DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
             <div className="space-y-2">
-              <blockquote className="font-bold">รูปปที่ระบบตรวจพบ</blockquote>
               <div className="flex flex-col gap-2 md:flex-row">
                 <div
                   className={
@@ -155,9 +152,27 @@ export default function CheckButton({
             </div>
           </div>
           <DialogFooter>
-            {canEdit && <Button onClick={() => setMode("EDIT")}>แก้ไข</Button>}
+            {canRequestChangesValue && (
+              <Button
+                onClick={() => setMode("EDIT")}
+                variant="update"
+                disabled={isPendingReview || isChangingStatusPending}
+              >
+                ส่งเรื่องแก้ไข
+              </Button>
+            )}
+            {canUpdateStatus && (
+              <UpdateStatusButton
+                itemId={String(itemId)}
+                stationType={stationType}
+                disabled={isChangingStatusPending}
+              />
+            )}
+            {showPrinterUpdateButton && <PrinterUpdateButton itemId={itemId} />}
             <DialogClose asChild>
-              <Button variant="outline">ปิด</Button>
+              <Button variant="outline" type="button">
+                ปิด
+              </Button>
             </DialogClose>
           </DialogFooter>
         </DialogContent>
@@ -180,7 +195,7 @@ export default function CheckButton({
                   const files = e.target.files;
                   const payload = {
                     files: files as unknown as FileList,
-                    item_id: String(id),
+                    item_id: String(itemId),
                   };
 
                   imageUpload.mutate(payload, {
@@ -195,8 +210,10 @@ export default function CheckButton({
             </div>
           </div>
           <DialogFooter>
-            <DialogClose>
-              <Button variant="outline">ยกเลิก</Button>
+            <DialogClose asChild>
+              <Button variant="outline" type="button">
+                ยกเลิก
+              </Button>
             </DialogClose>
             <Button
               className="bg-amber-600 hover:bg-amber-600/90"

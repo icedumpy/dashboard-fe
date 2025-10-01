@@ -1,13 +1,14 @@
-import { STATION } from "@/contants/station";
+import { STATION } from "@/constants/station";
 
 import type { PaginationType } from "./pagination";
 import type { ImageT } from "./image";
+import type { StatusT } from "./status";
 
 export type StationType = (typeof STATION)[keyof typeof STATION];
 
 export interface StationItemType {
   id: number;
-  station: string;
+  station: (typeof STATION)[keyof typeof STATION];
   line_id: number;
   product_code?: string;
   roll_number?: string;
@@ -15,17 +16,10 @@ export interface StationItemType {
   job_order_number?: string;
   roll_width?: number;
   detected_at: string;
-  status_code:
-    | "DEFECT"
-    | "REJECTED"
-    | "NORMAL"
-    | "RECHECK"
-    | "QC_PASS"
-    | "SCRAP";
+  status_code: StatusT;
   ai_note: string;
-  scrap_requires_qc: boolean;
-  scrap_confirmed_by?: number;
-  scrap_confirmed_at?: string;
+  acknowledged_by?: number;
+  acknowledged_at?: string;
   current_review_id: string;
   images_count: number;
   defects_count: number;
@@ -34,6 +28,7 @@ export interface StationItemType {
   is_pending_review: boolean;
   images: number;
   defects: string[];
+  is_changing_status_pending?: boolean;
 }
 
 export interface StationResponse {
@@ -43,11 +38,13 @@ export interface StationResponse {
 }
 
 export interface SummaryT {
-  total: number;
-  defects: number;
-  scrap: number;
+  defect: number;
+  normal: number;
   pending_defect: number;
-  pending_scrap: number;
+  qc_passed: number;
+  rejected: number;
+  scrap: number;
+  total: number;
 }
 
 export interface StationDetailResponse {
@@ -82,4 +79,22 @@ export interface ReviewedByUserT {
   username: string;
   display_name: string;
   role: string;
+}
+
+export interface ItemStatusHistoryT {
+  id: number;
+  event_type: string;
+  actor: ActorT;
+  from_status_id: unknown;
+  from_status_code: StatusT;
+  to_status_id: number;
+  to_status_code?: StatusT;
+  created_at: string;
+  defects?: string[];
+}
+
+export interface ActorT {
+  id: number;
+  username: string;
+  display_name: string;
 }

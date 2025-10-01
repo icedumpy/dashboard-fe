@@ -2,12 +2,12 @@ import { ColumnDef } from "@tanstack/react-table";
 import dayjs from "dayjs";
 
 import StatusBadge from "@/components/status-badge";
-import CheckButton from "../components/check-button";
-import ClassifyScrapButton from "../components/classify-scrap-button";
-import ConfirmButton from "../components/confirm-button";
+import StatusHistoryButton from "@/components/status-history-button/status-history-button";
+import ItemActions from "../components/item-actions";
+import DefectAlertIcon from "@/components/defect-alert-icon";
 
-import { DATE_TIME_FORMAT } from "@/contants/format";
-import { STATION_STATUS } from "@/contants/station";
+import { DATE_TIME_FORMAT } from "@/constants/format";
+import { STATUS } from "@/constants/status";
 
 import type { StationItemType } from "@/types/station";
 
@@ -15,37 +15,53 @@ export const COLUMNS_BUNDLE: ColumnDef<StationItemType>[] = [
   {
     accessorKey: "product_code",
     header: "Product Code",
+    enableSorting: true,
     meta: { className: "text-center" },
+    cell: (info) => {
+      const isDefect = info.row.original.status_code === STATUS.DEFECT;
+      return (
+        <div className="flex items-center gap-1">
+          <DefectAlertIcon isDefect={isDefect} />
+          {info.getValue<string>()}
+        </div>
+      );
+    },
   },
   {
     accessorKey: "roll_id",
     header: "Roll ID",
+    enableSorting: true,
     meta: { className: "text-center" },
   },
   {
     accessorKey: "roll_number",
     header: "Bundle Number",
+    enableSorting: true,
     meta: { className: "text-center" },
   },
   {
     accessorKey: "job_order_number",
     header: "Job Order Number",
+    enableSorting: true,
     meta: { className: "text-center" },
   },
   {
     accessorKey: "roll_width",
     header: "Roll Width",
+    enableSorting: true,
     meta: { className: "text-end" },
   },
   {
     accessorKey: "detected_at",
     header: "Time Stamp",
+    enableSorting: true,
     meta: { className: "text-center" },
     cell: (info) => dayjs(info.getValue<string>()).format(DATE_TIME_FORMAT),
   },
   {
     accessorKey: "status_code",
     header: "Status",
+    enableSorting: true,
     cell: (info) => (
       <StatusBadge
         status={info.getValue<string>()}
@@ -54,33 +70,13 @@ export const COLUMNS_BUNDLE: ColumnDef<StationItemType>[] = [
     ),
   },
   {
+    accessorKey: "history",
+    header: "History",
+    cell: ({ row }) => <StatusHistoryButton itemId={row.original.id} />,
+  },
+  {
     accessorKey: "action",
     header: "Action",
-    cell: ({ row }) => {
-      const id = row.original.id;
-      const status = row.original
-        ?.status_code as StationItemType["status_code"];
-      const is_pending_review = row.original?.is_pending_review;
-
-      const isClassifyScrap = status === STATION_STATUS.RECHECK;
-      return (
-        <div className="flex items-center gap-2">
-          {id && (
-            <CheckButton
-              id={id}
-              status={status}
-              is_pending_review={is_pending_review}
-              item_data={row.original}
-            />
-          )}
-          <ConfirmButton
-            status={status}
-            id={id}
-            is_pending_review={is_pending_review}
-          />
-          {isClassifyScrap && <ClassifyScrapButton id={id} status={status} />}
-        </div>
-      );
-    },
+    cell: ({ row }) => <ItemActions itemId={row.original.id} />,
   },
 ];

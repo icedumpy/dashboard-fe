@@ -1,7 +1,8 @@
 import React from "react";
 import { Factory, LogOut, User, Bell } from "lucide-react";
-import { useAuth } from "@/hooks/auth/use-auth-v2";
-import { ROLES } from "@/contants/auth";
+
+import { useAuth } from "@/hooks/auth/use-auth";
+import { ROLES } from "@/constants/auth";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -15,7 +16,6 @@ export const Layout: React.FC<LayoutProps> = ({ children, title }) => {
     switch (role) {
       case ROLES.OPERATOR:
         return "bg-green-100 text-green-800";
-      case ROLES.QC:
       case ROLES.INSPECTOR:
         return "bg-blue-100 text-blue-800";
       case ROLES.SUPERADMIN:

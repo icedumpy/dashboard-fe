@@ -1,26 +1,34 @@
-export const sanitizeQueryParams = <T extends Record<string, unknown>>(
-  params: T
-): Partial<T> => {
-  if (!params || typeof params !== "object" || Array.isArray(params)) {
+import { isEmpty } from "radash";
+
+export interface SanitizeOptions {
+  strict?: boolean;
+}
+
+export const sanitizeQueryParams = (
+  params: unknown,
+  options: SanitizeOptions = {}
+) => {
+  if (!params || typeof params !== "object") {
     return {};
   }
 
-  const isEmptyObject = (value: unknown) =>
-    typeof value === "object" &&
-    value !== null &&
-    !Array.isArray(value) &&
-    Object.keys(value).length === 0;
+  const { strict = true } = options;
 
   const filtered = Object.fromEntries(
-    Object.entries(params).filter(
-      ([, value]) =>
-        value !== undefined &&
-        value !== null &&
-        value !== "" &&
-        !(Array.isArray(value) && value.length === 0) &&
-        !isEmptyObject(value)
-    )
-  ) as Partial<T>;
+    Object.entries(params as Record<string, unknown>).filter(([, value]) => {
+      // Basic filtering
+      if (isEmpty(value) || value === null || value === undefined) {
+        return false;
+      }
 
-  return Object.keys(filtered).length ? filtered : {};
+      // Strict filtering
+      if (strict && (value === "" || value === 0 || value === false)) {
+        return false;
+      }
+
+      return true;
+    })
+  );
+
+  return filtered;
 };

@@ -1,0 +1,25 @@
+import Cookies from "js-cookie";
+
+export function getCookie(name: string) {
+  return Cookies.get(name);
+}
+
+export function setCookie(
+  name: string,
+  value: string,
+  options?: Cookies.CookieAttributes
+) {
+  return Cookies.set(name, value, options);
+}
+
+export function removeCookie(name: string, options?: Cookies.CookieAttributes) {
+  return Cookies.remove(name, options);
+}
+
+export function getAllCookies() {
+  return Cookies.get();
+}
+
+export function hasCookie(name: string): boolean {
+  return getCookie(name) !== undefined;
+}

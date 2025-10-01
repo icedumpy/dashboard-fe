@@ -1,5 +1,8 @@
 import axiosInstance from "@/lib/axios-instance";
-import { DEFECT_TYPE_ENDPOINT, PRODUCTION_LINE_ENDPOINT } from "@/contants/api";
+import {
+  DEFECT_TYPE_ENDPOINT,
+  PRODUCTION_LINE_ENDPOINT,
+} from "@/constants/api";
 
 import type { ProductionLineT } from "@/types/line";
 import type { OptionT } from "@/types/option";
@@ -11,6 +14,9 @@ export const OptionService = {
     const options = (response?.data?.data as ProductionLineT[]).map((item) => ({
       value: String(item.id),
       label: item.name,
+      meta: {
+        code: item.code,
+      },
     }));
 
     return options as OptionT[];

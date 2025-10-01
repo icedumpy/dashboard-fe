@@ -19,10 +19,10 @@ import ClassifyScrapForm from "./classify-scrap-form";
 
 import { useItemDetailAPI } from "@/hooks/item/use-item-detail";
 import { useItemScrapAPI } from "@/hooks/item/use-item-scrap";
-import { ITEM_ENDPOINT } from "@/contants/api";
+import { ITEM_ENDPOINT } from "@/constants/api";
 import { classifyScrapSchema } from "../schema";
-import { useAuth } from "@/hooks/auth/use-auth-v2";
-import { ROLES } from "@/contants/auth";
+import { useAuth } from "@/hooks/auth/use-auth";
+import { ROLES } from "@/constants/auth";
 
 import type { StationItemType } from "@/types/station";
 

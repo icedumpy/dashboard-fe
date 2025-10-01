@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/form";
 
 import { loginSchema } from "./schema";
-import { useAuth } from "@/hooks/auth/use-auth-v2";
+import { useAuth } from "@/hooks/auth/use-auth";
 import { cn } from "@/lib/utils";
 
 import type { LoginFormType } from "./types";
@@ -30,8 +30,6 @@ export default function LoginCard() {
   function onSubmit(values: LoginFormType) {
     login(values);
   }
-
-  console.log("loginError", loginError);
 
   return (
     <FormProvider {...form}>

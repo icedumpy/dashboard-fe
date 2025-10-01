@@ -1,20 +1,22 @@
 import { useMutation } from "@tanstack/react-query";
 
-import { STATION, STATION_STATUS } from "@/contants/station";
 import { ItemService } from "@/services/item-service";
 import { sanitizeQueryParams } from "@/utils/sanitize-query-params";
+
+import type { StatusT } from "@/types/status";
 
 export interface DownloadReportParams {
   detected_from?: string;
   detected_to?: string;
   job_order_number?: string;
   line_id: string;
+  roll_id?: string;
   number?: string;
   product_code?: string;
-  roll_width_max?: number;
-  roll_width_min?: number;
-  station: (typeof STATION)[keyof typeof STATION];
-  status?: (typeof STATION_STATUS)[keyof typeof STATION_STATUS][];
+  roll_width_max?: string;
+  roll_width_min?: string;
+  station: StatusT;
+  status?: StatusT[];
 }
 
 export const useItemReportAPI = () =>

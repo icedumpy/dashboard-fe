@@ -1,58 +1,45 @@
-import { useQueryClient } from "@tanstack/react-query";
-import { useCallback } from "react";
-import { toast } from "sonner";
+import { useQueryState } from "nuqs";
 
 import ViewDetailButton from "./view-detail-button";
-import ApproveButton from "./approve-button";
-import RejectButton from "./reject-button";
+import ReviewDecisionButton from "@/components/review-decision-button";
 
-import { REVIEW_ENDPOINT } from "@/contants/api";
-import { useReviewDecisionAPI } from "@/hooks/review/use-review-decision";
-import { REVIEW_STATE } from "@/contants/review";
-import useDismissDialog from "@/hooks/use-dismiss-dialog";
+import { REVIEW_STATE } from "@/constants/review";
+import { TABS, TABS_KEYS } from "../constants/tabs";
 
-export default function ActionButton({ id }: { id: string }) {
-  const reviewDecision = useReviewDecisionAPI();
-  const queryClient = useQueryClient();
-  const dismissDialog = useDismissDialog();
-
-  const handleReview = useCallback(
-    (decision: string, note?: string) => {
-      reviewDecision.mutate(
-        { reviewId: id, decision: decision, note: note ?? "" },
-        {
-          onSuccess() {
-            toast.success("อนุมัติการแก้ไขสำเร็จ");
-            queryClient.invalidateQueries({
-              queryKey: [REVIEW_ENDPOINT],
-              exact: false,
-            });
-            dismissDialog.dismiss();
-          },
-          onError(error) {
-            toast.error("อนุมัติการแก้ไขไม่สำเร็จ", {
-              description: error.message,
-            });
-          },
-        }
-      );
-    },
-    [id, reviewDecision, queryClient, dismissDialog]
-  );
+export default function ActionButton({
+  itemId,
+  reviewId,
+}: {
+  itemId: string;
+  reviewId: string;
+}) {
+  const [tabs] = useQueryState("tabs", {
+    defaultValue: TABS[0].value,
+  });
 
   return (
     <div className="flex gap-2">
-      <ViewDetailButton id={id} />
-      <ApproveButton
-        id={id}
-        isLoading={reviewDecision.isPending}
-        onSubmit={(value) => handleReview(REVIEW_STATE.APPROVED, value.note)}
-      />
-      <RejectButton
-        id={id}
-        isLoading={reviewDecision.isPending}
-        onSubmit={(value) => handleReview(REVIEW_STATE.REJECTED, value.note)}
-      />
+      <ViewDetailButton itemId={itemId} reviewId={reviewId} />
+      {tabs === TABS_KEYS.WAITING_FOR_REVIEW && (
+        <>
+          <ReviewDecisionButton
+            buttonProps={{
+              className: "size-8",
+            }}
+            itemId={itemId}
+            reviewId={reviewId}
+            decision={REVIEW_STATE.APPROVED}
+          />
+          <ReviewDecisionButton
+            buttonProps={{
+              className: "size-8",
+            }}
+            itemId={itemId}
+            reviewId={reviewId}
+            decision={REVIEW_STATE.REJECTED}
+          />
+        </>
+      )}
     </div>
   );
 }

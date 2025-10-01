@@ -1,194 +1,247 @@
-import { RotateCcwIcon } from "lucide-react";
-import { useFormContext } from "react-hook-form";
+import { useCallback, useState } from "react";
+import { FilterIcon, RotateCcwIcon } from "lucide-react";
+import { isEmpty } from "radash";
 import dayjs from "dayjs";
-import z from "zod";
 
 import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { MultiSelect } from "@/components/ui/multi-select";
+import { DatePicker } from "@/components/ui/date-picker";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import useItemFilters from "../hooks/use-item-filters";
 
 import { useStationStatusOptions } from "@/hooks/option/use-station-status-option";
-import { filtersSchema } from "../schema";
-import { InputDate } from "@/components/ui/input-date";
+import { useAuth } from "@/hooks/auth/use-auth";
+import { ROLES } from "@/constants/auth";
+import { DATE_TIME_FORMAT } from "@/constants/format";
+import { useProductionLineOptions } from "@/hooks/option/use-production-line-option";
+import { cn } from "@/lib/utils";
+import { Label } from "@/components/ui/label";
+import { Badge } from "@/components/ui/badge";
 
 export default function Filters() {
-  const form = useFormContext<z.infer<typeof filtersSchema>>();
-  const values = form.watch();
-  const filledCount = Object.values(values).filter((v) => v && v !== "").length;
+  const { user } = useAuth();
+  const { filters, setFilters, resetFilters } = useItemFilters();
+  const [toggleFilter, setToggleFilter] = useState(false);
+  const { data: productionLineOptions } = useProductionLineOptions();
+  const disabledLine = [ROLES.OPERATOR as string].includes(String(user?.role));
+
   const statusOptions = useStationStatusOptions();
+  const isOperator = user?.role === ROLES.OPERATOR;
+  const calendarDisabled = isOperator
+    ? {
+        before: dayjs().subtract(30, "day").toDate(),
+        after: dayjs().toDate(),
+      }
+    : undefined;
+
+  const filledCount = Object.entries(filters).filter(
+    ([key, value]) => key !== "line_id" && !isEmpty(value)
+  ).length;
+
+  const handleClear = useCallback(() => {
+    resetFilters();
+  }, [resetFilters]);
 
   return (
-    <div className="p-4 py-6 space-y-3 bg-white border rounded">
-      <div className="flex items-center justify-between">
-        <p>ตัวกรอง</p>
-        <div className="flex items-center gap-2">
-          <p className="text-sm">จำนวนตัวกรองที่กรอก: {filledCount}</p>
-          <Button
-            size="sm"
-            variant="outline"
-            disabled={filledCount === 0}
-            onClick={() => form.reset()}
-          >
-            <RotateCcwIcon />
-            ล้างตัวกรอง
-          </Button>
-        </div>
+    <div className="space-y-2">
+      <div className="flex items-center gap-2">
+        <p>Production Line:</p>
+        <Select
+          value={filters?.line_id}
+          onValueChange={(lineId) =>
+            setFilters({ ...filters, line_id: lineId })
+          }
+          disabled={disabledLine}
+        >
+          <SelectTrigger className="bg-white">
+            <SelectValue placeholder="Select a line" />
+          </SelectTrigger>
+          <SelectContent>
+            {productionLineOptions?.map((line) => (
+              <SelectItem key={line.value} value={line.value}>
+                {line.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        <Button
+          variant={filledCount || toggleFilter ? "default" : "outline"}
+          onClick={() => setToggleFilter(!toggleFilter)}
+        >
+          <FilterIcon /> ตัวกรอง
+          {filledCount != 0 && (
+            <Badge className="bg-white rounded-full aspect-square text-foreground size-5">
+              {filledCount}
+            </Badge>
+          )}
+        </Button>
       </div>
-      <Form {...form}>
-        <form className="grid items-baseline grid-cols-1 gap-4 md:grid-cols-4">
-          <FormField
-            control={form.control}
-            name="product_code"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Product Code</FormLabel>
-                <FormControl>
-                  <Input {...field} placeholder="ค้นหา Product Code" />
-                </FormControl>
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="number"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Roll/Bundle Number</FormLabel>
-                <FormControl>
-                  <Input {...field} placeholder="ค้นหา Roll/Bundle Number" />
-                </FormControl>
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="job_order_number"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Job Order Number</FormLabel>
-                <FormControl>
-                  <Input {...field} placeholder="ค้นหา Job Order Number" />
-                </FormControl>
-              </FormItem>
-            )}
-          />
+      <div
+        className={cn(
+          "p-4 py-6 space-y-3 bg-white border rounded",
+          !toggleFilter && "hidden"
+        )}
+      >
+        <div className="flex items-center justify-between">
+          <p>ตัวกรอง</p>
+          <div className="flex items-center gap-2">
+            <p className="text-sm">จำนวนตัวกรองที่กรอก: {filledCount}</p>
+            <Button
+              size="sm"
+              variant="outline"
+              disabled={filledCount === 0}
+              onClick={handleClear}
+            >
+              <RotateCcwIcon />
+              ล้างตัวกรอง
+            </Button>
+          </div>
+        </div>
+        <div className="grid items-baseline grid-cols-1 gap-4 md:grid-cols-4">
           <div className="flex flex-col gap-2">
-            <div className="flex items-end gap-2">
-              <FormField
-                control={form.control}
-                name="roll_width_min"
-                render={({ field }) => (
-                  <FormItem className="flex-1">
-                    <FormLabel>Roll Width (Min)</FormLabel>
-                    <Input
-                      {...field}
-                      placeholder="Min"
-                      onChange={(e) => {
-                        const value = e.target.value;
-                        if (value && isNaN(Number(value))) {
-                          form.setError("roll_width_min", {
-                            type: "manual",
-                            message: "Min ต้องเป็นตัวเลข",
-                          });
-                        } else {
-                          form.clearErrors("roll_width_min");
-                          field.onChange(value);
-                        }
-                      }}
-                    />
-                  </FormItem>
-                )}
+            <Label className="text-sm font-medium">Product Code</Label>
+            <Input
+              value={filters.product_code}
+              onChange={(e) => {
+                const value = e.target.value;
+                setFilters({ ...filters, product_code: value });
+              }}
+              placeholder="ค้นหา Product Code"
+            />
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <Label className="text-sm font-medium">Roll Id</Label>
+            <Input
+              value={filters.roll_id}
+              onChange={(e) => {
+                const value = e.target.value;
+                setFilters({ ...filters, roll_id: value });
+              }}
+              placeholder="ค้นหา Roll Id"
+            />
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <Label className="text-sm font-medium">Roll/Bundle Number</Label>
+            <Input
+              value={filters.number}
+              onChange={(e) => {
+                const value = e.target.value;
+                setFilters({ ...filters, number: value });
+              }}
+              placeholder="ค้นหา Roll/Bundle Number"
+            />
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <Label className="text-sm font-medium">Job Order Number</Label>
+            <Input
+              value={filters.job_order_number}
+              onChange={(e) => {
+                const value = e.target.value;
+                setFilters({ ...filters, job_order_number: value });
+              }}
+              placeholder="ค้นหา Job Order Number"
+            />
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <Label className="text-sm font-medium">Roll Width</Label>
+            <div className="flex items-end">
+              <Input
+                value={filters.roll_width_min}
+                placeholder="Min"
+                className="rounded-tr-none rounded-br-none"
+                onChange={(e) => {
+                  const value = e.target.value;
+                  if (value && isNaN(Number(value))) {
+                    // Could add error display here
+                    return;
+                  }
+                  setFilters({ ...filters, roll_width_min: value });
+                }}
               />
-              <span>-</span>
-              <FormField
-                control={form.control}
-                name="roll_width_max"
-                render={({ field }) => (
-                  <FormItem className="flex-1">
-                    <FormLabel>Roll Width (Max)</FormLabel>
-                    <Input
-                      {...field}
-                      placeholder="Max"
-                      onChange={(e) => {
-                        const value = e.target.value;
-                        if (value && isNaN(Number(value))) {
-                          form.setError("roll_width_max", {
-                            type: "manual",
-                            message: "Max ต้องเป็นตัวเลข",
-                          });
-                        } else {
-                          form.clearErrors("roll_width_max");
-                          field.onChange(value);
-                        }
-                      }}
-                    />
-                  </FormItem>
-                )}
+              <Input
+                value={filters.roll_width_max}
+                placeholder="Max"
+                className="border-l-0 rounded-tl-none rounded-bl-none"
+                onChange={(e) => {
+                  const value = e.target.value;
+                  if (value && isNaN(Number(value))) {
+                    // Could add error display here
+                    return;
+                  }
+                  setFilters({ ...filters, roll_width_max: value });
+                }}
               />
             </div>
           </div>
-          <FormField
-            control={form.control}
-            name="status"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Status</FormLabel>
-                <FormControl>
-                  <MultiSelect
-                    placeholder="เลือกสถานะ"
-                    options={statusOptions}
-                    value={field.value as string[]}
-                    onChange={field.onChange}
-                  />
-                </FormControl>
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="detected_from"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>วันที่เริ่มต้น</FormLabel>
-                <FormControl>
-                  <InputDate
-                    value={
-                      field.value ? dayjs(field.value).toDate() : undefined
-                    }
-                    onChange={field.onChange}
-                    placeholder="วันที่เริ่มต้น"
-                  />
-                </FormControl>
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="detected_to"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>วันที่สิ้นสุด</FormLabel>
-                <FormControl>
-                  <InputDate
-                    value={
-                      field.value ? dayjs(field.value).toDate() : undefined
-                    }
-                    onChange={field.onChange}
-                    placeholder="วันที่สิ้นสุด"
-                  />
-                </FormControl>
-              </FormItem>
-            )}
-          />
-        </form>
-      </Form>
+
+          <div className="flex flex-col gap-2">
+            <Label className="text-sm font-medium">Status</Label>
+            <MultiSelect
+              placeholder="เลือกสถานะ"
+              options={statusOptions}
+              value={
+                filters.status ? filters.status.split(",").filter(Boolean) : []
+              }
+              onChange={(value) => {
+                setFilters({ ...filters, status: value.join(",") });
+              }}
+            />
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <Label className="text-sm font-medium">วันที่เริ่มต้น</Label>
+            <DatePicker
+              dayBoundary="start"
+              displayFormat={DATE_TIME_FORMAT}
+              value={
+                filters.detected_from
+                  ? dayjs(filters.detected_from).toDate()
+                  : undefined
+              }
+              onChange={(value) => {
+                setFilters({
+                  ...filters,
+                  detected_from: value ? dayjs(value).toISOString() : "",
+                });
+              }}
+              placeholder="วันที่เริ่มต้น"
+              calendarProps={{ disabled: calendarDisabled }}
+            />
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <Label className="text-sm font-medium">วันที่สิ้นสุด</Label>
+            <DatePicker
+              dayBoundary="end"
+              displayFormat={DATE_TIME_FORMAT}
+              value={
+                filters.detected_to
+                  ? dayjs(filters.detected_to).toDate()
+                  : undefined
+              }
+              onChange={(value) => {
+                setFilters({
+                  ...filters,
+                  detected_to: value ? dayjs(value).toISOString() : "",
+                });
+              }}
+              placeholder="วันที่สิ้นสุด"
+              calendarProps={{ disabled: calendarDisabled }}
+            />
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

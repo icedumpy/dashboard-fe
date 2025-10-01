@@ -1,4 +1,4 @@
-import { parseAsInteger, useQueryState } from "nuqs";
+import { useQueryState } from "nuqs";
 
 import DataTable from "@/components/data-table";
 import {
@@ -9,31 +9,34 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import { useAuth } from "@/hooks/auth/use-auth-v2";
+import { ALL_OPTION } from "@/constants/option";
+import { REVIEW_STATE } from "@/constants/review";
 import { useDefectOptionAPI } from "@/hooks/option/use-defect-option";
 import { useProductionLineOptions } from "@/hooks/option/use-production-line-option";
-import { COLUMNS } from "../constants/columns";
 import { useReviewAPI } from "@/hooks/review/use-review";
-import { REVIEW_STATE } from "@/contants/review";
-import { ALL_OPTION } from "@/contants/option";
+import { WAITING_COLUMNS } from "../constants/waiting-columns";
+import useItemFilters from "@/pages/operator-page/hooks/use-item-filters";
+import useDataTable from "@/hooks/use-data-table";
 
 export default function WaitingReviewTable() {
-  const { user } = useAuth();
-  const [page, setPage] = useQueryState("page", parseAsInteger.withDefault(1));
-  const [line, setLine] = useQueryState("line", {
-    defaultValue: user?.line?.id ? String(user.line?.id) : "",
+  const { filters, setFilters } = useItemFilters();
+  const { sortingProps, page, resetPage, paginationProps } = useDataTable({
+    pageQueryKey: "page",
   });
+
   const [defect, setDefect] = useQueryState("defect", {
     defaultValue: "all",
   });
 
   const { data: lineOptions } = useProductionLineOptions();
   const { data: defectOptions } = useDefectOptionAPI();
-  const { data } = useReviewAPI({
+  const { data, isLoading } = useReviewAPI({
     page: page,
-    line_id: line,
-    review_state: REVIEW_STATE.PENDING,
+    line_id: filters.line_id,
+    review_state: [REVIEW_STATE.PENDING],
     defect_type_id: defect === "all" ? undefined : defect,
+    sort_by: sortingProps?.sortBy,
+    order_by: sortingProps?.orderBy,
   });
 
   return (
@@ -41,7 +44,13 @@ export default function WaitingReviewTable() {
       <div className="flex justify-between gap-2">
         <p>รายการที่รอตรวจสอบ</p>
         <div className="flex justify-between gap-2">
-          <Select value={line} onValueChange={setLine}>
+          <Select
+            value={filters.line_id}
+            onValueChange={(value) => {
+              resetPage();
+              setFilters({ ...filters, line_id: value });
+            }}
+          >
             <SelectTrigger>
               <SelectValue placeholder="เลือกสถานะ" />
             </SelectTrigger>
@@ -68,12 +77,11 @@ export default function WaitingReviewTable() {
         </div>
       </div>
       <DataTable
-        columns={COLUMNS}
+        isLoading={isLoading}
+        columns={WAITING_COLUMNS}
         data={data?.data ?? []}
-        pagination={{
-          ...data?.pagination,
-          onPageChange: setPage,
-        }}
+        sorting={sortingProps}
+        pagination={paginationProps(data?.pagination)}
       />
     </div>
   );

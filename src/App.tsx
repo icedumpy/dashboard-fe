@@ -5,11 +5,10 @@ import OperatorPage from "@/pages/operator-page";
 import ProtectedRoute from "@/components/protected-route";
 import AuthGuard from "@/components/auth-guard";
 import QCPage from "@/pages/qc-page";
-import { ManagerDashboard } from "./components/ManagerDashboard";
-import { OperatorDashboard } from "./components/OperatorDashboard";
+import ViewerPage from "./pages/viewer-page";
 
-import { useAuth } from "./hooks/auth/use-auth-v2";
-import { ROLES } from "./contants/auth";
+import { useAuth } from "./hooks/auth/use-auth";
+import { ROLES } from "./constants/auth";
 
 import type { RoleType } from "./types/auth";
 
@@ -18,16 +17,16 @@ function App() {
 
   const getDashboard = (role?: RoleType) => {
     switch (role) {
-      case ROLES.OPERATOR:
       case ROLES.VIEWER:
-        return <OperatorPage />; //V2
-      case ROLES.QC:
+        return <ViewerPage />;
+      case ROLES.OPERATOR:
+        return <OperatorPage />;
       case ROLES.INSPECTOR:
-        return <QCPage />; // V2
+        return <QCPage />;
       case ROLES.SUPERADMIN:
-        return <ManagerDashboard />; // V1
+        return <>TODO</>;
       default:
-        return <OperatorDashboard />; // V1
+        return <>TODO</>;
     }
   };
 

@@ -1,4 +1,4 @@
-import { ROLES } from "@/contants/auth";
+import { ROLES } from "@/constants/auth";
 
 export interface UserType {
   id: number;
@@ -24,4 +24,4 @@ export interface ShiftType {
   end_time: string;
 }
 
-export type RoleType = keyof typeof ROLES;
+export type RoleType = (typeof ROLES)[keyof typeof ROLES];

@@ -1,6 +1,5 @@
 import { DownloadIcon, FileIcon } from "lucide-react";
-import { useQueryState } from "nuqs";
-import { useCallback, useMemo } from "react";
+import { useCallback } from "react";
 import dayjs from "dayjs";
 
 import { Button } from "@/components/ui/button";
@@ -19,9 +18,10 @@ import {
   DownloadReportParams,
   useItemReportAPI,
 } from "@/hooks/item/use-item-report";
-import { STATION } from "@/contants/station";
+import { STATION } from "@/constants/station";
 import { downloadFile } from "@/utils/download-file";
 import { useLineAPI } from "@/hooks/line/use-line";
+import { getLineCode } from "@/helpers/item";
 
 export default function ExportBundleButton({
   filters,
@@ -29,29 +29,32 @@ export default function ExportBundleButton({
   filters: DownloadReportParams;
 }) {
   const { data } = useLineAPI();
-  const [line] = useQueryState("line", {
-    defaultValue: String(data?.data[0].id),
-  });
-
   const itemReport = useItemReportAPI();
+  const lineCode = getLineCode(Number(filters.line_id), data?.data);
   const handleExport = useCallback(() => {
-    const filename = `bundle-station-line-${line}-${dayjs().format(
+    const filename = `bundle-station-line-${lineCode}-${dayjs().format(
       "YYYY-MM-DD"
     )}.csv`;
 
     itemReport.mutate(
-      { ...filters, line_id: line, station: STATION.BUNDLE },
+      {
+        ...filters,
+        line_id: filters.line_id,
+        station: STATION.BUNDLE,
+        detected_from: filters.detected_from
+          ? dayjs(filters.detected_from).toISOString()
+          : undefined,
+        detected_to: filters.detected_to
+          ? dayjs(filters.detected_to).toISOString()
+          : undefined,
+      },
       {
         onSuccess(data) {
           downloadFile(data, filename);
         },
       }
     );
-  }, [itemReport, line, filters]);
-
-  const getLineCode = useMemo(() => {
-    return data?.data.find((item) => item.id === Number(line))?.code;
-  }, [data, line]);
+  }, [lineCode, itemReport, filters]);
 
   return (
     <Dialog>
@@ -68,13 +71,13 @@ export default function ExportBundleButton({
           <div className="grid rounded-full size-10 place-content-center bg-primary/20 text-primary">
             <FileIcon className="size-4" />
           </div>
-          <p>
-            ยืนยันการดาวน์โหลดรายงานสำหรับ Roll Station - Line {getLineCode}
-          </p>
+          <p>ยืนยันการดาวน์โหลดรายงานสำหรับ Bundle Station - Line {lineCode}</p>
         </div>
         <DialogFooter>
           <DialogClose asChild>
-            <Button variant="outline">ยกเลิก</Button>
+            <Button variant="outline" type="button">
+              ยกเลิก
+            </Button>
           </DialogClose>
           <Button onClick={handleExport}>ดาวน์โหลด</Button>
         </DialogFooter>

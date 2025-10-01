@@ -1,13 +1,13 @@
-import z from 'zod';
+import z from "zod";
 
-import { StationItemType } from '@/types/station';
-import { filtersSchema } from './schema';
+import { filtersSchema, updateItemDetailsSchema } from "./schema";
 
+import type { StationItemType, StationType } from "@/types/station";
 export interface CheckButtonProps {
-  is_pending_review?: boolean;
-  id: StationItemType['id'];
-  status: StationItemType['status_code'];
-  item_data?: StationItemType;
+  itemId: StationItemType["id"];
+  stationType: StationType;
 }
 
 export type FilterType = z.infer<typeof filtersSchema>;
+
+export type UpdateItemDetail = z.infer<typeof updateItemDetailsSchema>;

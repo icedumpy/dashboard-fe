@@ -1,32 +1,32 @@
-import { STATION_STATUS } from "@/contants/station";
+import { STATUS } from "@/constants/status";
 
 import type { OptionT } from "@/types/option";
 
 export const useStationStatusOptions = (): OptionT[] => {
   return [
     {
-      label: STATION_STATUS.DEFECT.toLocaleUpperCase(),
-      value: STATION_STATUS.DEFECT,
+      label: STATUS.DEFECT.toLocaleUpperCase(),
+      value: STATUS.DEFECT,
     },
     {
-      label: STATION_STATUS.REJECTED.toLocaleUpperCase(),
-      value: STATION_STATUS.REJECTED,
+      label: STATUS.REJECTED.toLocaleUpperCase(),
+      value: STATUS.REJECTED,
     },
     {
-      label: STATION_STATUS.SCRAP.toLocaleUpperCase(),
-      value: STATION_STATUS.SCRAP,
+      label: STATUS.SCRAP.toLocaleUpperCase(),
+      value: STATUS.SCRAP,
     },
     {
-      label: STATION_STATUS.RECHECK.toLocaleUpperCase(),
-      value: STATION_STATUS.RECHECK,
+      label: STATUS.RECHECK.toLocaleUpperCase(),
+      value: STATUS.RECHECK,
     },
     {
-      label: STATION_STATUS.NORMAL.toLocaleUpperCase(),
-      value: STATION_STATUS.NORMAL,
+      label: STATUS.NORMAL.toLocaleUpperCase(),
+      value: STATUS.NORMAL,
     },
     {
-      label: STATION_STATUS.QC_PASSED.toLocaleUpperCase(),
-      value: STATION_STATUS.QC_PASSED,
+      label: STATUS.QC_PASSED.toLocaleUpperCase(),
+      value: STATUS.QC_PASSED,
     },
   ];
 };

@@ -1,6 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 
-import { LOGIN_ENDPOINT } from "@/contants/api";
+import { LOGIN_ENDPOINT } from "@/constants/api";
 import { AuthService } from "@/services/auth-service";
 
 export const useLoginAPI = () =>
