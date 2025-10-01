@@ -1,5 +1,4 @@
 import { ColumnDef } from "@tanstack/react-table";
-import { AlertCircleIcon } from "lucide-react";
 import dayjs from "dayjs";
 
 import StatusBadge from "@/components/status-badge";
@@ -7,6 +6,7 @@ import ReviewedBy from "../components/reviewed-by";
 import ActionButton from "../components/action-button";
 import StatusHistoryButton from "@/components/status-history-button";
 import ProductionLineCode from "../components/production-line-code";
+import DefectAlertIcon from "@/components/defect-alert-icon";
 
 import { DATE_TIME_FORMAT } from "@/constants/format";
 import { STATUS } from "@/constants/status";
@@ -23,11 +23,7 @@ export const HISTORY_COLUMNS: ColumnDef<ReviewT>[] = [
       const isDefect = info.row.original.item.status.code === STATUS.DEFECT;
       return (
         <div className="flex items-center justify-start gap-1">
-          {isDefect ? (
-            <AlertCircleIcon className="text-white fill-destructive" />
-          ) : (
-            <div className="size-6" />
-          )}
+          <DefectAlertIcon isDefect={isDefect} />
           <ProductionLineCode id={info.row.original.item.line_id} />
         </div>
       );
