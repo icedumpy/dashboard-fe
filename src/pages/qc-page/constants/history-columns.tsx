@@ -9,7 +9,7 @@ import StatusHistoryButton from "@/components/status-history-button";
 import ProductionLineCode from "../components/production-line-code";
 
 import { DATE_TIME_FORMAT } from "@/constants/format";
-import { STATION_STATUS } from "@/constants/station";
+import { STATUS } from "@/constants/status";
 
 import type { ReviewT } from "@/types/review";
 
@@ -20,8 +20,7 @@ export const HISTORY_COLUMNS: ColumnDef<ReviewT>[] = [
     enableSorting: true,
     meta: { className: "text-center" },
     cell: (info) => {
-      const isDefect =
-        info.row.original.item.status.code === STATION_STATUS.DEFECT;
+      const isDefect = info.row.original.item.status.code === STATUS.DEFECT;
       return (
         <div className="flex items-center justify-start gap-1">
           {isDefect ? (

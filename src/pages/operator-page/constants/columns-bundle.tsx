@@ -7,7 +7,7 @@ import ItemActions from "../components/item-actions";
 import DefectAlertIcon from "@/components/defect-alert-icon";
 
 import { DATE_TIME_FORMAT } from "@/constants/format";
-import { STATION_STATUS } from "@/constants/station";
+import { STATUS } from "@/constants/status";
 
 import type { StationItemType } from "@/types/station";
 
@@ -18,7 +18,7 @@ export const COLUMNS_BUNDLE: ColumnDef<StationItemType>[] = [
     enableSorting: true,
     meta: { className: "text-center" },
     cell: (info) => {
-      const isDefect = info.row.original.status_code === STATION_STATUS.DEFECT;
+      const isDefect = info.row.original.status_code === STATUS.DEFECT;
       return (
         <div className="flex items-center gap-1">
           <DefectAlertIcon isDefect={isDefect} />

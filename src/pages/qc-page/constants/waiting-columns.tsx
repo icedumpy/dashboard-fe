@@ -8,7 +8,7 @@ import ProductionLineCode from "../components/production-line-code";
 import DefectAlertIcon from "@/components/defect-alert-icon";
 
 import { DATE_TIME_FORMAT } from "@/constants/format";
-import { STATION_STATUS } from "@/constants/station";
+import { STATUS } from "@/constants/status";
 
 import type { ReviewT } from "@/types/review";
 
@@ -18,8 +18,7 @@ export const WAITING_COLUMNS: ColumnDef<ReviewT>[] = [
     header: "Production Line",
     enableSorting: true,
     cell: (info) => {
-      const isDefect =
-        info.row.original.item.status.code === STATION_STATUS.DEFECT;
+      const isDefect = info.row.original.item.status.code === STATUS.DEFECT;
       return (
         <div className="flex items-center justify-start gap-1">
           <DefectAlertIcon isDefect={isDefect} />
