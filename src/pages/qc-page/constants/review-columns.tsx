@@ -18,6 +18,7 @@ export const REVIEW_COLUMNS: ColumnDef<ChangeStatusT>[] = [
     accessorKey: "production_line",
     header: "Production Line",
     enableSorting: true,
+    meta: { className: "text-center" },
     cell: ({ row }) => {
       const itemId = row.original.item_id;
       return <LineId itemId={itemId} />;

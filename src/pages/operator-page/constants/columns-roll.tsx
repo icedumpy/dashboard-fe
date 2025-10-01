@@ -4,8 +4,10 @@ import dayjs from "dayjs";
 import StatusBadge from "@/components/status-badge";
 import StatusHistoryButton from "@/components/status-history-button";
 import ItemActions from "../components/item-actions";
+import DefectAlertIcon from "@/components/defect-alert-icon";
 
 import { DATE_TIME_FORMAT } from "@/constants/format";
+import { STATUS } from "@/constants/status";
 
 import type { StationItemType } from "@/types/station";
 
@@ -14,7 +16,15 @@ export const COLUMNS_ROLL: ColumnDef<StationItemType>[] = [
     accessorKey: "product_code",
     header: "Product Code",
     enableSorting: true,
-    meta: { className: "text-center" },
+    cell: (info) => {
+      const isDefect = info.row.original.status_code === STATUS.DEFECT;
+      return (
+        <div className="flex items-center gap-1">
+          <DefectAlertIcon isDefect={isDefect} />
+          {info.getValue<string>()}
+        </div>
+      );
+    },
   },
   {
     accessorKey: "roll_id",
@@ -66,8 +76,6 @@ export const COLUMNS_ROLL: ColumnDef<StationItemType>[] = [
   {
     accessorKey: "action",
     header: "Action",
-    cell: ({ row }) => (
-      <ItemActions itemId={row.original.id} itemData={row.original} />
-    ),
+    cell: ({ row }) => <ItemActions itemId={row.original.id} />,
   },
 ];
