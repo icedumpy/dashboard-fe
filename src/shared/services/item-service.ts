@@ -3,7 +3,6 @@ import {
   ITEM_ENDPOINT,
   ITEM_FIX_REQUEST_ENDPOINT,
   ITEM_REPORT_ENDPOINT,
-  ITEM_SCRAP_ENDPOINT,
   ITEM_STATUS_HISTORY_ENDPOINT,
 } from "@/shared/constants/api";
 import { ItemUpdateParams } from "@/shared/hooks/item/use-item-update";
@@ -40,12 +39,6 @@ export const ItemService = {
         image_ids: params.image_ids,
         kinds: params.kinds,
       }
-    );
-    return response.data;
-  },
-  itemScrap: async (item_id: string) => {
-    const response = await axiosInstance.post(
-      ITEM_SCRAP_ENDPOINT.replace("{item_id}", item_id)
     );
     return response.data;
   },

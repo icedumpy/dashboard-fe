@@ -9,7 +9,6 @@ export const REFRESH_TOKEN_ENDPOINT = "/auth/refresh";
 export const ITEM_ENDPOINT = "/item";
 export const ITEM_REPORT_ENDPOINT = "/item/report";
 export const ITEM_FIX_REQUEST_ENDPOINT = "/item/{itemId}/fix-request";
-export const ITEM_SCRAP_ENDPOINT = "/item/{item_id}/scrap";
 export const ITEM_STATUS_HISTORY_ENDPOINT = "/item/{item_id}/history";
 export const ITEM_ACKNOWLEDGE_ENDPOINT = "/item/{item_id}/ack";
 
