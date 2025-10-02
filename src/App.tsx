@@ -1,16 +1,16 @@
 import { Routes, Route } from "react-router-dom";
 
-import LoginPage from "@/pages/login-page";
-import OperatorPage from "@/pages/operator-page";
-import ProtectedRoute from "@/components/protected-route";
-import AuthGuard from "@/components/auth-guard";
-import QCPage from "@/pages/qc-page";
-import ViewerPage from "./pages/viewer-page";
+import LoginPage from "@/features/login";
+import OperatorPage from "@/features/operator";
+import ProtectedRoute from "@/shared/components/protected-route";
+import AuthGuard from "@/shared/components/auth-guard";
+import QCPage from "@/features/qc";
+import ViewerPage from "@/features/viewer";
 
-import { useAuth } from "./hooks/auth/use-auth";
-import { ROLES } from "./constants/auth";
+import { useAuth } from "@/shared/hooks/auth/use-auth";
+import { ROLES } from "@/shared/constants/auth";
 
-import type { Role } from "./types/auth";
+import type { Role } from "@/shared/types/auth";
 
 function App() {
   const { user } = useAuth();

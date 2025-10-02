@@ -1,12 +1,12 @@
 import axios from "axios";
 import qs from "qs";
 
-import { API_V1, REFRESH_TOKEN_ENDPOINT } from "@/constants/api";
-import { ACCESS_TOKEN, REFRESH_TOKEN } from "@/constants/auth";
-import { ApiError } from "@/utils/api-error";
-import { clearAuthSession } from "@/helpers/auth";
-import { getCookie, setCookie } from "@/utils/cookie";
-import { sanitizeQueryParams } from "@/utils/sanitize-query-params";
+import { API_V1, REFRESH_TOKEN_ENDPOINT } from "@/shared/constants/api";
+import { ACCESS_TOKEN, REFRESH_TOKEN } from "@/shared/constants/auth";
+import { ApiError } from "@/shared/utils/api-error";
+import { clearAuthSession } from "@/shared/helpers/auth";
+import { getCookie, setCookie } from "@/shared/utils/cookie";
+import { sanitizeQueryParams } from "@/shared/utils/sanitize-query-params";
 
 const axiosInstance = axios.create({
   baseURL: import.meta.env.VITE_API_URL + API_V1,

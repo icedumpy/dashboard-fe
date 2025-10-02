@@ -1,0 +1,127 @@
+import { useState } from "react";
+import { useQueryState } from "nuqs";
+import { EyeIcon } from "lucide-react";
+
+import { Button } from "@/shared/components/ui/button";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/shared/components/ui/dialog";
+import ImageDefect from "@/features/operator/components/image-defect";
+import ImageRepair from "@/features/operator/components/image-repair";
+import ProductDetail from "@/features/operator/components/production-details";
+import UpdateStatusButton from "@/shared/components/update-status-button";
+import ReviewDecisionButton from "@/shared/components/review-decision-button";
+
+import { useItemDetailAPI } from "@/shared/hooks/item/use-item-detail";
+import { shouldShowUpdateStatusButton } from "@/shared/helpers/item";
+import { useAuth } from "@/shared/hooks/auth/use-auth";
+import { REVIEW_STATE } from "@/shared/constants/review";
+import { TABS, TABS_KEYS } from "../constants/tabs";
+
+export default function ViewDetailButton({
+  itemId,
+  reviewId,
+}: {
+  itemId: string;
+  reviewId: string;
+}) {
+  const { user } = useAuth();
+  const [open, setOpen] = useState(false);
+  const [tabs] = useQueryState("tabs", {
+    defaultValue: TABS[0].value,
+  });
+  const { data } = useItemDetailAPI(itemId, {
+    enabled: open && Boolean(itemId),
+  });
+
+  const canUpdateStatus =
+    shouldShowUpdateStatusButton(data?.data?.status_code, user) &&
+    data?.data.station;
+
+  const canReviewDecision =
+    tabs === TABS_KEYS.WAITING_FOR_REVIEW || tabs === TABS_KEYS.STATUS_REVIEW;
+
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <Button className="size-8 text-primary" variant="secondary">
+          <EyeIcon />
+        </Button>
+      </DialogTrigger>
+      <DialogContent
+        aria-describedby={undefined}
+        className="overflow-auto sm:max-w-4xl"
+      >
+        <DialogHeader>
+          <DialogTitle asChild>
+            <div>
+              <h3 className="text-xl font-bold">ตรวจสอบ Defect</h3>
+              <p className="text-sm font-normal text-muted-foreground">
+                {data?.data?.product_code} - Roll {data?.data.roll_number}
+              </p>
+            </div>
+          </DialogTitle>
+        </DialogHeader>
+        <div>
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <blockquote className="font-bold">
+                การเปรียบเทียบรูป Defect และรูปหลังการแก้ไข
+              </blockquote>
+              <div className="flex flex-col gap-2 md:flex-row">
+                <div className="w-full md:w-1/2">
+                  <ImageDefect images={data?.images?.DETECTED} />
+                </div>
+                <div className="w-full md:w-1/2">
+                  <ImageRepair images={data?.images?.FIX} />
+                </div>
+              </div>
+            </div>
+            <div className="space-y-2">
+              <ProductDetail
+                data={data?.data}
+                defects={data?.defects}
+                reviews={data?.reviews}
+              />
+            </div>
+          </div>
+        </div>
+        <DialogFooter>
+          {canReviewDecision && (
+            <>
+              <ReviewDecisionButton
+                buttonProps={{ size: "icon" }}
+                itemId={itemId}
+                reviewId={reviewId}
+                decision={REVIEW_STATE.APPROVED}
+              />
+              <ReviewDecisionButton
+                buttonProps={{ size: "icon" }}
+                itemId={itemId}
+                reviewId={reviewId}
+                decision={REVIEW_STATE.REJECTED}
+              />
+            </>
+          )}
+          {canUpdateStatus && (
+            <UpdateStatusButton
+              itemId={itemId}
+              stationType={data?.data.station}
+            />
+          )}
+          <DialogClose asChild>
+            <Button variant="outline" type="button">
+              ปิด
+            </Button>
+          </DialogClose>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
