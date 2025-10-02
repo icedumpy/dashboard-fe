@@ -2,7 +2,7 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App.tsx";
 import "./index.css";
-import Providers from "@/providers/main-providers.tsx";
+import Providers from "@/shared/providers/main-providers.tsx";
 
 const rootEl = document.getElementById("root")!;
 const loaderEl = document.getElementById("global-loader");
