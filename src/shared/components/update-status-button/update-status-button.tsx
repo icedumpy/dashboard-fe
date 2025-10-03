@@ -49,7 +49,6 @@ export default function UpdateStatusButton({
     enabled: !!itemId && open,
   });
 
-  const isItemStatusDefect = data?.data.status_code === STATUS.DEFECT;
   const changeStatus = useChangeStatus();
 
   const form = useForm<UpdateStatusT>({
@@ -134,23 +133,17 @@ export default function UpdateStatusButton({
     form.trigger("defect_type_ids");
   };
   const statusOptions = useMemo(() => {
-    switch (isItemStatusDefect) {
-      case true:
-        if (station === STATION.ROLL) {
-          return STATUS_OPTIONS;
-        } else {
-          return [...STATUS_OPTIONS, { label: "ม้วนเศษ", value: "8" }];
-        }
+    switch (station) {
+      case STATION.ROLL:
+        return STATUS_OPTIONS;
       default:
-        return STATUS_OPTIONS.filter(
-          (option) => option.label === STATUS.DEFECT
-        );
+        return [...STATUS_OPTIONS, { label: "ม้วนเศษ", value: "8" }];
     }
-  }, [isItemStatusDefect, station]);
+  }, [station]);
 
   const rollDefectTypeOptions = useMemo(() => {
     return defectOptions?.filter((option) =>
-      ["LABEL", "BARCODE"].includes(String(option.meta?.code))
+      ["LABEL", "BARCODE", "SCRATCH"].includes(String(option.meta?.code))
     );
   }, [defectOptions]);
 
