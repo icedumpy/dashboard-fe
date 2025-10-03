@@ -84,7 +84,7 @@ export function shouldShowUpdateStatusButton(
 
   return (
     allowedStatuses.includes(String(statusCode)) &&
-    !disallowedRoles.includes(user.role)
+    disallowedRoles.includes(user.role)
   );
 }
 

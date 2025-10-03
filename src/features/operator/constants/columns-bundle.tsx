@@ -77,6 +77,8 @@ export const COLUMNS_BUNDLE: ColumnDef<Item>[] = [
   {
     accessorKey: "action",
     header: "Action",
-    cell: ({ row }) => <ItemActions itemId={row.original.id} />,
+    cell: ({ row }) => (
+      <ItemActions itemId={row.original.id} station={row.original.station} />
+    ),
   },
 ];

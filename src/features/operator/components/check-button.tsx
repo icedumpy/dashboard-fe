@@ -38,7 +38,7 @@ import { useImageUpload } from "@/shared/hooks/upload/use-image-upload";
 import type { ImageT } from "@/shared/types/image";
 import type { CheckButtonProps } from "../types";
 
-export default function CheckButton({ itemId, stationType }: CheckButtonProps) {
+export default function CheckButton({ itemId, station }: CheckButtonProps) {
   const [open, setOpen] = useState(false);
   const [mode, setMode] = useState<"VIEW" | "EDIT">("VIEW");
   const { user } = useAuth();
@@ -164,7 +164,7 @@ export default function CheckButton({ itemId, stationType }: CheckButtonProps) {
             {canUpdateStatus && (
               <UpdateStatusButton
                 itemId={String(itemId)}
-                stationType={stationType}
+                station={station}
                 disabled={isChangingStatusPending}
               />
             )}
