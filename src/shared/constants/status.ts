@@ -5,6 +5,7 @@ export const STATUS = {
   RECHECK: "RECHECK",
   NORMAL: "NORMAL",
   QC_PASSED: "QC_PASSED",
+  LEFTOVER_ROLL: "LEFTOVER_ROLL",
 };
 
 export const STATUS_LIST = [
@@ -49,5 +50,12 @@ export const STATUS_LIST = [
     nameTh: "QC Passed",
     active: true,
     displayOrder: 60,
+  },
+  {
+    id: 8,
+    code: STATUS.LEFTOVER_ROLL,
+    nameTh: "ม้วนเศษ",
+    active: true,
+    displayOrder: 70,
   },
 ] as const;

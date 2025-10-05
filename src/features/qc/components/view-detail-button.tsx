@@ -110,10 +110,7 @@ export default function ViewDetailButton({
             </>
           )}
           {canUpdateStatus && (
-            <UpdateStatusButton
-              itemId={itemId}
-              stationType={data?.data.station}
-            />
+            <UpdateStatusButton itemId={itemId} station={data?.data.station} />
           )}
           <DialogClose asChild>
             <Button variant="outline" type="button">

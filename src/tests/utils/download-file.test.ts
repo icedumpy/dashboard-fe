@@ -1,5 +1,5 @@
 import { describe, it, vi, expect } from "vitest";
-import { downloadFile } from "./download-file";
+import { downloadFile } from "@/shared/utils/download-file";
 
 window.URL.createObjectURL = vi.fn(() => "blob:url");
 describe("downloadFile", () => {

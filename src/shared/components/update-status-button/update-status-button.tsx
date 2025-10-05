@@ -35,17 +35,13 @@ import { useDefectOptionAPI } from "@/shared/hooks/option/use-defect-option";
 import { STATION } from "@/shared/constants/station";
 import { STATUS } from "@/shared/constants/status";
 
-import type { UpdateStatusT } from "./types";
+import type { UpdateStatusButtonProps, UpdateStatusT } from "./types";
 
 export default function UpdateStatusButton({
   itemId,
-  stationType,
+  station,
   disabled,
-}: {
-  itemId: string;
-  stationType: (typeof STATION)[keyof typeof STATION];
-  disabled?: boolean;
-}) {
+}: UpdateStatusButtonProps & { disabled?: boolean }) {
   const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
   const { data: defectOptions } = useDefectOptionAPI();
@@ -53,7 +49,6 @@ export default function UpdateStatusButton({
     enabled: !!itemId && open,
   });
 
-  const isItemStatusDefect = data?.data.status_code === STATUS.DEFECT;
   const changeStatus = useChangeStatus();
 
   const form = useForm<UpdateStatusT>({
@@ -137,21 +132,18 @@ export default function UpdateStatusButton({
     }
     form.trigger("defect_type_ids");
   };
-
   const statusOptions = useMemo(() => {
-    switch (isItemStatusDefect) {
-      case true:
+    switch (station) {
+      case STATION.ROLL:
         return STATUS_OPTIONS;
       default:
-        return STATUS_OPTIONS.filter(
-          (option) => option.label === STATUS.DEFECT
-        );
+        return [...STATUS_OPTIONS, { label: "ม้วนเศษ", value: "8" }];
     }
-  }, [isItemStatusDefect]);
+  }, [station]);
 
   const rollDefectTypeOptions = useMemo(() => {
     return defectOptions?.filter((option) =>
-      ["LABEL", "BARCODE"].includes(String(option.meta?.code))
+      ["LABEL", "BARCODE", "SCRATCH"].includes(String(option.meta?.code))
     );
   }, [defectOptions]);
 
@@ -189,116 +181,130 @@ export default function UpdateStatusButton({
                         className="grid grid-cols-1 gap-2 mb-0"
                       >
                         {statusOptions.map((option) => (
-                          <FormItem key={option.value}>
-                            <FormControl>
-                              <div className="flex items-center space-x-2">
-                                <RadioGroupItem
-                                  value={option.value}
-                                  id={option.value}
-                                />
-                                <Label htmlFor={option.value}>
-                                  {option.label}
-                                </Label>
-                              </div>
-                            </FormControl>
-                          </FormItem>
+                          <>
+                            <FormItem key={option.value}>
+                              <FormControl>
+                                <div className="flex items-center space-x-2">
+                                  <RadioGroupItem
+                                    value={option.value}
+                                    id={option.value}
+                                  />
+                                  <Label htmlFor={option.value}>
+                                    {option.label}
+                                  </Label>
+                                </div>
+                              </FormControl>
+                            </FormItem>
+                            {form.watch("statusId") ===
+                              STATUS_OPTIONS[2].value &&
+                              option.value === STATUS_OPTIONS[2].value &&
+                              form.watch("statusId") ===
+                                STATUS_OPTIONS[2].value && (
+                                <>
+                                  {station === STATION.ROLL ? (
+                                    <FormItem className="pl-4">
+                                      <FormControl>
+                                        <RadioGroup
+                                          value={form
+                                            .watch("defect_type_ids")?.[0]
+                                            ?.toString()}
+                                          onValueChange={(value) => {
+                                            form.setValue("defect_type_ids", [
+                                              Number(value),
+                                            ]);
+                                            form.trigger("defect_type_ids");
+                                          }}
+                                          className="grid grid-cols-2"
+                                        >
+                                          {rollDefectTypeOptions?.map(
+                                            (item) => (
+                                              <FormItem
+                                                key={item.value}
+                                                className="w-full"
+                                              >
+                                                <FormControl>
+                                                  <Label
+                                                    htmlFor={`defect-radio-${item.value}`}
+                                                    className="hover:bg-accent/50 flex items-start gap-1 rounded border p-2 
+                                                  has-[[aria-checked=true]]:border-blue-600 
+                                                  has-[[aria-checked=true]]:bg-blue-50 
+                                                  dark:has-[[aria-checked=true]]:border-blue-900 
+                                                  dark:has-[[aria-checked=true]]:bg-blue-950"
+                                                  >
+                                                    <RadioGroupItem
+                                                      value={item.value.toString()}
+                                                      id={`defect-radio-${item.value}`}
+                                                      className="mr-2"
+                                                    />
+                                                    <div className="grid gap-1.5 font-normal">
+                                                      <p className="text-sm font-medium leading-none">
+                                                        {item.label}
+                                                      </p>
+                                                      <p className="text-sm text-muted-foreground">
+                                                        {item.meta?.code}
+                                                      </p>
+                                                    </div>
+                                                  </Label>
+                                                </FormControl>
+                                              </FormItem>
+                                            )
+                                          )}
+                                        </RadioGroup>
+                                      </FormControl>
+                                      <FormMessage />
+                                    </FormItem>
+                                  ) : (
+                                    <FormItem>
+                                      <div className="grid grid-cols-2 gap-2 lg:grid-cols-4">
+                                        {bundledDefectTypeOptions?.map(
+                                          (item) => (
+                                            <Label
+                                              key={item.value}
+                                              className="hover:bg-accent/50 flex items-start gap-1 rounded border p-2 
+                                            has-[[aria-checked=true]]:border-blue-600 
+                                            has-[[aria-checked=true]]:bg-blue-50 
+                                            dark:has-[[aria-checked=true]]:border-blue-900 
+                                            dark:has-[[aria-checked=true]]:bg-blue-950"
+                                            >
+                                              <Checkbox
+                                                id={item.value.toString()}
+                                                value={item.value}
+                                                checked={form
+                                                  .watch("defect_type_ids")
+                                                  ?.includes(
+                                                    Number(item.value)
+                                                  )}
+                                                onCheckedChange={handleOnCheckedChange(
+                                                  item.value
+                                                )}
+                                                className="data-[state=checked]:border-blue-600 
+                                              data-[state=checked]:bg-blue-600 
+                                              data-[state=checked]:text-white 
+                                              dark:data-[state=checked]:border-blue-700 
+                                              dark:data-[state=checked]:bg-blue-700"
+                                              />
+                                              <div className="grid gap-1.5 font-normal">
+                                                <p className="text-sm font-medium leading-none">
+                                                  {item.label}
+                                                </p>
+                                                <p className="text-sm text-muted-foreground">
+                                                  {item.meta?.code}
+                                                </p>
+                                              </div>
+                                            </Label>
+                                          )
+                                        )}
+                                      </div>
+                                      <FormMessage />
+                                    </FormItem>
+                                  )}
+                                </>
+                              )}
+                          </>
                         ))}
                       </RadioGroup>
                     </FormControl>
                     <FormMessage />
-
-                    {form.watch("statusId") === STATUS_OPTIONS[2].value && (
-                      <>
-                        {stationType === STATION.ROLL ? (
-                          <FormItem className="pl-4">
-                            <FormControl>
-                              <RadioGroup
-                                value={form
-                                  .watch("defect_type_ids")?.[0]
-                                  ?.toString()}
-                                onValueChange={(value) => {
-                                  form.setValue("defect_type_ids", [
-                                    Number(value),
-                                  ]);
-                                  form.trigger("defect_type_ids");
-                                }}
-                                className="grid grid-cols-2"
-                              >
-                                {rollDefectTypeOptions?.map((item) => (
-                                  <FormItem key={item.value} className="w-full">
-                                    <FormControl>
-                                      <Label
-                                        htmlFor={`defect-radio-${item.value}`}
-                                        className="hover:bg-accent/50 flex items-start gap-1 rounded border p-2 
-                                        has-[[aria-checked=true]]:border-blue-600 
-                                        has-[[aria-checked=true]]:bg-blue-50 
-                                        dark:has-[[aria-checked=true]]:border-blue-900 
-                                      dark:has-[[aria-checked=true]]:bg-blue-950"
-                                      >
-                                        <RadioGroupItem
-                                          value={item.value.toString()}
-                                          id={`defect-radio-${item.value}`}
-                                          className="mr-2"
-                                        />
-                                        <div className="grid gap-1.5 font-normal">
-                                          <p className="text-sm font-medium leading-none">
-                                            {item.label}
-                                          </p>
-                                          <p className="text-sm text-muted-foreground">
-                                            {item.meta?.code}
-                                          </p>
-                                        </div>
-                                      </Label>
-                                    </FormControl>
-                                  </FormItem>
-                                ))}
-                              </RadioGroup>
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        ) : (
-                          <FormItem>
-                            <div className="grid grid-cols-2 gap-2 lg:grid-cols-4">
-                              {bundledDefectTypeOptions?.map((item) => (
-                                <Label
-                                  key={item.value}
-                                  className="hover:bg-accent/50 flex items-start gap-1 rounded border p-2 
-                                  has-[[aria-checked=true]]:border-blue-600 
-                                  has-[[aria-checked=true]]:bg-blue-50 
-                                  dark:has-[[aria-checked=true]]:border-blue-900 
-                                  dark:has-[[aria-checked=true]]:bg-blue-950"
-                                >
-                                  <Checkbox
-                                    id={item.value.toString()}
-                                    value={item.value}
-                                    checked={form
-                                      .watch("defect_type_ids")
-                                      ?.includes(Number(item.value))}
-                                    onCheckedChange={handleOnCheckedChange(
-                                      item.value
-                                    )}
-                                    className="data-[state=checked]:border-blue-600 
-                                    data-[state=checked]:bg-blue-600 
-                                    data-[state=checked]:text-white 
-                                    dark:data-[state=checked]:border-blue-700 
-                                    dark:data-[state=checked]:bg-blue-700"
-                                  />
-                                  <div className="grid gap-1.5 font-normal">
-                                    <p className="text-sm font-medium leading-none">
-                                      {item.label}
-                                    </p>
-                                    <p className="text-sm text-muted-foreground">
-                                      {item.meta?.code}
-                                    </p>
-                                  </div>
-                                </Label>
-                              ))}
-                            </div>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      </>
-                    )}
                   </FormItem>
                 )}
               />
