@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { sanitizeQueryParams } from "./sanitize-query-params";
+import { sanitizeQueryParams } from "@/shared/utils/sanitize-query-params";
 
 describe("sanitizeQueryParams", () => {
   it("should remove keys with empty values (success case)", () => {

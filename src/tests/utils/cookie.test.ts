@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, Mock } from "vitest";
-import * as cookieUtils from "./cookie";
+import * as cookieUtils from "@/shared/utils/cookie";
 import Cookies from "js-cookie";
 
 vi.mock("js-cookie");
