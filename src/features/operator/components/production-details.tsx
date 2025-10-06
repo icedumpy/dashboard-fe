@@ -116,8 +116,8 @@ export default function ProductDetail({
         name: 'reason',
         value:
           currentReview.state == 'REJECTED'
-            ? currentReview.reject_reason
-            : currentReview.review_note,
+            ? currentReview?.reject_reason ?? '-'
+            : currentReview?.review_note ?? '-',
       },
       {
         label: 'Product Code:',
