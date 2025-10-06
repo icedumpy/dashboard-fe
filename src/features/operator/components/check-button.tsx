@@ -180,7 +180,7 @@ export default function CheckButton({ itemId, station }: CheckButtonProps) {
 
       {/* Edit */}
       <Dialog open={mode === "EDIT" && open} onOpenChange={toggleOpen}>
-        <DialogContent aria-describedby={undefined}>
+        <DialogContent aria-describedby={undefined} className="overflow-auto">
           <DialogHeader>
             <DialogTitle>ยืนยันการแก้ใข</DialogTitle>
           </DialogHeader>
