@@ -195,7 +195,7 @@ describe("Item helpers", () => {
       ).toBe(true);
       expect(
         itemHelpers.shouldShowUpdateStatusButton(STATUS.NORMAL, {
-          role: ROLES.VIEWER,
+          role: ROLES.OPERATOR,
           id: 0,
           username: "",
           display_name: "",
@@ -217,7 +217,7 @@ describe("Item helpers", () => {
     it("should return false if not disallowed role", () => {
       expect(
         itemHelpers.shouldShowUpdateStatusButton(STATUS.DEFECT, {
-          role: ROLES.OPERATOR,
+          role: ROLES.VIEWER,
           id: 0,
           username: "",
           display_name: "",

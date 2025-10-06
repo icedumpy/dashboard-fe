@@ -80,11 +80,11 @@ export function shouldShowUpdateStatusButton(
   if (!user) return false;
 
   const allowedStatuses = [STATUS.DEFECT, STATUS.NORMAL, STATUS.SCRAP];
-  const disallowedRoles: Role[] = [ROLES.VIEWER, ROLES.INSPECTOR];
+  const allowedRoles: Role[] = [ROLES.OPERATOR, ROLES.INSPECTOR];
 
   return (
     allowedStatuses.includes(String(statusCode)) &&
-    disallowedRoles.includes(user.role)
+    allowedRoles.includes(user.role)
   );
 }
 
