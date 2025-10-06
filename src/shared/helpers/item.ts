@@ -1,62 +1,77 @@
-import { isEmpty } from "radash";
+import { isEmpty } from 'radash';
 
-import { ROLES } from "@/shared/constants/auth";
-import { REVIEW_STATE_OPTION } from "@/shared/constants/review";
-import { STATUS } from "@/shared/constants/status";
+import { ROLES } from '@/shared/constants/auth';
+import { REVIEW_STATE_OPTION } from '@/shared/constants/review';
+import { STATUS } from '@/shared/constants/status';
 
-import type { LineResponse } from "@/shared/hooks/line/use-line";
-import type { Role, User } from "@/shared/types/auth";
-import type { OptionT } from "@/shared/types/option";
-import type { ReviewT, StationDetailResponse } from "@/shared/types/item";
+import type { LineResponse } from '@/shared/hooks/line/use-line';
+import type { Role, User } from '@/shared/types/auth';
+import type { ReviewT, StationDetailResponse } from '@/shared/types/item';
+import type { OptionT } from '@/shared/types/option';
 
 export const getLineCode = (
   lineId?: number,
-  lineData?: LineResponse["data"]
+  lineData?: LineResponse['data'],
 ) => {
   return (
-    lineData?.find((item) => Number(item.id) === Number(lineId))?.code ?? "-"
+    lineData?.find(item => Number(item.id) === Number(lineId))?.code ?? '-'
   );
 };
 
 export const getDefectNames = (
   defects?: { defect_type_code: string }[],
-  defectOptions?: OptionT[]
+  defectOptions?: OptionT[],
 ) => {
-  if (isEmpty(defects) || isEmpty(defectOptions)) return "-";
+  if (isEmpty(defects) || isEmpty(defectOptions)) return '-';
   return defects
     ?.map(
-      (defect) =>
+      defect =>
         defectOptions?.find(
-          (item) => item?.meta?.code === defect.defect_type_code
-        )?.label ?? "-"
+          item => item?.meta?.code === defect.defect_type_code,
+        )?.label ?? '-',
     )
-    .join(", ");
+    .join(', ');
 };
 
 export const getCurrentState = (reviews?: ReviewT[]) => {
-  if (isEmpty(reviews)) return "-";
+  if (isEmpty(reviews)) return '-';
   const sorted =
     reviews
       ?.sort(
         (a, b) =>
           new Date(a.submitted_at).getTime() -
-          new Date(b.submitted_at).getTime()
+          new Date(b.submitted_at).getTime(),
       )
-      .map((review) => review.state) ?? [];
+      .map(review => review.state) ?? [];
 
   const latestState = sorted[sorted.length - 1];
   const mappedLabel = REVIEW_STATE_OPTION.find(
-    (option) => option.value === latestState
+    option => option.value === latestState,
   )?.label;
 
-  return mappedLabel ?? "-";
+  return mappedLabel ?? '-';
+};
+export const getCurrentReview = (reviews?: ReviewT[]) => {
+  // if (isEmpty(reviews)) return {};
+  const sorted =
+    reviews
+      ?.sort(
+        (a, b) =>
+          new Date(a.submitted_at).getTime() -
+          new Date(b.submitted_at).getTime(),
+      )
+      .map(review => review) ?? [];
+
+  const latestState = sorted[sorted.length - 1];
+
+  return latestState;
 };
 
 export function canRequestChanges(
   status?: string,
   userLineId?: string | number,
   currentLineId?: string | number,
-  userRole?: Role
+  userRole?: Role,
 ): boolean {
   if (!status || !userLineId || !currentLineId) return false;
   const editableStatuses = [STATUS.DEFECT, STATUS.RECHECK, STATUS.REJECTED];
@@ -75,7 +90,7 @@ export function isHiddenRepairImages(statusCode: string | undefined) {
 
 export function shouldShowUpdateStatusButton(
   statusCode?: string,
-  user?: User
+  user?: User,
 ): boolean {
   if (!user) return false;
 
@@ -94,14 +109,14 @@ export function canEditItemDetail(role?: Role) {
 }
 
 export function canUpdatePrinter(
-  defects?: StationDetailResponse["defects"],
-  role?: Role
+  defects?: StationDetailResponse['defects'],
+  role?: Role,
 ): boolean {
   if (!role || !defects) return false;
 
   const allowedRoles: Role[] = [ROLES.OPERATOR, ROLES.INSPECTOR];
   const hasScratchDefect = defects?.some(
-    (defect) => defect.defect_type_code === "SCRATCH"
+    defect => defect.defect_type_code === 'SCRATCH',
   );
   return allowedRoles.includes(role) && !!hasScratchDefect;
 }

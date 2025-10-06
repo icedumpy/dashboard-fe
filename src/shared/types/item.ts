@@ -1,7 +1,7 @@
-import type { Pagination } from "./pagination";
-import type { ImageT } from "./image";
-import type { StatusT } from "./status";
-import type { Station } from "./station";
+import type { ImageT } from './image';
+import type { Pagination } from './pagination';
+import type { Station } from './station';
+import type { StatusT } from './status';
 
 export interface Item {
   id: number;
@@ -57,10 +57,11 @@ export interface Images {
   OTHER: ImageT[];
 }
 
+export type IReviewState = 'APPROVED' | 'REJECTED';
 export interface ReviewT {
   id: number;
   review_type: string;
-  state: string;
+  state: IReviewState;
   submitted_by: number;
   submitted_at: string;
   reviewed_by: string;

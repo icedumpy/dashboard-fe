@@ -1,12 +1,11 @@
-import { useEffect, useMemo, useState } from "react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useQueryClient } from "@tanstack/react-query";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-import dayjs from "dayjs";
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useQueryClient } from '@tanstack/react-query';
+import dayjs from 'dayjs';
+import { useEffect, useMemo, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 
-import { Button } from "@/shared/components/ui/button";
-import { Input } from "@/shared/components/ui/input";
+import { Button } from '@/shared/components/ui/button';
 import {
   Form,
   FormControl,
@@ -14,30 +13,32 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/shared/components/ui/form";
+} from '@/shared/components/ui/form';
+import { Input } from '@/shared/components/ui/input';
 
-import { useLineAPI } from "@/shared/hooks/line/use-line";
-import { DATE_TIME_FORMAT } from "@/shared/constants/format";
-import { useDefectOptionAPI } from "@/shared/hooks/option/use-defect-option";
-import { updateItemDetailsSchema } from "../schema";
+import useItemFilters from '@/features/operator/hooks/use-item-filters';
+import { ITEM_ENDPOINT } from '@/shared/constants/api';
+import { DATE_TIME_FORMAT } from '@/shared/constants/format';
 import {
+  canEditItemDetail,
+  getCurrentReview,
   getCurrentState,
   getDefectNames,
   getLineCode,
-  canEditItemDetail,
-} from "@/shared/helpers/item";
-import { ITEM_ENDPOINT } from "@/shared/constants/api";
-import { useItemUpdate } from "@/shared/hooks/item/use-item-update";
-import { useAuth } from "@/shared/hooks/auth/use-auth";
-import useItemFilters from "@/features/operator/hooks/use-item-filters";
+} from '@/shared/helpers/item';
+import { useAuth } from '@/shared/hooks/auth/use-auth';
+import { useItemUpdate } from '@/shared/hooks/item/use-item-update';
+import { useLineAPI } from '@/shared/hooks/line/use-line';
+import { useDefectOptionAPI } from '@/shared/hooks/option/use-defect-option';
+import { updateItemDetailsSchema } from '../schema';
 
-import type { StationDetailResponse } from "@/shared/types/item";
-import type { UpdateItemDetail } from "../types";
+import type { StationDetailResponse } from '@/shared/types/item';
+import type { UpdateItemDetail } from '../types';
 
 interface ProductDetailProps {
-  data?: StationDetailResponse["data"];
-  defects?: StationDetailResponse["defects"];
-  reviews?: StationDetailResponse["reviews"];
+  data?: StationDetailResponse['data'];
+  defects?: StationDetailResponse['defects'];
+  reviews?: StationDetailResponse['reviews'];
 }
 
 export default function ProductDetail({
@@ -50,7 +51,7 @@ export default function ProductDetail({
   const { filters } = useItemFilters();
   const { data: lines } = useLineAPI();
   const { data: defectOptions } = useDefectOptionAPI();
-  const [mode, setMode] = useState<"VIEW" | "EDIT">("VIEW");
+  const [mode, setMode] = useState<'VIEW' | 'EDIT'>('VIEW');
   const itemUpdate = useItemUpdate();
 
   const form = useForm({
@@ -67,17 +68,18 @@ export default function ProductDetail({
 
   useEffect(() => {
     form.reset({
-      job_order_number: data?.job_order_number || "",
-      roll_id: data?.roll_id || "",
-      roll_number: data?.roll_number || "",
-      bundle_number: data?.bundle_number || "",
-      product_code: data?.product_code || "",
+      job_order_number: data?.job_order_number || '',
+      roll_id: data?.roll_id || '',
+      roll_number: data?.roll_number || '',
+      bundle_number: data?.bundle_number || '',
+      product_code: data?.product_code || '',
     });
   }, [data, form]);
 
   const lineCode = getLineCode(Number(filters.line_id), lines?.data);
   const defectNames = getDefectNames(defects, defectOptions);
   const currentState = getCurrentState(reviews);
+  const currentReview = getCurrentReview(reviews);
   const canEditItem = canEditItemDetail(user?.role);
 
   const editableFields = useMemo(
@@ -85,46 +87,54 @@ export default function ProductDetail({
       Object.keys(updateItemDetailsSchema.shape) as Array<
         keyof UpdateItemDetail
       >,
-    []
+    [],
   );
 
   const dataList = useMemo(
     () => [
-      { label: "Production Line:", name: "line_code", value: lineCode },
+      { label: 'Production Line:', name: 'line_code', value: lineCode },
       {
-        label: "Job Order Number:",
-        name: "job_order_number",
-        value: data?.job_order_number ?? "-",
+        label: 'Job Order Number:',
+        name: 'job_order_number',
+        value: data?.job_order_number ?? '-',
       },
       {
-        label: "ประเภท Defect:",
-        name: "defect_type",
-        value: defectNames || "-",
+        label: 'ประเภท Defect:',
+        name: 'defect_type',
+        value: defectNames || '-',
       },
-      { label: "Roll ID:", name: "roll_id", value: data?.roll_id ?? "-" },
-      { label: "สถานี:", name: "station", value: data?.station ?? "-" },
+      { label: 'Roll ID:', name: 'roll_id', value: data?.roll_id ?? '-' },
+      { label: 'สถานี:', name: 'station', value: data?.station ?? '-' },
       {
-        label: "Roll Width:",
-        name: "roll_width",
-        value: data?.roll_width ?? "-",
+        label: 'Roll Width:',
+        name: 'roll_width',
+        value: data?.roll_width ?? '-',
       },
-      { label: "สถานะปัจจุบัน:", name: "current_state", value: currentState },
+      { label: 'สถานะปัจจุบัน:', name: 'current_state', value: currentState },
       {
-        label: "Product Code:",
-        name: "product_code",
-        value: data?.product_code ?? "-",
+        label: 'เหตุผล:',
+        name: 'reason',
+        value:
+          currentReview.state == 'REJECTED'
+            ? currentReview.reject_reason
+            : currentReview.review_note,
       },
       {
-        label: "ตรวจพบเมื่อ:",
-        name: "detected_at",
+        label: 'Product Code:',
+        name: 'product_code',
+        value: data?.product_code ?? '-',
+      },
+      {
+        label: 'ตรวจพบเมื่อ:',
+        name: 'detected_at',
         value: data?.detected_at
           ? dayjs(data.detected_at).format(DATE_TIME_FORMAT)
-          : "-",
+          : '-',
       },
       {
-        label: "Roll Number:",
-        name: "roll_number",
-        value: data?.roll_number ?? "-",
+        label: 'Roll Number:',
+        name: 'roll_number',
+        value: data?.roll_number ?? '-',
       },
     ],
     [
@@ -138,7 +148,7 @@ export default function ProductDetail({
       data?.roll_number,
       defectNames,
       currentState,
-    ]
+    ],
   );
 
   const handleSubmit = (values: UpdateItemDetail) => {
@@ -149,7 +159,7 @@ export default function ProductDetail({
       },
       {
         onSuccess() {
-          toast.success("แก้ไขรายละเอียดสำเร็จ");
+          toast.success('แก้ไขรายละเอียดสำเร็จ');
           queryClient.invalidateQueries({
             queryKey: [ITEM_ENDPOINT, String(data?.id)],
           });
@@ -157,14 +167,14 @@ export default function ProductDetail({
             queryKey: [ITEM_ENDPOINT],
             exact: false,
           });
-          setMode("VIEW");
+          setMode('VIEW');
         },
         onError(error) {
-          toast.error("แก้ไขรายละเอียดไม่สำเร็จ", {
+          toast.error('แก้ไขรายละเอียดไม่สำเร็จ', {
             description: error.message,
           });
         },
-      }
+      },
     );
   };
 
@@ -174,11 +184,11 @@ export default function ProductDetail({
         <blockquote className="prose">รายละเอียดการผลิต</blockquote>
         {canEditItem && (
           <div className="space-x-2">
-            {mode === "VIEW" ? (
+            {mode === 'VIEW' ? (
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => setMode(mode === "VIEW" ? "EDIT" : "VIEW")}
+                onClick={() => setMode(mode === 'VIEW' ? 'EDIT' : 'VIEW')}
               >
                 แก้ไขรายละเอียด
               </Button>
@@ -188,7 +198,7 @@ export default function ProductDetail({
                   size="sm"
                   variant="outline"
                   onClick={() => {
-                    setMode("VIEW");
+                    setMode('VIEW');
                     form.clearErrors();
                     form.reset();
                   }}
@@ -209,28 +219,28 @@ export default function ProductDetail({
       </div>
       <Form {...form}>
         <form className="grid w-full grid-cols-1 gap-2 p-4 border rounded md:grid-cols-2 lg:grid-cols-3">
-          {dataList.map((item) => (
+          {dataList.map(item => (
             <FormField
               key={item.label}
-              name={item.name || ""}
+              name={item.name || ''}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>{item.label}</FormLabel>
                   <FormControl>
-                    {mode === "EDIT" &&
+                    {mode === 'EDIT' &&
                     editableFields.includes(
-                      item.name as keyof UpdateItemDetail
+                      item.name as keyof UpdateItemDetail,
                     ) ? (
                       <Input
-                        value={field.value ?? ""}
-                        onChange={(e) => {
-                          if (item.name === "roll_width") {
+                        value={field.value ?? ''}
+                        onChange={e => {
+                          if (item.name === 'roll_width') {
                             const numericValue = e.target.value.replace(
                               /\D/g,
-                              ""
+                              '',
                             );
                             field.onChange(
-                              numericValue ? Number(numericValue) : ""
+                              numericValue ? Number(numericValue) : '',
                             );
                             form.trigger(item.name as keyof UpdateItemDetail);
                           } else {
@@ -238,9 +248,9 @@ export default function ProductDetail({
                             form.trigger(item.name as keyof UpdateItemDetail);
                           }
                         }}
-                        min={item.name === "roll_width" ? 0 : undefined}
+                        min={item.name === 'roll_width' ? 0 : undefined}
                         inputMode={
-                          item.name === "roll_width" ? "numeric" : undefined
+                          item.name === 'roll_width' ? 'numeric' : undefined
                         }
                       />
                     ) : (
