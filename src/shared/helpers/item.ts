@@ -42,7 +42,7 @@ export const getCurrentState = (reviews?: ReviewT[]) => {
           new Date(a.submitted_at).getTime() -
           new Date(b.submitted_at).getTime(),
       )
-      .map(review => review.state) ?? [];
+      .map(review => review?.state) ?? [];
 
   const latestState = sorted[sorted.length - 1];
   const mappedLabel = REVIEW_STATE_OPTION.find(
@@ -52,7 +52,7 @@ export const getCurrentState = (reviews?: ReviewT[]) => {
   return mappedLabel ?? '-';
 };
 export const getCurrentReview = (reviews?: ReviewT[]) => {
-  // if (isEmpty(reviews)) return {};
+  if (isEmpty(reviews)) return {} as ReviewT;
   const sorted =
     reviews
       ?.sort(
@@ -95,7 +95,7 @@ export function shouldShowUpdateStatusButton(
   if (!user) return false;
 
   const allowedStatuses = [STATUS.DEFECT, STATUS.NORMAL, STATUS.SCRAP];
-  const allowedRoles: Role[] = [ROLES.OPERATOR, ROLES.INSPECTOR];
+  const allowedRoles: Role[] = [ROLES.OPERATOR];
 
   return (
     allowedStatuses.includes(String(statusCode)) &&
