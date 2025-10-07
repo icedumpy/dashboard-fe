@@ -88,39 +88,43 @@ export default function CheckButton({ itemId, station }: CheckButtonProps) {
     };
 
     imageUpload.mutate(uploadImagePayload, {
-      onError(error) {
+      onSuccess: uploadRes => {
+        const uploadedImages = (uploadRes.data as ImageT[]) || [];
+
+        itemFixRequest.mutate(
+          {
+            itemId: String(itemId),
+            image_ids: uploadedImages.map(img => Number(img.id)),
+            kinds: 'Fixed defect using patching method',
+          },
+          {
+            onSuccess: () => {
+              toast.success('แก้ไขสำเร็จ');
+              queryClient.invalidateQueries({
+                queryKey: [ITEM_ENDPOINT],
+                exact: false,
+              });
+
+              imageUpload.reset();
+              setImage(undefined);
+              setOpen(false);
+            },
+            onError: error => {
+              toast.error('แก้ไขไม่สำเร็จ', {
+                description: error.message,
+              });
+            },
+          },
+        );
+      },
+
+      onError: error => {
         toast.error('อัพโหลดรูปภาพล้มเหลว', {
           description: error.message,
         });
       },
     });
-
-    itemFixRequest.mutate(
-      {
-        itemId: String(itemId),
-        image_ids:
-          (imageUpload.data?.data as ImageT[]).map(img => Number(img.id)) || [],
-        kinds: 'Fixed defect using patching method',
-      },
-      {
-        onSuccess() {
-          toast.success('แก้ไขสำเร็จ');
-          queryClient.invalidateQueries({
-            queryKey: [ITEM_ENDPOINT],
-            exact: false,
-          });
-          imageUpload.reset();
-
-          setOpen(false);
-        },
-        onError(error) {
-          toast.error('แก้ไขไม่สำเร็จ', {
-            description: error.message,
-          });
-        },
-      },
-    );
-  }, [itemId, imageUpload, itemFixRequest, queryClient]);
+  }, [image, itemId, imageUpload, itemFixRequest, queryClient]);
 
   useEffect(() => {
     if (!open) {
