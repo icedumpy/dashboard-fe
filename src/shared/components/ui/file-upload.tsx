@@ -1,19 +1,40 @@
-import { useQuery } from "@tanstack/react-query";
-import { ImageUpIcon } from "lucide-react";
-
-import { IMAGE_PATH_ENDPOINT } from "@/shared/constants/api";
-import { UploadService } from "@/shared/services/upload-service";
+import { IMAGE_PATH_ENDPOINT } from '@/shared/constants/api';
+import { UploadService } from '@/shared/services/upload-service';
+import { useQuery } from '@tanstack/react-query';
+import { ImageUpIcon } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 interface FileUploadProps {
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  value?: string;
+  value?: string | FileList;
 }
 
 export default function FileUpload({ onChange, value }: FileUploadProps) {
-  const { data: image } = useQuery({
-    queryKey: [IMAGE_PATH_ENDPOINT, value],
-    queryFn: () => UploadService.getImageBold(value),
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+
+  // Fetch existing image (when value is a string path)
+  const { data: imageBlob } = useQuery({
+    queryKey: [IMAGE_PATH_ENDPOINT, typeof value === 'string' ? value : null],
+    queryFn: () =>
+      typeof value === 'string' ? UploadService.getImageBold(value) : null,
+    enabled: typeof value === 'string' && !!value,
   });
+
+  // Generate preview when FileList is passed
+  useEffect(() => {
+    if (value instanceof FileList && value.length > 0) {
+      const url = URL.createObjectURL(value[0]);
+      setPreviewUrl(url);
+
+      // Clean up to avoid memory leaks
+      return () => URL.revokeObjectURL(url);
+    } else {
+      setPreviewUrl(null);
+    }
+  }, [value]);
+
+  const displayImage =
+    previewUrl || (imageBlob ? URL.createObjectURL(imageBlob) : null);
 
   return (
     <label
@@ -21,9 +42,9 @@ export default function FileUpload({ onChange, value }: FileUploadProps) {
       className="flex items-center justify-center p-4 text-center border border-dashed rounded-md cursor-pointer border-border bg-accent aspect-video"
     >
       <div className="flex flex-col items-center justify-center gap-2 text-sm">
-        {image ? (
+        {displayImage ? (
           <img
-            src={URL.createObjectURL(image)}
+            src={displayImage}
             alt="Preview"
             className="object-contain mb-2 rounded-lg aspect-video"
           />
@@ -39,6 +60,7 @@ export default function FileUpload({ onChange, value }: FileUploadProps) {
           </div>
         )}
       </div>
+
       <input
         id="file-upload"
         type="file"
