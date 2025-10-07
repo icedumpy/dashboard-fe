@@ -1,82 +1,83 @@
-import { ColumnDef } from "@tanstack/react-table";
-import dayjs from "dayjs";
+import { ColumnDef } from '@tanstack/react-table';
+import dayjs from 'dayjs';
 
-import StatusBadge from "@/shared/components/status-badge";
-import StatusHistoryButton from "@/shared/components/status-history-button/status-history-button";
-import ItemActions from "../components/item-actions";
-import DefectAlertIcon from "@/shared/components/defect-alert-icon";
+import DefectAlertIcon from '@/shared/components/defect-alert-icon';
+import StatusBadge from '@/shared/components/status-badge';
+import StatusHistoryButton from '@/shared/components/status-history-button/status-history-button';
+import ItemActions from '../components/item-actions';
 
-import { DATE_TIME_FORMAT } from "@/shared/constants/format";
-import { STATUS } from "@/shared/constants/status";
+import { DATE_TIME_FORMAT } from '@/shared/constants/format';
+import { STATUS } from '@/shared/constants/status';
 
-import type { Item } from "@/shared/types/item";
+import type { Item } from '@/shared/types/item';
 
 export const COLUMNS_BUNDLE: ColumnDef<Item>[] = [
   {
-    accessorKey: "product_code",
-    header: "Product Code",
+    accessorKey: 'product_code',
+    header: 'Product Code',
     enableSorting: true,
-    meta: { className: "text-center" },
-    cell: (info) => {
+    meta: { className: 'text-center' },
+    cell: info => {
       const isDefect = info.row.original.status_code === STATUS.DEFECT;
+      const isRejected = info.row.original.status_code === STATUS.REJECTED;
       return (
         <div className="flex items-center gap-1">
-          <DefectAlertIcon isDefect={isDefect} />
+          <DefectAlertIcon isDefect={isDefect || isRejected} />
           {info.getValue<string>()}
         </div>
       );
     },
   },
   {
-    accessorKey: "roll_id",
-    header: "Roll ID",
+    accessorKey: 'roll_id',
+    header: 'Roll ID',
     enableSorting: true,
-    meta: { className: "text-center" },
+    meta: { className: 'text-center' },
   },
   {
-    accessorKey: "roll_number",
-    header: "Bundle Number",
+    accessorKey: 'roll_number',
+    header: 'Bundle Number',
     enableSorting: true,
-    meta: { className: "text-center" },
+    meta: { className: 'text-center' },
   },
   {
-    accessorKey: "job_order_number",
-    header: "Job Order Number",
+    accessorKey: 'job_order_number',
+    header: 'Job Order Number',
     enableSorting: true,
-    meta: { className: "text-center" },
+    meta: { className: 'text-center' },
   },
   {
-    accessorKey: "roll_width",
-    header: "Roll Width",
+    accessorKey: 'roll_width',
+    header: 'Roll Width',
     enableSorting: true,
-    meta: { className: "text-end" },
+    meta: { className: 'text-end' },
   },
   {
-    accessorKey: "detected_at",
-    header: "Time Stamp",
+    accessorKey: 'detected_at',
+    header: 'Time Stamp',
     enableSorting: true,
-    meta: { className: "text-center" },
-    cell: (info) => dayjs(info.getValue<string>()).format(DATE_TIME_FORMAT),
+    meta: { className: 'text-center' },
+    cell: info => dayjs(info.getValue<string>()).format(DATE_TIME_FORMAT),
   },
   {
-    accessorKey: "status_code",
-    header: "Status",
+    accessorKey: 'status_code',
+    header: 'Status',
     enableSorting: true,
-    cell: (info) => (
+    cell: info => (
       <StatusBadge
         status={info.getValue<string>()}
-        note={info.row.original.defects?.join(", ")}
+        note={info.row.original.defects?.join(', ')}
       />
     ),
   },
   {
-    accessorKey: "history",
-    header: "History",
+    accessorKey: 'history',
+    header: 'History',
     cell: ({ row }) => <StatusHistoryButton itemId={row.original.id} />,
   },
   {
-    accessorKey: "action",
-    header: "Action",
+    accessorKey: 'action',
+    header: 'Action',
     cell: ({ row }) => (
       <ItemActions itemId={row.original.id} station={row.original.station} />
     ),
