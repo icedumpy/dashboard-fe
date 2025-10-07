@@ -50,21 +50,19 @@ export function useAuth() {
     },
   });
 
-  // Logout mutation
-  const logoutMutation = useMutation({
-    mutationFn: authApi.logout,
-    onSuccess: () => {
-      queryClient.clear();
-      navigate("/login", { replace: true });
-    },
-  });
+  const logout = () => {
+    clearAuthSession();
+    queryClient.clear();
+    navigate("/login", { replace: true });
+    // window.location.href = "/login";
+  };
 
   return {
     user,
     isLoading,
     isAuthenticated: !!user,
     login: loginMutation.mutate,
-    logout: logoutMutation.mutate,
+    logout: logout,
     isLoginLoading: loginMutation.isPending,
     loginError: loginMutation.error,
   };
