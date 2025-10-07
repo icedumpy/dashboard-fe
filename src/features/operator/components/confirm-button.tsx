@@ -49,44 +49,46 @@ export default function ConfirmButton({ itemId }: CheckButtonProps) {
       toast.error('เกิดข้อผิดพลาดในการอัพโหลดรูป');
       return;
     }
+
     const uploadImagePayload = {
       files: image,
       item_id: String(itemId),
     };
 
     imageUpload.mutate(uploadImagePayload, {
-      onError(error) {
+      onSuccess: uploadRes => {
+        const uploadedImages = (uploadRes.data as ImageT[]) || [];
+
+        itemFixRequest.mutate(
+          {
+            itemId: String(itemId),
+            image_ids: uploadedImages.map(img => Number(img.id)),
+            kinds: 'Fixed defect using patching method',
+          },
+          {
+            onSuccess: () => {
+              toast.success('แก้ไขสำเร็จ');
+              queryClient.invalidateQueries({
+                queryKey: [ITEM_ENDPOINT],
+                exact: false,
+              });
+              imageUpload.reset();
+              setOpen(false);
+            },
+            onError: error => {
+              toast.error('แก้ไขไม่สำเร็จ', {
+                description: error.message,
+              });
+            },
+          },
+        );
+      },
+      onError: error => {
         toast.error('อัพโหลดรูปภาพล้มเหลว', {
           description: error.message,
         });
       },
     });
-
-    itemFixRequest.mutate(
-      {
-        itemId: String(itemId),
-        image_ids:
-          (imageUpload.data?.data as ImageT[]).map(img => Number(img.id)) || [],
-        kinds: 'Fixed defect using patching method',
-      },
-      {
-        onSuccess() {
-          toast.success('แก้ไขสำเร็จ');
-          queryClient.invalidateQueries({
-            queryKey: [ITEM_ENDPOINT],
-            exact: false,
-          });
-          imageUpload.reset();
-
-          setOpen(false);
-        },
-        onError(error) {
-          toast.error('แก้ไขไม่สำเร็จ', {
-            description: JSON.stringify(error),
-          });
-        },
-      },
-    );
   }, [image, itemId, imageUpload, itemFixRequest, queryClient]);
 
   const ALLOWED_STATUSES = [STATUS.DEFECT, STATUS.REJECTED];
