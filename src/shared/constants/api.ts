@@ -32,3 +32,6 @@ export const DECIDE_STATUS_ENDPOINT = "/change_status/{request_id}/decision";
 
 // Dashboard
 export const DASHBOARD_SUMMARY_ENDPOINT = "/dashboard/summary";
+
+// Item Status
+export const ITEM_STATUS_ENDPOINT = "/item_status";

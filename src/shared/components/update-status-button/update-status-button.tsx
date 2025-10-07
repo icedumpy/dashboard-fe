@@ -26,7 +26,6 @@ import { Checkbox } from "@/shared/components/ui/checkbox";
 import { Label } from "@/shared/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/shared/components/ui/radio-group";
 
-import { STATUS_OPTIONS } from "./constants";
 import { updateStatusSchema } from "./schema";
 import { useItemDetailAPI } from "@/shared/hooks/item/use-item-detail";
 import { useChangeStatus } from "@/shared/hooks/change-status/use-create-change-status";
@@ -34,8 +33,10 @@ import { ITEM_ENDPOINT } from "@/shared/constants/api";
 import { useDefectOptionAPI } from "@/shared/hooks/option/use-defect-option";
 import { STATION } from "@/shared/constants/station";
 import { STATUS } from "@/shared/constants/status";
+import { useGetItemStatusAPI } from "@/shared/hooks/item-status/use-get-item-status";
 
 import type { UpdateStatusButtonProps, UpdateStatusT } from "./types";
+import type { OptionT } from "@/shared/types/option";
 
 export default function UpdateStatusButton({
   itemId,
@@ -48,7 +49,7 @@ export default function UpdateStatusButton({
   const { data } = useItemDetailAPI(itemId, {
     enabled: !!itemId && open,
   });
-
+  const { data: itemStatus } = useGetItemStatusAPI();
   const changeStatus = useChangeStatus();
 
   const form = useForm<UpdateStatusT>({
@@ -71,16 +72,16 @@ export default function UpdateStatusButton({
         .map(Number)
         .filter(Boolean);
 
-      const statusId = STATUS_OPTIONS.find(
-        (option) => option.label === data.data.status_code
-      )?.value;
+      const statusId = itemStatus?.data?.find(
+        (option) => option.code === data.data.status_code
+      )?.id;
 
       form.reset({
-        statusId: statusId,
+        statusId: String(statusId),
         defect_type_ids: isEmpty(defectIds) ? undefined : defectIds,
       });
     }
-  }, [data?.data, data?.defects, defectOptions, form]);
+  }, [data?.data, data?.defects, defectOptions, form, itemStatus?.data]);
 
   const handleSubmit = (values: UpdateStatusT) => {
     changeStatus.mutate(
@@ -132,14 +133,44 @@ export default function UpdateStatusButton({
     }
     form.trigger("defect_type_ids");
   };
+
   const statusOptions = useMemo(() => {
+    const options: OptionT[] = (itemStatus?.data ?? [])
+      .map((status) => ({
+        label: status.name_th,
+        value: String(status.id),
+        meta: { code: status.code },
+      }))
+      .filter((option) =>
+        [STATUS.NORMAL, STATUS.SCRAP, STATUS.DEFECT].includes(
+          String(option.meta.code)
+        )
+      )
+      .sort(
+        (a, b) =>
+          [STATUS.NORMAL, STATUS.SCRAP, STATUS.DEFECT].indexOf(
+            String(a.meta.code)
+          ) -
+          [STATUS.NORMAL, STATUS.SCRAP, STATUS.DEFECT].indexOf(
+            String(b.meta.code)
+          )
+      );
+
     switch (station) {
       case STATION.ROLL:
-        return STATUS_OPTIONS;
-      default:
-        return [...STATUS_OPTIONS, { label: "ม้วนเศษ", value: "8" }];
+        return options as OptionT[];
+      default: {
+        const leftoverRollStatus = itemStatus?.data.find(
+          (status) => status.code === STATUS.LEFTOVER_ROLL
+        );
+
+        return [
+          ...options,
+          { label: leftoverRollStatus?.name_th, value: leftoverRollStatus?.id },
+        ] as OptionT[];
+      }
     }
-  }, [station]);
+  }, [itemStatus?.data, station]);
 
   const rollDefectTypeOptions = useMemo(() => {
     return defectOptions?.filter((option) =>
@@ -150,6 +181,12 @@ export default function UpdateStatusButton({
   const bundledDefectTypeOptions = useMemo(() => {
     return defectOptions;
   }, [defectOptions]);
+
+  const defectStatus = useMemo(() => {
+    return statusOptions.find(
+      (option) => option?.meta?.code === String(STATUS.DEFECT)
+    );
+  }, [statusOptions]);
 
   return (
     <Dialog open={open} onOpenChange={toggleOpen}>
@@ -186,20 +223,17 @@ export default function UpdateStatusButton({
                               <FormControl>
                                 <div className="flex items-center space-x-2">
                                   <RadioGroupItem
-                                    value={option.value}
-                                    id={option.value}
+                                    value={String(option.value)}
+                                    id={String(option.value)}
                                   />
-                                  <Label htmlFor={option.value}>
+                                  <Label htmlFor={String(option.value)}>
                                     {option.label}
                                   </Label>
                                 </div>
                               </FormControl>
                             </FormItem>
-                            {form.watch("statusId") ===
-                              STATUS_OPTIONS[2].value &&
-                              option.value === STATUS_OPTIONS[2].value &&
-                              form.watch("statusId") ===
-                                STATUS_OPTIONS[2].value && (
+                            {form.watch("statusId") === defectStatus?.value &&
+                              option.value === defectStatus?.value && (
                                 <>
                                   {station === STATION.ROLL ? (
                                     <FormItem className="pl-4">
