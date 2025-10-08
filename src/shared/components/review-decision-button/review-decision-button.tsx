@@ -103,7 +103,7 @@ export default function ReviewDecisionButton({
       </DialogTrigger>
       <DialogContent aria-describedby={undefined}>
         <DialogHeader>
-          <DialogTitle>{dialogTitle} review decide</DialogTitle>
+          <DialogTitle>{dialogTitle}</DialogTitle>
         </DialogHeader>
         <div className="space-y-2">
           <Form {...form}>
