@@ -73,6 +73,11 @@ export function MultiSelect({
     () => options.filter((option) => !value?.includes(option.value)),
     [options, value]
   );
+  const selected = React.useMemo(
+    () => options.filter((option) => value?.includes(option.value)).map(item => item.label),
+    [options, value]
+  );
+
 
   return (
     <Popover>
@@ -94,7 +99,7 @@ export function MultiSelect({
               <span className="text-muted-foreground">{placeholder}</span>
             ) : (
               <span className="block w-full min-w-0 truncate">
-                {value?.join(", ")}
+                {selected?.join(", ")}
               </span>
             )}
           </div>
