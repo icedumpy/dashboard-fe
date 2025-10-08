@@ -98,6 +98,7 @@ export const HISTORY_COLUMNS: ColumnDef<ReviewT>[] = [
     meta: { className: "text-center" },
     cell: (info) => (
       <ActionButton
+        requestId={info.row?.original?.id}
         itemId={String(info.row?.original?.item?.id)}
         reviewId={String(info.row?.original?.id)}
       />

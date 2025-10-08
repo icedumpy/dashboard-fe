@@ -7,9 +7,11 @@ import { REVIEW_STATE } from "@/shared/constants/review";
 import { TABS, TABS_KEYS } from "../constants/tabs";
 
 export default function ActionButton({
+  requestId,
   itemId,
   reviewId,
 }: {
+  requestId: number;
   itemId: string;
   reviewId: string;
 }) {
@@ -19,7 +21,11 @@ export default function ActionButton({
 
   return (
     <div className="flex gap-2">
-      <ViewDetailButton itemId={itemId} reviewId={reviewId} />
+      <ViewDetailButton
+        requestId={requestId}
+        itemId={itemId}
+        reviewId={reviewId}
+      />
       {tabs === TABS_KEYS.WAITING_FOR_REVIEW && (
         <>
           <ReviewDecisionButton
