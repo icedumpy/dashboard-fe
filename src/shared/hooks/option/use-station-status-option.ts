@@ -9,6 +9,10 @@ export const useStationStatusOptions = (): OptionT[] => {
     statuses?.data?.map((status) => ({
       label: status.code.toLocaleUpperCase(),
       value: status.code,
+      meta: {
+        status_code: status.code,
+        id: status.id,
+      },
     })) || []
   );
 };

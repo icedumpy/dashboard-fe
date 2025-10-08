@@ -1,19 +1,20 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { CheckIcon, XIcon } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { CheckIcon, XIcon } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { useState } from "react";
 import { toast } from "sonner";
 
+import { Button } from "@/shared/components/ui/button";
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/shared/components/ui/dialog";
+import { Textarea } from "@/shared/components/ui/textarea";
 import {
   Form,
   FormControl,
@@ -21,27 +22,25 @@ import {
   FormItem,
   FormLabel,
 } from "@/shared/components/ui/form";
-import { Textarea } from "@/shared/components/ui/textarea";
-import { Button } from "@/shared/components/ui/button";
 
-import { useReviewDecisionAPI } from "@/shared/hooks/review/use-review-decision";
-import { useItemDetailAPI } from "@/shared/hooks/item/use-item-detail";
-import useDismissDialog from "@/shared/hooks/use-dismiss-dialog";
-import { REVIEW_STATE } from "@/shared/constants/review";
-import { REVIEW_ENDPOINT } from "@/shared/constants/api";
+import { useDecideStatus } from "@/shared/hooks/change-status/use-decide-status";
 import { cn } from "@/lib/utils";
-import { reviewSchema } from "./schema";
+import { reviewSchema } from "../review-decision-button/schema";
+import { useItemDetailAPI } from "@/shared/hooks/item/use-item-detail";
+import { CHANGE_STATUS_ENDPOINT } from "@/shared/constants/api";
+import { REVIEW_STATE } from "@/shared/constants/review";
+import useDismissDialog from "@/shared/hooks/use-dismiss-dialog";
 
-import type { ReviewDecisionButtonProps } from "./types";
+import type { DecideStatusButtonProps } from "./types";
 
-export default function ReviewDecisionButton({
+export default function DecideStatusButton({
   itemId,
-  reviewId,
   decision,
+  request_id,
   buttonProps,
-}: ReviewDecisionButtonProps) {
+}: DecideStatusButtonProps) {
   const [open, setOpen] = useState(false);
-  const reviewDecision = useReviewDecisionAPI();
+  const decideStatus = useDecideStatus();
   const queryClient = useQueryClient();
   const dismissDialog = useDismissDialog();
 
@@ -55,6 +54,10 @@ export default function ReviewDecisionButton({
       ? "ยืนยันการเปลี่ยนสถานะ สำหรับ:"
       : "ปฏิเสธการเปลี่ยนสถานะ สำหรับ:";
 
+  const { data } = useItemDetailAPI(String(itemId), {
+    enabled: open,
+  });
+
   const form = useForm({
     defaultValues: {
       note: undefined,
@@ -63,20 +66,22 @@ export default function ReviewDecisionButton({
     resolver: zodResolver(reviewSchema),
   });
 
-  const { data } = useItemDetailAPI(itemId, {
-    enabled: open,
-  });
-
   const handleSubmit = () => {
     const values = form.getValues();
     const title = decision === REVIEW_STATE.APPROVED ? "อนุมัติ" : "ปฏิเสธ";
-    reviewDecision.mutate(
-      { reviewId: reviewId, decision: decision, note: values.note ?? "" },
+    decideStatus.mutate(
+      {
+        requestId: request_id,
+        params: {
+          decision: values.decision,
+          note: values.note,
+        },
+      },
       {
         onSuccess() {
           toast.success(`${title}การแก้ไขสำเร็จ`);
           queryClient.invalidateQueries({
-            queryKey: [REVIEW_ENDPOINT],
+            queryKey: [CHANGE_STATUS_ENDPOINT],
             exact: false,
           });
           dismissDialog.dismiss();
@@ -89,7 +94,6 @@ export default function ReviewDecisionButton({
       }
     );
   };
-
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
@@ -103,7 +107,7 @@ export default function ReviewDecisionButton({
       </DialogTrigger>
       <DialogContent aria-describedby={undefined}>
         <DialogHeader>
-          <DialogTitle>{dialogTitle} review decide</DialogTitle>
+          <DialogTitle>{dialogTitle}</DialogTitle>
         </DialogHeader>
         <div className="space-y-2">
           <Form {...form}>
@@ -146,13 +150,8 @@ export default function ReviewDecisionButton({
           </Form>
         </div>
         <DialogFooter>
-          <DialogClose asChild>
-            <Button variant="outline" type="button">
-              ยกเลิก
-            </Button>
-          </DialogClose>
           <Button
-            disabled={reviewDecision.isPending || !form.formState.isValid}
+            disabled={decideStatus.isPending || !form.formState.isDirty}
             onClick={form.handleSubmit(handleSubmit)}
           >
             ยืนยัน

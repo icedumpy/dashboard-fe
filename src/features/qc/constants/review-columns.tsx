@@ -1,7 +1,6 @@
 import StatusBadge from "@/shared/components/status-badge";
 import ViewDetailButton from "../components/view-detail-button";
-import ReviewDecisionButton from "@/shared/components/review-decision-button";
-
+import DecideStatusButton from "@/shared/components/decide-status-button/decide-status-button";
 import { useItemDetailAPI } from "@/shared/hooks/item/use-item-detail";
 import { useProductionLineOptions } from "@/shared/hooks/option/use-production-line-option";
 import { STATION } from "@/shared/constants/station";
@@ -95,20 +94,25 @@ export const REVIEW_COLUMNS: ColumnDef<ChangeStatusT>[] = [
       return (
         <div className="space-x-2">
           <ViewDetailButton
+            requestId={requestId}
             itemId={String(itemId)}
             reviewId={String(requestId)}
           />
-          <ReviewDecisionButton
-            itemId={String(itemId)}
-            reviewId={String(requestId)}
+          <DecideStatusButton
+            itemId={itemId}
+            request_id={requestId}
             decision={REVIEW_STATE.APPROVED}
-            buttonProps={{ className: "size-8" }}
+            buttonProps={{
+              className: "size-8",
+            }}
           />
-          <ReviewDecisionButton
-            itemId={String(itemId)}
-            reviewId={String(requestId)}
+          <DecideStatusButton
+            itemId={itemId}
+            request_id={requestId}
             decision={REVIEW_STATE.REJECTED}
-            buttonProps={{ className: "size-8" }}
+            buttonProps={{
+              className: "size-8",
+            }}
           />
         </div>
       );

@@ -23,11 +23,14 @@ import { shouldShowUpdateStatusButton } from "@/shared/helpers/item";
 import { useAuth } from "@/shared/hooks/auth/use-auth";
 import { REVIEW_STATE } from "@/shared/constants/review";
 import { TABS, TABS_KEYS } from "../constants/tabs";
+import DecideStatusButton from "@/shared/components/decide-status-button/decide-status-button";
 
 export default function ViewDetailButton({
+  requestId,
   itemId,
   reviewId,
 }: {
+  requestId: number;
   itemId: string;
   reviewId: string;
 }) {
@@ -44,8 +47,8 @@ export default function ViewDetailButton({
     shouldShowUpdateStatusButton(data?.data?.status_code, user) &&
     data?.data.station;
 
-  const canReviewDecision =
-    tabs === TABS_KEYS.WAITING_FOR_REVIEW || tabs === TABS_KEYS.STATUS_REVIEW;
+  const canReviewDecision = tabs === TABS_KEYS.WAITING_FOR_REVIEW;
+  const canStatusReview = tabs === TABS_KEYS.STATUS_REVIEW;
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -105,6 +108,20 @@ export default function ViewDetailButton({
                 buttonProps={{ size: "icon" }}
                 itemId={itemId}
                 reviewId={reviewId}
+                decision={REVIEW_STATE.REJECTED}
+              />
+            </>
+          )}
+          {canStatusReview && (
+            <>
+              <DecideStatusButton
+                request_id={requestId}
+                itemId={Number(itemId)}
+                decision={REVIEW_STATE.APPROVED}
+              />
+              <DecideStatusButton
+                request_id={requestId}
+                itemId={Number(itemId)}
                 decision={REVIEW_STATE.REJECTED}
               />
             </>
