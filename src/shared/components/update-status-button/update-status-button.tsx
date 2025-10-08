@@ -150,33 +150,40 @@ export default function UpdateStatusButton({
           allowedCodes.indexOf(String(b.meta?.code))
       );
 
-    if (station === STATION.ROLL) {
-      // When the current item is NORMAL or SCRAP, only show DEFECT as target
-      const currentIsOnDefectTrigger =
-        !!data?.data?.status_code &&
-        [STATUS.NORMAL, STATUS.SCRAP].includes(data.data.status_code);
+    const currentStatus = data?.data?.status_code;
 
-      return currentIsOnDefectTrigger
-        ? mapped.filter((o) => String(o.meta?.code) === STATUS.DEFECT)
-        : mapped;
+    // If current status is NORMAL or SCRAP, only show DEFECT option (for both ROLL & BUNDLE)
+    if (
+      currentStatus &&
+      [STATUS.NORMAL, STATUS.SCRAP].includes(currentStatus)
+    ) {
+      // ✅ Only return the DEFECT option, do not add leftoverRoll
+      return mapped.filter((o) => String(o.meta?.code) === STATUS.DEFECT);
     }
 
-    // Non-ROLL stations: include leftover roll status if available
-    const leftoverRoll = itemStatus?.data?.find(
-      (s) => s.code === STATUS.LEFTOVER_ROLL
-    );
+    // If current status is other (DEFECT, etc.), show all options
+    let allOptions: OptionT[] = mapped;
 
-    if (!leftoverRoll) return mapped;
+    // For BUNDLE stations: add LEFTOVER_ROLL option if available
+    // ✅ Only when current status is not NORMAL or SCRAP
+    if (station !== STATION.ROLL) {
+      const leftoverRoll = itemStatus?.data?.find(
+        (s) => s.code === STATUS.LEFTOVER_ROLL
+      );
 
-    const leftoverOption: OptionT = {
-      label: leftoverRoll.name_th,
-      value: String(leftoverRoll.id),
-      meta: { code: leftoverRoll.code },
-    };
+      if (leftoverRoll) {
+        const leftoverOption: OptionT = {
+          label: leftoverRoll.name_th,
+          value: String(leftoverRoll.id),
+          meta: { code: leftoverRoll.code },
+        };
 
-    // avoid duplicates if leftoverRoll already included
-    const exists = mapped.some((m) => m.value === leftoverOption.value);
-    return exists ? mapped : [...mapped, leftoverOption];
+        const exists = allOptions.some((m) => m.value === leftoverOption.value);
+        allOptions = exists ? allOptions : [...allOptions, leftoverOption];
+      }
+    }
+
+    return allOptions;
   }, [itemStatus?.data, station, data?.data?.status_code]);
 
   const rollDefectTypeOptions = useMemo(() => {
