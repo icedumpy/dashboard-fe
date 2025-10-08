@@ -151,7 +151,7 @@ export default function DecideStatusButton({
         </div>
         <DialogFooter>
           <Button
-            disabled={decideStatus.isPending || !form.formState.isDirty}
+            disabled={decideStatus.isPending || !form.formState.isValid}
             onClick={form.handleSubmit(handleSubmit)}
           >
             ยืนยัน
