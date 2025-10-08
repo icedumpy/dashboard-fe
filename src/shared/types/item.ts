@@ -14,6 +14,7 @@ export interface Item {
   roll_width?: number;
   detected_at: string;
   status_code: StatusT;
+  status_name_th?: string;
   ai_note: string;
   acknowledged_by?: number;
   acknowledged_at?: string;

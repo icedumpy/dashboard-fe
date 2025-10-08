@@ -65,6 +65,7 @@ export const COLUMNS_ROLL: ColumnDef<Item>[] = [
     cell: info => (
       <StatusBadge
         status={info.getValue<string>()}
+        status_name_th={info.row.original?.status_name_th}
         note={info.row.original.defects?.join(', ')}
       />
     ),
