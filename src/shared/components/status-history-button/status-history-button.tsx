@@ -1,8 +1,9 @@
-import dayjs from "dayjs";
-import { useState } from "react";
+import dayjs from 'dayjs';
+import { useCallback, useState } from 'react';
 
-import DataTable from "@/shared/components/data-table";
-import { Button } from "@/shared/components/ui/button";
+import DataTable from '@/shared/components/data-table';
+import StatusBadge from '@/shared/components/status-badge';
+import { Button } from '@/shared/components/ui/button';
 import {
   Dialog,
   DialogClose,
@@ -11,58 +12,71 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/shared/components/ui/dialog";
-import StatusBadge from "@/shared/components/status-badge";
+} from '@/shared/components/ui/dialog';
 
-import { DATE_TIME_FORMAT } from "@/shared/constants/format";
-import { useItemStatusHistory } from "@/shared/hooks/item/use-item-status-history";
+import { DATE_TIME_FORMAT } from '@/shared/constants/format';
+import { useItemStatusHistory } from '@/shared/hooks/item/use-item-status-history';
 
-import type { ColumnDef } from "@tanstack/react-table";
-import type { ItemStatusHistoryT } from "@/shared/types/item";
+import type { ItemStatusHistoryT } from '@/shared/types/item';
+import type { ColumnDef } from '@tanstack/react-table';
 
 export default function StatusHistoryButton({ itemId }: { itemId: number }) {
   const [open, setOpen] = useState(false);
-  const { data: statusHistory, isLoading } = useItemStatusHistory(
-    String(itemId),
-    {
-      enabled: open && Boolean(itemId),
-    }
-  );
+  const {
+    data: statusHistory,
+    isLoading,
+    refetch,
+  } = useItemStatusHistory(String(itemId));
 
   const columns: ColumnDef<ItemStatusHistoryT>[] = [
     {
-      accessorKey: "from_status_code",
-      header: "ก่อนหน้า",
-      meta: { className: "text-start" },
-      cell: ({ row }) => <StatusBadge status={row.original.from_status_code} />,
-    },
-    {
-      accessorKey: "to_status_code",
-      header: "หลังจากนั้น",
-      meta: { className: "text-start" },
+      accessorKey: 'from_status_code',
+      header: 'ก่อนหน้า',
+      meta: { className: 'text-start' },
       cell: ({ row }) => (
         <StatusBadge
-          status={row.original.to_status_code}
-          note={row.original.defects?.join(", ")}
+          status={row.original.from_status_code}
+          note={row.original.before_defects?.join(', ')}
         />
       ),
     },
     {
-      accessorKey: "actor",
-      header: "ผู้ดำเนินการ",
-      cell: ({ row }) => row.original.actor.display_name,
-      meta: { className: "text-start" },
+      accessorKey: 'to_status_code',
+      header: 'หลังจากนั้น',
+      meta: { className: 'text-start' },
+      cell: ({ row }) => (
+        <StatusBadge
+          status={row.original.to_status_code}
+          note={row.original.defects?.join(', ')}
+        />
+      ),
     },
     {
-      accessorKey: "created_at",
-      header: "แก้ไขเมื่อ",
-      cell: (info) => dayjs(info.getValue<string>()).format(DATE_TIME_FORMAT),
-      meta: { className: "text-center" },
+      accessorKey: 'actor',
+      header: 'ผู้ดำเนินการ',
+      cell: ({ row }) => row.original.actor.display_name,
+      meta: { className: 'text-start' },
+    },
+    {
+      accessorKey: 'created_at',
+      header: 'แก้ไขเมื่อ',
+      cell: info => dayjs(info.getValue<string>()).format(DATE_TIME_FORMAT),
+      meta: { className: 'text-center' },
     },
   ];
 
+  const handleOnOpen = useCallback(
+    async (open: boolean) => {
+      if (open) {
+        await refetch();
+      }
+      setOpen(open);
+    },
+    [open],
+  );
+
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={handleOnOpen}>
       <DialogTrigger asChild>
         <Button size="xs" variant="outline">
           ประวัติการแก้ไข

@@ -89,6 +89,7 @@ export interface ItemStatusHistoryT {
   to_status_id: number;
   to_status_code?: StatusT;
   created_at: string;
+  before_defects?: string[];
   defects?: string[];
 }
 
