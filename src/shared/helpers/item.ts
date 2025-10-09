@@ -78,10 +78,10 @@ export function canRequestChanges(
   const allowedRoles: Role[] = [ROLES.OPERATOR];
 
   const isEditable = editableStatuses.includes(status);
-  const isSameLine = String(userLineId) === String(currentLineId);
+  // const isSameLine = String(userLineId) === String(currentLineId);
   const isRoleAllowed = userRole ? allowedRoles.includes(userRole) : true;
 
-  return isEditable && isSameLine && isRoleAllowed;
+  return isEditable && isRoleAllowed;
 }
 
 export function isHiddenRepairImages(statusCode: string | undefined) {

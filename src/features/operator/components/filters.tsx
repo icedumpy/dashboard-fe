@@ -1,12 +1,12 @@
-import { useCallback, useState } from "react";
+import dayjs from "dayjs";
 import { FilterIcon, RotateCcwIcon } from "lucide-react";
 import { isEmpty } from "radash";
-import dayjs from "dayjs";
+import { useCallback, useState } from "react";
 
 import { Button } from "@/shared/components/ui/button";
+import { DatePicker } from "@/shared/components/ui/date-picker";
 import { Input } from "@/shared/components/ui/input";
 import { MultiSelect } from "@/shared/components/ui/multi-select";
-import { DatePicker } from "@/shared/components/ui/date-picker";
 import {
   Select,
   SelectContent,
@@ -16,21 +16,22 @@ import {
 } from "@/shared/components/ui/select";
 import useItemFilters from "../hooks/use-item-filters";
 
-import { useStationStatusOptions } from "@/shared/hooks/option/use-station-status-option";
-import { useAuth } from "@/shared/hooks/auth/use-auth";
+import { cn } from "@/lib/utils";
+import { Badge } from "@/shared/components/ui/badge";
+import { Label } from "@/shared/components/ui/label";
 import { ROLES } from "@/shared/constants/auth";
 import { DATE_TIME_FORMAT } from "@/shared/constants/format";
+import { useAuth } from "@/shared/hooks/auth/use-auth";
 import { useProductionLineOptions } from "@/shared/hooks/option/use-production-line-option";
-import { cn } from "@/lib/utils";
-import { Label } from "@/shared/components/ui/label";
-import { Badge } from "@/shared/components/ui/badge";
+import { useStationStatusOptions } from "@/shared/hooks/option/use-station-status-option";
 
 export default function Filters() {
   const { user } = useAuth();
   const { filters, setFilters, resetFilters } = useItemFilters();
   const [toggleFilter, setToggleFilter] = useState(false);
   const { data: productionLineOptions } = useProductionLineOptions();
-  const disabledLine = [ROLES.OPERATOR as string].includes(String(user?.role));
+  // const disabledLine = [ROLES.OPERATOR as string].includes(String(user?.role));
+  const disabledLine = false;
 
   const statusOptions = useStationStatusOptions();
   const isOperator = user?.role === ROLES.OPERATOR;
