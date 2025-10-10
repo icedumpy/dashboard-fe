@@ -74,7 +74,12 @@ export const COLUMNS_BUNDLE: ColumnDef<Item>[] = [
   {
     accessorKey: 'history',
     header: 'History',
-    cell: ({ row }) => <StatusHistoryButton itemId={row.original.id} />,
+    cell: ({ row }) => {
+      if (row.original.is_item_history_exists) {
+        return <StatusHistoryButton itemId={row.original.id} />;
+      }
+      return <></>;
+    },
   },
   {
     accessorKey: 'action',

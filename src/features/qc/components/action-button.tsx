@@ -1,10 +1,10 @@
-import { useQueryState } from "nuqs";
+import { useQueryState } from 'nuqs';
 
-import ViewDetailButton from "./view-detail-button";
-import ReviewDecisionButton from "@/shared/components/review-decision-button";
+import ReviewDecisionButton from '@/shared/components/review-decision-button';
+import ViewDetailButton from './view-detail-button';
 
-import { REVIEW_STATE } from "@/shared/constants/review";
-import { TABS, TABS_KEYS } from "../constants/tabs";
+import { REVIEW_STATE } from '@/shared/constants/review';
+import { TABS, TABS_KEYS } from '../constants/tabs';
 
 export default function ActionButton({
   requestId,
@@ -15,7 +15,7 @@ export default function ActionButton({
   itemId: string;
   reviewId: string;
 }) {
-  const [tabs] = useQueryState("tabs", {
+  const [tabs] = useQueryState('tabs', {
     defaultValue: TABS[0].value,
   });
 
@@ -30,7 +30,7 @@ export default function ActionButton({
         <>
           <ReviewDecisionButton
             buttonProps={{
-              className: "size-8",
+              className: 'size-8',
             }}
             itemId={itemId}
             reviewId={reviewId}
@@ -38,7 +38,7 @@ export default function ActionButton({
           />
           <ReviewDecisionButton
             buttonProps={{
-              className: "size-8",
+              className: 'size-8',
             }}
             itemId={itemId}
             reviewId={reviewId}
