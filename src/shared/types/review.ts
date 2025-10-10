@@ -1,4 +1,4 @@
-import { REVIEW_STATE } from "@/shared/constants/review";
+import { REVIEW_STATE } from '@/shared/constants/review';
 
 export interface ReviewT {
   id: 5;
@@ -25,6 +25,7 @@ export interface Item {
   detected_at: string;
   ai_note: string;
   status: Status;
+  is_item_history_exists: boolean;
 }
 
 export interface Status {

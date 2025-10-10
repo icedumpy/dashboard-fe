@@ -27,6 +27,7 @@ export interface Item {
   images: number;
   defects: string[];
   is_changing_status_pending?: boolean;
+  is_item_history_exists?: boolean;
 }
 
 export interface ItemResponse {
