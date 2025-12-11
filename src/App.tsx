@@ -1,16 +1,17 @@
-import { Routes, Route } from "react-router-dom";
+import { Route, Routes } from 'react-router-dom';
 
-import LoginPage from "@/features/login";
-import OperatorPage from "@/features/operator";
-import ProtectedRoute from "@/shared/components/protected-route";
-import AuthGuard from "@/shared/components/auth-guard";
-import QCPage from "@/features/qc";
-import ViewerPage from "@/features/viewer";
+import LoginPage from '@/features/login';
+import OperatorPage from '@/features/operator';
+import QCPage from '@/features/qc';
+import ViewerPage from '@/features/viewer';
+import AuthGuard from '@/shared/components/auth-guard';
+import ProtectedRoute from '@/shared/components/protected-route';
 
-import { useAuth } from "@/shared/hooks/auth/use-auth";
-import { ROLES } from "@/shared/constants/auth";
+import { ROLES } from '@/shared/constants/auth';
+import { useAuth } from '@/shared/hooks/auth/use-auth';
 
-import type { Role } from "@/shared/types/auth";
+import type { Role } from '@/shared/types/auth';
+import AdjustCamera from './features/operator/components/adjust-camera';
 
 function App() {
   const { user } = useAuth();
@@ -41,6 +42,7 @@ function App() {
           </ProtectedRoute>
         }
       />
+      <Route path="/line/:id/:cameraId" element={<AdjustCamera />} />
     </Routes>
   );
 }
