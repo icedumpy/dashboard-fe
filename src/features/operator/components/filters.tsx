@@ -31,7 +31,6 @@ export default function Filters() {
   const { filters, setFilters, resetFilters } = useItemFilters();
   const [toggleFilter, setToggleFilter] = useState(false);
   const { data: productionLineOptions } = useProductionLineOptions();
-  // const disabledLine = [ROLES.OPERATOR as string].includes(String(user?.role));
   const disabledLine = false;
 
   const statusOptions = useStationStatusOptions();
@@ -93,7 +92,13 @@ export default function Filters() {
             <Button
               className="bg-[#E17100]"
               // TODO: fix this
-              onClick={() => navigate(`/line/${filters.line_id}/abc`)}
+              onClick={() =>
+                window.open(
+                  `camera/line/${filters.line_id}`,
+                  '_blank',
+                  'noopener,noreferrer',
+                )
+              }
             >
               ปรับโฟกัสกล้อง
             </Button>

@@ -42,7 +42,7 @@ function App() {
           </ProtectedRoute>
         }
       />
-      <Route path="/line/:id/:cameraId" element={<AdjustCamera />} />
+      <Route path="/camera/line/:lineId" element={<AdjustCamera />} />
     </Routes>
   );
 }

@@ -1,16 +1,16 @@
+import axiosInstance from '@/lib/axios-instance';
 import {
   CHANGE_STATUS_ENDPOINT,
   DECIDE_STATUS_ENDPOINT,
-} from "@/shared/constants/api";
-import { ChangeStatusParams } from "@/shared/hooks/change-status/use-create-change-status";
-import { DecideStatusParams } from "@/shared/hooks/change-status/use-decide-status";
-import axiosInstance from "@/lib/axios-instance";
+} from '@/shared/constants/api';
+import { ChangeStatusParams } from '@/shared/hooks/change-status/use-create-change-status';
+import { DecideStatusParams } from '@/shared/hooks/change-status/use-decide-status';
 
 import type {
   ChangeStatusSummary,
   ChangeStatusT,
-} from "@/shared/types/change-status";
-import type { Pagination } from "@/shared/types/pagination";
+} from '@/shared/types/change-status';
+import type { Pagination } from '@/shared/types/pagination';
 
 interface ChangeStatusResponse {
   data: ChangeStatusT[];
@@ -31,11 +31,11 @@ export const ChangeStatusService = {
   },
   patchChangeStatus: async (
     requestId: number,
-    params: Partial<DecideStatusParams>
+    params: Partial<DecideStatusParams>,
   ) => {
     const response = await axiosInstance.patch(
-      `${DECIDE_STATUS_ENDPOINT.replace("{request_id}", String(requestId))}`,
-      params
+      `${DECIDE_STATUS_ENDPOINT.replace('{request_id}', String(requestId))}`,
+      params,
     );
     return response.data;
   },
