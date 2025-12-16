@@ -9,4 +9,9 @@ export const useGetCameraStreamUrl = (cameraId?: number) =>
     ],
     queryFn: () => CameraService.getCameraStreamUrl(cameraId),
     enabled: !!cameraId,
+    staleTime: 0,
+    // cacheTime: 0,
+    refetchOnMount: 'always',
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
   });
