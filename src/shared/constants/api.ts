@@ -39,4 +39,4 @@ export const ITEM_STATUS_ENDPOINT = '/item_status';
 // Camera
 export const GET_CAMERAS_ENDPOINT = `/camera`;
 export const GET_CAMREA_STREAM_ENDPOINT = `/camera/{cameraId}/stream-url`;
-export const FOCUS_CAMERA_ENDPOINT = `/camera/rest-focus`;
+export const FOCUS_CAMERA_ENDPOINT = `/camera/reset-focus`;
