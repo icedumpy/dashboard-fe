@@ -3,7 +3,7 @@ import Hls from 'hls.js';
 import { useEffect, useRef } from 'react';
 
 type HlsCameraPlayerProps = {
-  hlsUrl: string;
+  hlsUrl?: string | null;
   isError?: boolean;
   className?: string;
 };
@@ -14,32 +14,61 @@ export function HlsCameraPlayer({
   className,
 }: HlsCameraPlayerProps) {
   const videoRef = useRef<HTMLVideoElement | null>(null);
+  const hlsRef = useRef<Hls | null>(null);
 
   useEffect(() => {
-    if (!hlsUrl || !videoRef.current) return;
-
     const video = videoRef.current;
 
+    // clean up any previous instance before re-init
+    if (hlsRef.current) {
+      hlsRef.current.destroy();
+      hlsRef.current = null;
+    }
+
+    if (!hlsUrl || !video) return;
+
+    console.log('[HLS] init player with url:', hlsUrl);
+
+    // Safari / iOS: native HLS
     if (video.canPlayType('application/vnd.apple.mpegurl')) {
       video.src = hlsUrl;
+      video
+        .play()
+        .catch(err => console.warn('[HLS] native autoplay blocked', err));
       return;
     }
 
-    let hls: Hls | null = null;
-
+    // Other browsers: use hls.js
     if (Hls.isSupported()) {
-      hls = new Hls();
+      const hls = new Hls({
+        enableWorker: true,
+      });
+      hlsRef.current = hls;
+
       hls.loadSource(hlsUrl);
       hls.attachMedia(video);
 
-      hls.on(Hls.Events.ERROR, (event, data) => {
-        console.error('HLS error', event, data);
+      hls.on(Hls.Events.MANIFEST_PARSED, () => {
+        console.log('[HLS] manifest parsed, starting playback');
+        video
+          .play()
+          .catch(err =>
+            console.warn('[HLS] autoplay blocked after manifest parsed', err),
+          );
       });
+
+      hls.on(Hls.Events.ERROR, (event, data) => {
+        console.error('[HLS] error', event, data);
+      });
+    } else {
+      console.error('[HLS] not supported in this browser');
     }
 
     return () => {
-      if (hls) {
-        hls.destroy();
+      if (hlsRef.current) {
+        console.log('[HLS] destroy instance');
+        hlsRef.current.destroy();
+        hlsRef.current = null;
       }
     };
   }, [hlsUrl]);
