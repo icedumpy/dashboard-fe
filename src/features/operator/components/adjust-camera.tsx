@@ -82,7 +82,7 @@ function AdjustCamera() {
 
   return (
     <div className="min-h-screen w-full bg-[#0e192b] flex items-center justify-center px-4 py-10">
-      <div className="w-full max-w-5xl rounded-3xl bg-[#1f2b3b] border border-slate-800  px-8 py-8 text-slate-100">
+      <div className="w-full max-w-2xl rounded-3xl bg-[#1f2b3b] border border-slate-800  px-8 py-8 text-slate-100">
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-2xl font-semibold bg-gradient-to-r from-sky-400 to-indigo-400 bg-clip-text text-transparent">
