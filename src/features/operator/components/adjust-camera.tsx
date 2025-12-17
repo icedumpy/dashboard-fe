@@ -28,7 +28,7 @@ function AdjustCamera() {
   const cameras = useMemo(() => {
     return [
       {
-        camera_name: 'All',
+        camera_name: '-- เลือกกล้อง --',
         camera_url: '',
       } as ICameraResponse,
     ].concat(...cameraApis);
@@ -147,7 +147,7 @@ function AdjustCamera() {
             isButtonDisabled && focusState !== 'focusing'
               ? 'bg-gradient-to-r from-slate-600 to-slate-700 text-slate-200 cursor-not-allowed'
               : focusState === 'success'
-              ? 'bg-emerald-500 hover:bg-emerald-500/90 text-white'
+              ? 'bg-[#22c55f] hover:bg-[#22c55f]/90 text-white'
               : focusState === 'failed'
               ? 'bg-red-500 text-white'
               : 'bg-gradient-to-r from-sky-600 to-indigo-500 hover:from-sky-400 hover:to-indigo-400 text-white shadow-lg shadow-sky-500/25',
