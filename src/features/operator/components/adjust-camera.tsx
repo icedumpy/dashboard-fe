@@ -81,8 +81,8 @@ function AdjustCamera() {
     !selectedCameraId || isLoading || focusState === 'focusing' || isError;
 
   return (
-    <div className="min-h-screen w-full bg-[#0e192b] flex items-center justify-center px-4 py-10">
-      <div className="w-full max-w-2xl rounded-3xl bg-[#1f2b3b] border border-slate-800  px-8 py-8 text-slate-100">
+    <div className="min-h-screen w-full h-full bg-[#0e192b] flex items-center justify-center px-4 py-10">
+      <div className="w-full max-w-4xl rounded-3xl bg-[#1f2b3b] border border-slate-800  px-8 py-8 text-slate-100">
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-2xl font-semibold bg-gradient-to-r from-sky-400 to-indigo-400 bg-clip-text text-transparent">
@@ -118,25 +118,18 @@ function AdjustCamera() {
           </div>
         </div>
 
-        <div className="relative rounded-2xl border border-slate-800 bg-black/90 overflow-hidden">
+        <div className="relative rounded-2xl min-h-[500px] border border-slate-800 bg-black/90 overflow-hidden">
           {cameraUrlData?.url ? (
             <HlsCameraPlayer hlsUrl={cameraUrlData.url} isError={isError} />
           ) : (
-            <div className="relative flex h-64 items-center justify-center text-xs font-medium">
-              <span className="px-3 py-1 rounded-full bg-slate-900/80 border border-slate-700 text-[11px] tracking-wide text-slate-400">
+            <div className="relative min-h-[500px] flex items-center justify-center text-xs font-medium">
+              <span className="px-3 py-1 rounded-full bg-slate-900/80 border border-slate-700 text-sm tracking-wide text-slate-400">
                 {isError ? 'เกิดปัญหาขณะโหลดกล้อง' : `ไม่มีสัญญาน`}
               </span>
             </div>
           )}
-
-          {/* <div className="pointer-events-none absolute inset-5">
-            <div className="absolute inset-0 border border-slate-800/80 rounded-xl" />
-            <div className="absolute inset-y-0 left-1/2 w-px -translate-x-1/2 bg-slate-800/70" />
-            <div className="absolute inset-x-0 top-1/2 h-px -translate-y-1/2 bg-slate-800/70" />
-          </div> */}
         </div>
 
-        {/* Focus button with 3 states */}
         <button
           type="button"
           onClick={handleFocusClick}
