@@ -75,7 +75,7 @@ export function HlsCameraPlayer({
 
   if (isError || !hlsUrl) {
     return (
-      <div className="relative flex h-64 w-full items-center justify-center rounded-2xl border border-slate-800 bg-black text-xs text-slate-500">
+      <div className="relative flex min-h-[500px] w-full items-center justify-center rounded-2xl border border-slate-800 bg-black text-xs text-slate-500">
         <span>ไม่มีสัญญาน</span>
       </div>
     );
@@ -85,7 +85,7 @@ export function HlsCameraPlayer({
     <div
       className={
         className ??
-        'relative h-64 w-full overflow-hidden rounded-2xl border border-slate-800 bg-black'
+        'relative h-full w-full sm:min-h-[500px] overflow-hidden rounded-2xl border border-slate-800 bg-black'
       }
     >
       <video
@@ -93,15 +93,15 @@ export function HlsCameraPlayer({
         autoPlay
         muted
         playsInline
-        controls={false}
-        className="h-full w-full object-contain"
+        controls={true}
+        className="absolute inset-0 block h-full w-full object-contain"
       />
 
-      <div className="pointer-events-none absolute inset-5">
+      {/* <div className="pointer-events-none absolute inset-5">
         <div className="absolute inset-0 rounded-xl border border-slate-800/80" />
         <div className="absolute inset-y-0 left-1/2 w-px -translate-x-1/2 bg-slate-800/70" />
         <div className="absolute inset-x-0 top-1/2 h-px -translate-y-1/2 bg-slate-800/70" />
-      </div>
+      </div> */}
     </div>
   );
 }
