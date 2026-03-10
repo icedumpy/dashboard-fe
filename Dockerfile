@@ -1,29 +1,16 @@
-# ---- Builder ----
-FROM node:18-alpine AS builder
+FROM node:20-alpine
+
 WORKDIR /app
 
-# copy package.json + package-lock.json (ถ้ามี)
-COPY package*.json ./
+RUN corepack enable
 
-# ติดตั้ง dependencies รวม devDependencies
-RUN npm ci
+COPY package.json yarn.lock ./
+RUN yarn install --frozen-lockfile
 
-# copy source code ทั้งหมด
 COPY . .
 
-# run build (ใช้ vite + plugin-react ได้แน่นอน เพราะมี devDeps)
-RUN npm run build
+RUN yarn build
 
+EXPOSE 5173
 
-# ---- Runner ----
-FROM nginx:alpine AS runner
-WORKDIR /usr/share/nginx/html
-
-# copy build result ไป nginx
-COPY --from=builder /app/dist .
-
-# nginx config สำหรับ react router SPA
-COPY nginx.conf /etc/nginx/conf.d/default.conf
-
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+CMD ["yarn", "preview", "--host", "0.0.0.0", "--port", "5173"]
