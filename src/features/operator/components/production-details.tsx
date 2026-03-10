@@ -70,6 +70,7 @@ export default function ProductDetail({
     form.reset({
       job_order_number: data?.job_order_number || '',
       roll_id: data?.roll_id || '',
+      roll_width: data?.roll_width ?? 0,
       roll_number: data?.roll_number || '',
       bundle_number: data?.bundle_number || '',
       product_code: data?.product_code || '',
@@ -219,46 +220,48 @@ export default function ProductDetail({
       </div>
       <Form {...form}>
         <form className="grid w-full grid-cols-1 gap-2 p-4 border rounded md:grid-cols-2 lg:grid-cols-3">
-          {dataList.map(item => (
-            <FormField
-              key={item.label}
-              name={item.name || ''}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{item.label}</FormLabel>
-                  <FormControl>
-                    {mode === 'EDIT' &&
-                    editableFields.includes(
-                      item.name as keyof UpdateItemDetail,
-                    ) ? (
-                      <Input
-                        value={field.value ?? ''}
-                        onChange={e => {
-                          if (item.name === 'roll_width') {
-                            const numericValue = e.target.value ?? 0;
-                            field.onChange(
-                              numericValue ? Number(numericValue) : '',
-                            );
-                            form.trigger(item.name as keyof UpdateItemDetail);
-                          } else {
-                            field.onChange(e.target.value);
-                            form.trigger(item.name as keyof UpdateItemDetail);
+          {dataList.map(item => {
+            return (
+              <FormField
+                key={item.label}
+                name={item.name || ''}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{item.label}</FormLabel>
+                    <FormControl>
+                      {mode === 'EDIT' &&
+                      editableFields.includes(
+                        item.name as keyof UpdateItemDetail,
+                      ) ? (
+                        <Input
+                          value={field.value ?? ''}
+                          onChange={e => {
+                            if (item.name === 'roll_width') {
+                              const numericValue = e.target.value ?? 0;
+                              field.onChange(
+                                numericValue ? Number(numericValue) : '',
+                              );
+                              form.trigger(item.name as keyof UpdateItemDetail);
+                            } else {
+                              field.onChange(e.target.value);
+                              form.trigger(item.name as keyof UpdateItemDetail);
+                            }
+                          }}
+                          min={item.name === 'roll_width' ? 0 : undefined}
+                          inputMode={
+                            item.name === 'roll_width' ? 'numeric' : undefined
                           }
-                        }}
-                        min={item.name === 'roll_width' ? 0 : undefined}
-                        inputMode={
-                          item.name === 'roll_width' ? 'numeric' : undefined
-                        }
-                      />
-                    ) : (
-                      <span className="py-1.5 font-bold">{item.value}</span>
-                    )}
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          ))}
+                        />
+                      ) : (
+                        <span className="py-1.5 font-bold">{item.value}</span>
+                      )}
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            );
+          })}
         </form>
       </Form>
     </>
