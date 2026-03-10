@@ -116,8 +116,8 @@ export default function ProductDetail({
         name: 'reason',
         value:
           currentReview.state == 'REJECTED'
-            ? currentReview?.reject_reason ?? '-'
-            : currentReview?.review_note ?? '-',
+            ? (currentReview?.reject_reason ?? '-')
+            : (currentReview?.review_note ?? '-'),
       },
       {
         label: 'Product Code:',
@@ -235,10 +235,7 @@ export default function ProductDetail({
                         value={field.value ?? ''}
                         onChange={e => {
                           if (item.name === 'roll_width') {
-                            const numericValue = e.target.value.replace(
-                              /\D/g,
-                              '',
-                            );
+                            const numericValue = e.target.value ?? 0;
                             field.onChange(
                               numericValue ? Number(numericValue) : '',
                             );
